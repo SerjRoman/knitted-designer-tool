@@ -1,0 +1,1 @@
+export { useCanvasZoom } from "./model";
