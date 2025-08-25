@@ -5,29 +5,31 @@ import {
 	COLORS,
 	GRID_HEIGHT,
 	GRID_WIDTH,
+	GRID_X_COUNT,
+	GRID_Y_COUNT,
 	INITIAL_PIXEL_SIZE,
 	MAX_PIXEL_SIZE,
 	MIN_PIXEL_SIZE,
 	type Grid,
 	type Point,
 } from "@/shared/lib";
-import { createEmptyGrid } from "../../lib";
+import { createEmptyGrid, createEmtpySizes } from "../../lib";
 
 interface CanvasSlice {
 	grid: Grid;
 	currentColor: string;
 	backgroundColor: string;
-	gridWidth: number;
-	gridHeight: number;
 	pixelSize: number;
+	columnWidths: number[];
+	rowHeights: number[];
 }
 const initialState: CanvasSlice = {
 	grid: createEmptyGrid(GRID_WIDTH, GRID_HEIGHT, BACKGROUND_COLOR),
 	currentColor: COLORS.black,
 	backgroundColor: BACKGROUND_COLOR,
-	gridWidth: GRID_WIDTH,
-	gridHeight: GRID_HEIGHT,
 	pixelSize: INITIAL_PIXEL_SIZE,
+	rowHeights: createEmtpySizes(GRID_Y_COUNT, INITIAL_PIXEL_SIZE),
+	columnWidths: createEmtpySizes(GRID_X_COUNT, INITIAL_PIXEL_SIZE),
 };
 export const canvsaSlice = createSlice({
 	name: "canvas",
@@ -50,6 +52,11 @@ export const canvsaSlice = createSlice({
 				MIN_PIXEL_SIZE,
 				Math.min(MAX_PIXEL_SIZE, payload)
 			);
+			state.columnWidths = createEmtpySizes(
+				GRID_X_COUNT,
+				state.pixelSize
+			);
+			state.rowHeights = createEmtpySizes(GRID_Y_COUNT, state.pixelSize);
 		},
 	},
 });

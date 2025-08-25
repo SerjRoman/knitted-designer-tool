@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState, type MouseEvent } from "react";
+import { useCallback, useMemo, useRef, useState, type MouseEvent } from "react";
 import { SelectColor } from "@/features/select-color";
 import { ButtonEraser } from "@/features/select-eraser";
 import { useCanvasZoom } from "@/features/zoom-canvas";
@@ -11,16 +11,44 @@ import {
 } from "@/shared/lib";
 import { Canvas } from "@/shared/ui";
 export function App() {
-	const { grid, pixelSize } = useAppSelector((state) => state.canvas);
+	const { grid, pixelSize, columnWidths, rowHeights } = useAppSelector(
+		(state) => state.canvas
+	);
 	const [isDrawing, setIsDrawing] = useState<boolean>(false);
 	const dispatch = useAppDispatch();
 	const ref = useRef<HTMLCanvasElement>(null);
+	const columnOffsets = useMemo(() => {
+		const arr: number[] = [];
+		let accum: number = 0;
+		columnWidths.forEach((elem) => {
+			arr.push(accum);
+			accum += elem;
+		});
+		return arr;
+	}, [columnWidths]);
+	const rowOffsets = useMemo(() => {
+		const arr: number[] = [];
+		let accum: number = 0;
+		rowHeights.forEach((elem) => {
+			arr.push(accum);
+			accum += elem;
+		});
+		return arr;
+	}, [rowHeights]);
 	useCanvasZoom(ref);
 	const draw = useCallback(
 		(context: CanvasRenderingContext2D) => {
-			drawPixelGrid(context, grid, pixelSize);
+			drawPixelGrid(
+				context,
+				grid,
+				pixelSize,
+				columnOffsets,
+				rowOffsets,
+				columnWidths,
+				rowHeights
+			);
 		},
-		[grid, pixelSize]
+		[columnOffsets, columnWidths, grid, pixelSize, rowHeights, rowOffsets]
 	);
 	const handleDraw = (event: MouseEvent<HTMLCanvasElement>) => {
 		const { offsetX, offsetY } = event.nativeEvent;
