@@ -1,0 +1,1 @@
+export { INITIAL_PIXEL_SIZE, INITIAL_ROWS, INITIAL_COLUMNS } from "./sizes";

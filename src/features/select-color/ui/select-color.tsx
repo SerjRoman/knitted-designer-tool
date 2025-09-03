@@ -1,12 +1,12 @@
 import type { ChangeEvent } from "react";
-import { setColor } from "@/entities/canvas";
+import { setCurrentColor } from "@/entities/editor";
 import { COLORS, useAppDispatch, useAppSelector } from "@/shared/lib";
 
 export function SelectColor() {
 	const dispatch = useAppDispatch();
-	const { currentColor } = useAppSelector((state) => state.canvas);
+	const { currentColor } = useAppSelector((state) => state.editor);
 	function handleChange(event: ChangeEvent<HTMLSelectElement>) {
-		dispatch(setColor(event.target.value));
+		dispatch(setCurrentColor(event.target.value));
 	}
 	const colors = Object.entries(COLORS);
 	return (

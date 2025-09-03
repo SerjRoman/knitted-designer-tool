@@ -1,16 +1,10 @@
 import { type RefObject, useEffect } from "react";
-import { setPixelSize } from "@/entities/canvas";
-import {
-	useAppDispatch,
-	useAppSelector,
-	MIN_PIXEL_SIZE,
-	MAX_PIXEL_SIZE,
-} from "@/shared/lib";
+import { updateZoomScale } from "@/entities/viewport";
+import { useAppDispatch, useAppSelector } from "@/shared/lib";
 
 export function useCanvasZoom(canvasRef: RefObject<HTMLCanvasElement | null>) {
 	const dispatch = useAppDispatch();
 	const { pixelSize } = useAppSelector((state) => state.canvas);
-
 	useEffect(() => {
 		const canvasElement = canvasRef.current;
 		if (!canvasElement) return;
@@ -18,14 +12,8 @@ export function useCanvasZoom(canvasRef: RefObject<HTMLCanvasElement | null>) {
 		const handleWheel = (event: WheelEvent) => {
 			event.preventDefault();
 			const zoomDirection = event.deltaY < 0 ? 1 : -1;
-
-			const newPixelSize = pixelSize + zoomDirection;
-			if (
-				newPixelSize >= MIN_PIXEL_SIZE &&
-				newPixelSize <= MAX_PIXEL_SIZE
-			) {
-				dispatch(setPixelSize(newPixelSize));
-			}
+			const newScale = zoomDirection / 100;
+			dispatch(updateZoomScale(newScale));
 		};
 
 		canvasElement.addEventListener("wheel", handleWheel, {

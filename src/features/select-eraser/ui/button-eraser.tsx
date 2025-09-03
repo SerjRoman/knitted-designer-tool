@@ -1,7 +1,9 @@
-import { setEraser } from "@/entities/canvas";
+import { selectTool } from "@/entities/editor";
 import { useAppDispatch } from "@/shared/lib";
 
 export function ButtonEraser() {
 	const dispatch = useAppDispatch();
-	return <button onClick={() => dispatch(setEraser())}>Eraser</button>;
+	return (
+		<button onClick={() => dispatch(selectTool("eraser"))}>Eraser</button>
+	);
 }
