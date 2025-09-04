@@ -1,5 +1,6 @@
 import { useCallback, useState, type MouseEvent } from "react";
 import { drawPixel } from "@/features/draw-pixel";
+import { pickColor } from "@/features/select-tool";
 import { drawPixelLayer, selectOffsets } from "@/entities/canvas";
 import { RULER_SIZE, useAppDispatch, useAppSelector } from "@/shared/lib";
 import { Canvas } from "@/shared/ui";
@@ -16,8 +17,23 @@ export function CanvasLayer() {
 		rowHeights,
 	} = useAppSelector((state) => state.canvas);
 	const { columnOffsets, rowOffsets } = useAppSelector(selectOffsets);
+	const { scale, isPanning, offsets } = useAppSelector(
+		(state) => state.viewport
+	);
+	const { tool } = useAppSelector((state) => state.editor);
 	const handleDraw = useCallback(
 		(context: CanvasRenderingContext2D) => {
+			context.imageSmoothingEnabled = false;
+			context.resetTransform();
+			context.clearRect(
+				0,
+				0,
+				pixelSize * numberColumns + RULER_SIZE,
+				pixelSize * numberRows + RULER_SIZE
+			);
+			context.translate(offsets.x, offsets.y);
+			context.scale(scale, scale);
+
 			drawPixelLayer(
 				context,
 				grid,
@@ -27,19 +43,40 @@ export function CanvasLayer() {
 				rowHeights
 			);
 		},
-		[columnOffsets, columnWidths, grid, rowHeights, rowOffsets]
+		[
+			columnOffsets,
+			columnWidths,
+			grid,
+			numberColumns,
+			numberRows,
+			pixelSize,
+			rowHeights,
+			rowOffsets,
+			scale,
+			offsets,
+		]
 	);
 
 	const handleDrawing = (event: MouseEvent<HTMLCanvasElement>) => {
 		const { offsetX, offsetY } = event.nativeEvent;
-		const gridX = Math.floor(offsetX / pixelSize);
-		const gridY = Math.floor(offsetY / pixelSize);
+		const gridX = Math.floor((offsetX - offsets.x) / pixelSize / scale);
+		const gridY = Math.floor((offsetY - offsets.y) / pixelSize / scale);
 		if (grid[gridY]?.[gridX] !== undefined) {
-			dispatch(drawPixel({ x: gridX, y: gridY }));
+			const point = { x: gridX, y: gridY };
+			switch (tool) {
+				case "eraser":
+				case "brush":
+					dispatch(drawPixel(point));
+					break;
+				case "colorPicker":
+					dispatch(pickColor(point));
+					break;
+			}
 		}
 	};
 
 	function handleMouseDown(event: MouseEvent<HTMLCanvasElement>) {
+		if (isPanning) return;
 		setIsDrawing(true);
 		handleDrawing(event);
 	}

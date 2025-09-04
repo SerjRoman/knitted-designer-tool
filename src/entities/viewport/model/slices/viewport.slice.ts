@@ -2,13 +2,13 @@ import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 interface ViewportSlice {
 	scale: number;
-	offset: { x: number; y: number };
+	offsets: { x: number; y: number };
 	isPanning: boolean;
 }
 
 const initialState: ViewportSlice = {
 	scale: 1,
-	offset: { x: 0, y: 0 },
+	offsets: { x: 0, y: 0 },
 	isPanning: false,
 };
 
@@ -22,18 +22,18 @@ export const viewportSlice = createSlice({
 		endPanning(state) {
 			state.isPanning = false;
 		},
-		updateZoomScale(state, { payload }: PayloadAction<number>) {
-			state.scale += payload;
+		setZoomScale(state, { payload }: PayloadAction<number>) {
+			state.scale = payload;
 		},
-		updateOffset(
+		setOffset(
 			state,
 			{ payload }: PayloadAction<{ x: number; y: number }>
 		) {
-			state.offset.x += payload.x;
-			state.offset.y += payload.y;
+			state.offsets.x = payload.x;
+			state.offsets.y = payload.y;
 		},
 	},
 });
 
-export const { startPanning, endPanning, updateZoomScale, updateOffset } =
+export const { startPanning, endPanning, setZoomScale, setOffset } =
 	viewportSlice.actions;

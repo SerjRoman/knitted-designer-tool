@@ -7,3 +7,5 @@ export const COLORS = {
 	red: "#f00000",
 };
 export const BACKGROUND_COLOR = COLORS.white;
+export const RULER_TEXT_COLOR = COLORS.red;
+export const RULER_LINE_COLOR = COLORS.blue

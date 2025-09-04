@@ -79,6 +79,16 @@ export const canvsaSlice = createSlice({
 				return row.pop();
 			});
 		},
+		updateGridSizes(state) {
+			state.columnWidths = createSizesFrom(
+				state.numberColumns,
+				state.pixelSize
+			);
+			state.rowHeights = createSizesFrom(
+				state.numberRows,
+				state.pixelSize
+			);
+		},
 	},
 });
 
@@ -90,4 +100,5 @@ export const {
 	removeRow,
 	addColumn,
 	removeColumn,
+	updateGridSizes,
 } = canvsaSlice.actions;

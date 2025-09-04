@@ -1,14 +1,15 @@
 import { useCallback } from "react";
-import { drawGridLayer } from "@/entities/canvas";
+import { drawHorizontalRulerLayer } from "@/entities/canvas";
 import { RULER_SIZE, useAppSelector } from "@/shared/lib";
 import { Canvas } from "@/shared/ui";
 
-export function GridLayer() {
-	const { pixelSize, numberColumns, numberRows } = useAppSelector(
+export function HorizontalRulerLayer() {
+	const { numberColumns, numberRows, pixelSize } = useAppSelector(
 		(state) => state.canvas
 	);
 	const { scale, offsets } = useAppSelector((state) => state.viewport);
-	const handleDrawGrid = useCallback(
+
+	const handleDrawRuler = useCallback(
 		(context: CanvasRenderingContext2D) => {
 			context.imageSmoothingEnabled = false;
 			context.resetTransform();
@@ -20,22 +21,27 @@ export function GridLayer() {
 			);
 			context.translate(offsets.x, offsets.y);
 			context.scale(scale, scale);
-			drawGridLayer(context, pixelSize, numberColumns, numberRows);
+			drawHorizontalRulerLayer(
+				context,
+				numberColumns,
+				pixelSize,
+				scale,
+				offsets
+			);
 		},
-		[numberColumns, numberRows, pixelSize, scale, offsets]
+		[numberColumns, numberRows, offsets, pixelSize, scale]
 	);
 	return (
 		<Canvas
-			draw={handleDrawGrid}
+			draw={handleDrawRuler}
 			style={{
 				position: "absolute",
-				zIndex: 2,
-				pointerEvents: "none",
-				top: RULER_SIZE,
+				top: 0,
 				left: RULER_SIZE,
+				zIndex: 0,
 			}}
-			width={pixelSize * numberColumns}
-			height={pixelSize * numberRows}
+			width={pixelSize * numberColumns + RULER_SIZE}
+			height={pixelSize * numberRows + RULER_SIZE}
 		/>
 	);
 }

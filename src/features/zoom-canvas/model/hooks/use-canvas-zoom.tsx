@@ -1,27 +1,37 @@
 import { type RefObject, useEffect } from "react";
-import { updateZoomScale } from "@/entities/viewport";
-import { useAppDispatch, useAppSelector } from "@/shared/lib";
+import { setZoomScale } from "@/entities/viewport";
+import {
+	MAX_ZOOM,
+	MIN_ZOOM,
+	useAppDispatch,
+	useAppSelector,
+	ZOOM_SENSITY,
+} from "@/shared/lib";
 
-export function useCanvasZoom(canvasRef: RefObject<HTMLCanvasElement | null>) {
+export function useCanvasZoom(containerRef: RefObject<HTMLDivElement | null>) {
 	const dispatch = useAppDispatch();
 	const { pixelSize } = useAppSelector((state) => state.canvas);
+	const { scale } = useAppSelector((state) => state.viewport);
 	useEffect(() => {
-		const canvasElement = canvasRef.current;
-		if (!canvasElement) return;
+		const divElement = containerRef.current;
+		if (!divElement) return;
 
 		const handleWheel = (event: WheelEvent) => {
 			event.preventDefault();
 			const zoomDirection = event.deltaY < 0 ? 1 : -1;
-			const newScale = zoomDirection / 100;
-			dispatch(updateZoomScale(newScale));
+			const newScale = Math.max(
+				MIN_ZOOM,
+				Math.min(MAX_ZOOM, scale + zoomDirection / ZOOM_SENSITY)
+			);
+			dispatch(setZoomScale(newScale));
 		};
 
-		canvasElement.addEventListener("wheel", handleWheel, {
+		divElement.addEventListener("wheel", handleWheel, {
 			passive: false,
 		});
 
 		return () => {
-			canvasElement.removeEventListener("wheel", handleWheel);
+			divElement.removeEventListener("wheel", handleWheel);
 		};
-	}, [canvasRef, dispatch, pixelSize]);
+	}, [containerRef, dispatch, pixelSize, scale]);
 }
