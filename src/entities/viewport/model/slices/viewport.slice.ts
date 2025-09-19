@@ -7,8 +7,8 @@ interface ViewportSlice {
 }
 
 const initialState: ViewportSlice = {
-	scale: 1,
-	offsets: { x: 0, y: 0 },
+	scale: 0.9,
+	offsets: { x: 50, y: 50 },
 	isPanning: false,
 };
 

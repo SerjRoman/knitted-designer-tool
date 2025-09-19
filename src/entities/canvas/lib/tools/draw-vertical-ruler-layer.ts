@@ -12,8 +12,6 @@ export function drawVerticalRulerLayer(
 	scale: number,
 	offsets: { x: number; y: number }
 ) {
-	context.resetTransform();
-
 	context.fillStyle = BACKGROUND_COLOR;
 
 	context.font = "16px sans-serif";
@@ -36,7 +34,6 @@ export function drawVerticalRulerLayer(
 		context.lineTo(offsets.x + RULER_SIZE - tickHeight, screenY);
 		context.stroke();
 
-		// Рисуем текст только для длинных делений
 		if (isMajorTick) {
 			context.fillText(String(i), offsets.x + RULER_SIZE / 3, screenY);
 		}

@@ -9,7 +9,10 @@ export const drawPixel = createAsyncThunk(
 			canvas: { backgroundColor },
 		} = getState() as AppStateSchema;
 		const {
-			editor: { currentColor, tool },
+			editor: {
+				currentColor,
+				toolState: { tool },
+			},
 		} = getState() as AppStateSchema;
 		const color = tool === "eraser" ? backgroundColor : currentColor;
 

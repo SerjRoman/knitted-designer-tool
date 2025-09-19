@@ -12,8 +12,6 @@ export function drawHorizontalRulerLayer(
 	scale: number,
 	offsets: { x: number; y: number }
 ) {
-	context.resetTransform();
-
 	context.fillStyle = BACKGROUND_COLOR;
 
 	context.font = "16px sans-serif";
@@ -35,7 +33,6 @@ export function drawHorizontalRulerLayer(
 		context.lineTo(screenX, offsets.y + RULER_SIZE - tickHeight);
 		context.stroke();
 
-		// Рисуем текст только для длинных делений
 		if (isMajorTick) {
 			context.fillText(String(i), screenX, offsets.y + RULER_SIZE / 3);
 		}

@@ -1,1 +1,1 @@
-export type { EditorTools } from "./tools";
+export type * from "./tools";

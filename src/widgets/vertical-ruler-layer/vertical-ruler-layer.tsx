@@ -11,15 +11,6 @@ export function VerticalRulerLayer() {
 
 	const handleDrawRuler = useCallback(
 		(context: CanvasRenderingContext2D) => {
-			if (offsets.x < 0) {
-				context.clearRect(
-					0,
-					0,
-					pixelSize * numberColumns + RULER_SIZE,
-					pixelSize * numberRows + RULER_SIZE
-				);
-				return;
-			}
 			context.imageSmoothingEnabled = false;
 			context.resetTransform();
 			context.clearRect(
@@ -28,8 +19,6 @@ export function VerticalRulerLayer() {
 				pixelSize * numberColumns + RULER_SIZE,
 				pixelSize * numberRows + RULER_SIZE
 			);
-			context.translate(offsets.x, offsets.y);
-			context.scale(scale, scale);
 			drawVerticalRulerLayer(
 				context,
 				numberRows,
@@ -45,12 +34,11 @@ export function VerticalRulerLayer() {
 			draw={handleDrawRuler}
 			style={{
 				position: "absolute",
-				top: RULER_SIZE,
-				left: 0,
 				zIndex: 0,
+				top: RULER_SIZE,
 			}}
-			width={pixelSize * numberColumns + RULER_SIZE}
-			height={pixelSize * numberRows + RULER_SIZE}
+			width={pixelSize * numberColumns}
+			height={pixelSize * numberRows}
 		/>
 	);
 }

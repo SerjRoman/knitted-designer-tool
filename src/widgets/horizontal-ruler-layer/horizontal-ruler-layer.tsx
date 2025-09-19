@@ -16,11 +16,10 @@ export function HorizontalRulerLayer() {
 			context.clearRect(
 				0,
 				0,
-				pixelSize * numberColumns + RULER_SIZE,
-				pixelSize * numberRows + RULER_SIZE
+				context.canvas.width,
+				context.canvas.height
 			);
-			context.translate(offsets.x, offsets.y);
-			context.scale(scale, scale);
+
 			drawHorizontalRulerLayer(
 				context,
 				numberColumns,
@@ -29,7 +28,7 @@ export function HorizontalRulerLayer() {
 				offsets
 			);
 		},
-		[numberColumns, numberRows, offsets, pixelSize, scale]
+		[numberColumns, offsets, pixelSize, scale]
 	);
 	return (
 		<Canvas

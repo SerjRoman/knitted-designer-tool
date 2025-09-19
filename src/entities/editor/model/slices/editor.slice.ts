@@ -1,14 +1,10 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { COLORS } from "@shared/lib";
-import type { EditorTools } from "../types";
-
-interface EditorState {
-	tool: EditorTools;
-	currentColor: string;
-}
+import { lineReducers, rectReducers, toolInitialStates } from "../tools";
+import type { EditorState, EditorTools } from "../types";
 
 const initialState: EditorState = {
-	tool: "brush",
+	toolState: { tool: "brush" },
 	currentColor: COLORS.black,
 };
 
@@ -17,12 +13,21 @@ export const editorSlice = createSlice({
 	name: "editor",
 	reducers: {
 		selectTool(state, { payload }: PayloadAction<EditorTools>) {
-			state.tool = payload;
+			state.toolState = toolInitialStates[payload];
 		},
 		setCurrentColor(state, { payload }: PayloadAction<string>) {
 			state.currentColor = payload;
 		},
+		...lineReducers,
+		...rectReducers,
 	},
 });
 
-export const { selectTool, setCurrentColor } = editorSlice.actions;
+export const {
+	selectTool,
+	setCurrentColor,
+	setLineStartPoint,
+	setRectStartPoint,
+	clearRectState,
+	clearLineStartPoint,
+} = editorSlice.actions;

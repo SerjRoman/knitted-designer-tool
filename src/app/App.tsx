@@ -2,11 +2,12 @@ import { useRef } from "react";
 import { CanvasLayer } from "@/widgets/canvas-layer";
 import { GridLayer } from "@/widgets/grid-layer";
 import { HorizontalRulerLayer } from "@/widgets/horizontal-ruler-layer";
+import { UILayer } from "@/widgets/ui-layer/ui-layer";
 import { VerticalRulerLayer } from "@/widgets/vertical-ruler-layer";
 import { usePanCanvas } from "@/features/pan-canvas";
 import { SelectColor } from "@/features/select-color";
-import { useCanvasZoom } from "@/features/zoom-canvas";
 import { SelectToolPanel } from "@/features/select-tool";
+import { useCanvasZoom } from "@/features/zoom-canvas";
 
 export function App() {
 	const containerRef = useRef<HTMLDivElement>(null);
@@ -30,6 +31,7 @@ export function App() {
 				<GridLayer />
 				<HorizontalRulerLayer />
 				<VerticalRulerLayer />
+				<UILayer />
 			</div>
 		</div>
 	);

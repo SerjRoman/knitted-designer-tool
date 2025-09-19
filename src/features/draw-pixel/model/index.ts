@@ -1,1 +1,1 @@
-export { drawPixel } from "./thunks";
+export { drawPixel, drawLine, drawRect } from "./thunks";

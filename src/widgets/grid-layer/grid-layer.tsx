@@ -24,12 +24,13 @@ export function GridLayer() {
 		},
 		[numberColumns, numberRows, pixelSize, scale, offsets]
 	);
+
 	return (
 		<Canvas
 			draw={handleDrawGrid}
 			style={{
 				position: "absolute",
-				zIndex: 2,
+				zIndex: 3,
 				pointerEvents: "none",
 				top: RULER_SIZE,
 				left: RULER_SIZE,
