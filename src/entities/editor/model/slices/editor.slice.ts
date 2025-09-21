@@ -1,6 +1,11 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { COLORS } from "@shared/lib";
-import { lineReducers, rectReducers, toolInitialStates } from "../tools";
+import {
+	lineReducers,
+	rectReducers,
+	selectReducers,
+	toolInitialStates,
+} from "../tools";
 import type { EditorState, EditorTools } from "../types";
 
 const initialState: EditorState = {
@@ -20,6 +25,7 @@ export const editorSlice = createSlice({
 		},
 		...lineReducers,
 		...rectReducers,
+		...selectReducers,
 	},
 });
 
@@ -30,4 +36,10 @@ export const {
 	setRectStartPoint,
 	clearRectState,
 	clearLineStartPoint,
+	setSelectStartPoint,
+	addSelectedPoint,
+	removeSelectedPoint,
+	clearSelectedPoints,
+	setSelectedPoints,
+	clearSelectStartPoint,
 } = editorSlice.actions;

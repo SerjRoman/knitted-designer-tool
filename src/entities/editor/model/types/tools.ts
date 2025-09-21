@@ -1,6 +1,12 @@
 import type { Point } from "@/shared/lib";
 
-export type EditorTools = "brush" | "line" | "rect" | "eraser" | "colorPicker";
+export type EditorTools =
+	| "brush"
+	| "line"
+	| "rect"
+	| "eraser"
+	| "colorPicker"
+	| "select";
 export interface BrushState {
 	tool: "brush";
 }
@@ -18,13 +24,19 @@ export interface EraserState {
 export interface ColorPickerState {
 	tool: "colorPicker";
 }
+export interface SelectState {
+	tool: "select";
+	selectedPoints: null | Point[];
+	startPoint: null | Point;
+}
 
 export type EditorToolState =
 	| BrushState
 	| LineState
 	| RectState
 	| EraserState
-	| ColorPickerState;
+	| ColorPickerState
+	| SelectState;
 
 export interface EditorState {
 	toolState: EditorToolState;

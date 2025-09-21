@@ -38,6 +38,12 @@ export function SelectToolPanel() {
 			>
 				Rect
 			</button>
+			<button
+				className={tool === "select" ? styles.active : undefined}
+				onClick={() => dispatch(selectTool("select"))}
+			>
+				Select
+			</button>
 		</div>
 	);
 }

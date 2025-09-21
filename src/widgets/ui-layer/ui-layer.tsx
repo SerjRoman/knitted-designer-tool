@@ -1,20 +1,33 @@
 import { useCallback, useState, type MouseEvent } from "react";
-import { drawLine, drawPixel, drawRect } from "@/features/draw-pixel";
+import {
+	drawLine,
+	drawPixel,
+	drawRect,
+	drawSelect,
+} from "@/features/draw-pixel";
 import { pickColor } from "@/features/select-tool";
 import {
 	drawCrosshair,
 	drawPreviewLine,
 	drawPreviewRect,
+	drawPreviewSelect,
+	drawSelectedPoints,
 } from "@/entities/canvas";
 import {
+	addSelectedPoint,
+	clearSelectedPoints,
 	isPreviewTool,
+	removeSelectedPoint,
 	setLineStartPoint,
 	setRectStartPoint,
+	setSelectStartPoint,
 } from "@/entities/editor";
 import {
+	isPointInPoints,
 	RULER_SIZE,
 	useAppDispatch,
 	useAppSelector,
+	useDebounce,
 	usePointFromEvent,
 } from "@/shared/lib";
 import { Canvas } from "@/shared/ui";
@@ -22,7 +35,6 @@ import { Canvas } from "@/shared/ui";
 export function UILayer() {
 	const [isDrawing, setIsDrawing] = useState(false);
 	const dispatch = useAppDispatch();
-
 	const { point, updatePointFromEvent } = usePointFromEvent();
 
 	const { pixelSize } = useAppSelector((state) => state.canvas);
@@ -30,6 +42,9 @@ export function UILayer() {
 		(state) => state.viewport
 	);
 	const { toolState } = useAppSelector((state) => state.editor);
+	const selectedPoints = useDebounce(
+		toolState.tool === "select" ? toolState.selectedPoints : null
+	);
 
 	const handleDraw = useCallback(
 		(context: CanvasRenderingContext2D) => {
@@ -41,7 +56,13 @@ export function UILayer() {
 
 			context.translate(offsets.x, offsets.y);
 			context.scale(scale, scale);
-
+			if ("selectedPoints" in toolState && toolState.selectedPoints) {
+				drawSelectedPoints(
+					context,
+					toolState.selectedPoints,
+					pixelSize
+				);
+			}
 			if (!point || isPanning) return;
 
 			if (
@@ -59,6 +80,13 @@ export function UILayer() {
 					);
 				} else if (toolState.tool === "rect") {
 					drawPreviewRect(
+						context,
+						toolState.startPoint,
+						point,
+						pixelSize
+					);
+				} else if (toolState.tool === "select") {
+					drawPreviewSelect(
 						context,
 						toolState.startPoint,
 						point,
@@ -85,7 +113,7 @@ export function UILayer() {
 		}
 	};
 
-	function handleMouseDown() {
+	function handleMouseDown(event: MouseEvent<HTMLCanvasElement>) {
 		if (isPanning || !point) return;
 		setIsDrawing(true);
 
@@ -93,19 +121,42 @@ export function UILayer() {
 			dispatch(setLineStartPoint(point));
 		} else if (toolState.tool === "rect") {
 			dispatch(setRectStartPoint(point));
+		} else if (toolState.tool === "select") {
+			if (event.shiftKey) {
+				let isPointInSelected = false;
+				if (toolState.selectedPoints) {
+					isPointInSelected = isPointInPoints(
+						point,
+						toolState.selectedPoints
+					);
+				}
+
+				if (isPointInSelected) {
+					dispatch(removeSelectedPoint(point));
+				} else {
+					dispatch(addSelectedPoint(point));
+				}
+			} else {
+				if (!toolState.startPoint) {
+					dispatch(clearSelectedPoints());
+					dispatch(setSelectStartPoint(point));
+				}
+			}
 		} else {
 			handleDrawing();
 		}
 	}
 
 	function handleMouseUp() {
-		if (!isDrawing) return; // Защита от лишних срабатываний
+		if (!isDrawing) return;
 
 		if (isPreviewTool(toolState.tool) && point) {
 			if (toolState.tool === "line") {
 				dispatch(drawLine(point));
 			} else if (toolState.tool === "rect") {
 				dispatch(drawRect(point));
+			} else if (toolState.tool === "select") {
+				dispatch(drawSelect(point));
 			}
 		}
 
@@ -114,8 +165,23 @@ export function UILayer() {
 
 	function handleMouseMove(event: MouseEvent<HTMLCanvasElement>) {
 		updatePointFromEvent(event);
-		if (isDrawing && !isPreviewTool(toolState.tool) && point) {
-			handleDrawing();
+		if (isDrawing && point) {
+			if (!isPreviewTool(toolState.tool)) {
+				handleDrawing();
+				return;
+			}
+			if (toolState.tool === "select" && event.shiftKey) {
+				if (!selectedPoints) return;
+				const isPointInSelected = isPointInPoints(
+					point,
+					selectedPoints
+				);
+				if (isPointInSelected) {
+					dispatch(removeSelectedPoint(point));
+				} else {
+					dispatch(addSelectedPoint(point));
+				}
+			}
 		}
 	}
 
