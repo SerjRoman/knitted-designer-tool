@@ -8,3 +8,4 @@ export { drawPreviewLine } from "./draw-preview-line";
 export { drawPreviewRect } from "./draw-preview-rect";
 export { drawPreviewSelect } from "./draw-preview-select";
 export { drawSelectedPoints } from "./draw-selected-points";
+export { drawClipboardPreview } from "./draw-clipboard-preview";

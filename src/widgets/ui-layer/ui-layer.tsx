@@ -1,4 +1,5 @@
 import { useCallback, useState, type MouseEvent } from "react";
+import { pasteFromClipboard } from "@/features/clipboard";
 import {
 	drawLine,
 	drawPixel,
@@ -7,6 +8,7 @@ import {
 } from "@/features/draw-pixel";
 import { pickColor } from "@/features/select-tool";
 import {
+	drawClipboardPreview,
 	drawCrosshair,
 	drawPreviewLine,
 	drawPreviewRect,
@@ -41,9 +43,11 @@ export function UILayer() {
 	const { scale, offsets, isPanning } = useAppSelector(
 		(state) => state.viewport
 	);
-	const { toolState } = useAppSelector((state) => state.editor);
-	const selectedPoints = useDebounce(
-		toolState.tool === "select" ? toolState.selectedPoints : null
+	const { toolState, selectedPoints, clipboard } = useAppSelector(
+		(state) => state.editor
+	);
+	const debouncedSelectedPoints = useDebounce(
+		toolState.tool === "select" ? selectedPoints : null
 	);
 
 	const handleDraw = useCallback(
@@ -56,15 +60,23 @@ export function UILayer() {
 
 			context.translate(offsets.x, offsets.y);
 			context.scale(scale, scale);
-			if ("selectedPoints" in toolState && toolState.selectedPoints) {
-				drawSelectedPoints(
+			if (selectedPoints) {
+				drawSelectedPoints(context, selectedPoints, pixelSize);
+			}
+
+			if (!point || isPanning) return;
+
+			if (clipboard.points && clipboard.origin) {
+				drawClipboardPreview(
 					context,
-					toolState.selectedPoints,
+					clipboard.points,
+					{
+						x: point.x - clipboard.origin.x,
+						y: point.y - clipboard.origin.y,
+					},
 					pixelSize
 				);
 			}
-			if (!point || isPanning) return;
-
 			if (
 				isDrawing &&
 				isPreviewTool(toolState.tool) &&
@@ -97,7 +109,17 @@ export function UILayer() {
 				drawCrosshair(context, point, pixelSize);
 			}
 		},
-		[offsets, scale, point, isPanning, isDrawing, toolState, pixelSize]
+		[
+			offsets,
+			scale,
+			selectedPoints,
+			point,
+			isPanning,
+			isDrawing,
+			toolState,
+			pixelSize,
+			clipboard,
+		]
 	);
 
 	const handleDrawing = () => {
@@ -124,11 +146,8 @@ export function UILayer() {
 		} else if (toolState.tool === "select") {
 			if (event.shiftKey) {
 				let isPointInSelected = false;
-				if (toolState.selectedPoints) {
-					isPointInSelected = isPointInPoints(
-						point,
-						toolState.selectedPoints
-					);
+				if (selectedPoints) {
+					isPointInSelected = isPointInPoints(point, selectedPoints);
 				}
 
 				if (isPointInSelected) {
@@ -142,6 +161,8 @@ export function UILayer() {
 					dispatch(setSelectStartPoint(point));
 				}
 			}
+		} else if (toolState.tool === "paste") {
+			dispatch(pasteFromClipboard(point));
 		} else {
 			handleDrawing();
 		}
@@ -171,10 +192,10 @@ export function UILayer() {
 				return;
 			}
 			if (toolState.tool === "select" && event.shiftKey) {
-				if (!selectedPoints) return;
+				if (!debouncedSelectedPoints) return;
 				const isPointInSelected = isPointInPoints(
 					point,
-					selectedPoints
+					debouncedSelectedPoints
 				);
 				if (isPointInSelected) {
 					dispatch(removeSelectedPoint(point));

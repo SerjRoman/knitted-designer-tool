@@ -1,11 +1,49 @@
-import { selectTool } from "@/entities/editor";
+import { useEffect } from "react";
+import { copySelection, cutSelection } from "@/features/clipboard";
+import { clearClipboard, selectTool } from "@/entities/editor";
 import { useAppDispatch, useAppSelector } from "@/shared/lib";
 import styles from "./select-tool-panel.module.css";
 export function SelectToolPanel() {
 	const dispatch = useAppDispatch();
 	const {
 		toolState: { tool },
+		clipboard,
+		selectedPoints,
 	} = useAppSelector((state) => state.editor);
+	useEffect(() => {
+		const handleKeyDown = (e: KeyboardEvent) => {
+			if (e.ctrlKey || e.metaKey) {
+				switch (e.key.toLowerCase()) {
+					case "c":
+						if (selectedPoints && selectedPoints.length > 0) {
+							e.preventDefault();
+							dispatch(copySelection());
+						}
+						break;
+					case "x":
+						if (selectedPoints && selectedPoints.length > 0) {
+							e.preventDefault();
+							dispatch(cutSelection());
+						}
+						break;
+					case "v":
+						if (clipboard) {
+							e.preventDefault();
+							dispatch(selectTool("paste"));
+						}
+						break;
+				}
+			}
+			if (e.key === "Escape") {
+				if (tool === "paste") {
+					dispatch(selectTool("select"));
+				}
+			}
+		};
+
+		window.addEventListener("keydown", handleKeyDown);
+		return () => window.removeEventListener("keydown", handleKeyDown);
+	}, [dispatch, clipboard, selectedPoints, tool]);
 	return (
 		<div>
 			<button
@@ -40,9 +78,37 @@ export function SelectToolPanel() {
 			</button>
 			<button
 				className={tool === "select" ? styles.active : undefined}
-				onClick={() => dispatch(selectTool("select"))}
+				onClick={() => {
+					dispatch(selectTool("select"));
+					dispatch(clearClipboard());
+				}}
 			>
 				Select
+			</button>
+			<button
+				className={tool === "copy" ? styles.active : undefined}
+				onClick={() => {
+					dispatch(selectTool("copy"));
+					dispatch(copySelection());
+				}}
+			>
+				Copy
+			</button>
+			<button
+				className={tool === "cut" ? styles.active : undefined}
+				onClick={() => {
+					dispatch(selectTool("cut"));
+					dispatch(cutSelection());
+				}}
+			>
+				Cut
+			</button>
+			<button
+				className={tool === "paste" ? styles.active : undefined}
+				onClick={() => dispatch(selectTool("paste"))}
+				disabled={clipboard.points ? false : true}
+			>
+				Paste
 			</button>
 		</div>
 	);

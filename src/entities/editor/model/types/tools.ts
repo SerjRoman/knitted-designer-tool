@@ -1,4 +1,4 @@
-import type { Point } from "@/shared/lib";
+import type { Point, PointWithColor } from "@/shared/lib";
 
 export type EditorTools =
 	| "brush"
@@ -6,7 +6,10 @@ export type EditorTools =
 	| "rect"
 	| "eraser"
 	| "colorPicker"
-	| "select";
+	| "select"
+	| "copy"
+	| "cut"
+	| "paste";
 export interface BrushState {
 	tool: "brush";
 }
@@ -26,8 +29,16 @@ export interface ColorPickerState {
 }
 export interface SelectState {
 	tool: "select";
-	selectedPoints: null | Point[];
 	startPoint: null | Point;
+}
+export interface CutState {
+	tool: "cut";
+}
+export interface CopyState {
+	tool: "copy";
+}
+export interface PasteState {
+	tool: "paste";
 }
 
 export type EditorToolState =
@@ -36,9 +47,17 @@ export type EditorToolState =
 	| RectState
 	| EraserState
 	| ColorPickerState
-	| SelectState;
+	| SelectState
+	| CutState
+	| CopyState
+	| PasteState;
 
 export interface EditorState {
 	toolState: EditorToolState;
 	currentColor: string;
+	selectedPoints: null | Point[];
+	clipboard: {
+		points: null | PointWithColor[];
+		origin: null | Point;
+	};
 }

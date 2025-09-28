@@ -1,10 +1,10 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { setPixel } from "@/entities/canvas";
 import type { AppStateSchema, Point } from "@/shared/lib";
+import { drawPixelWithColor } from "./draw-pixel-with-color";
 
 export const drawPixel = createAsyncThunk(
 	"canvas/draw-pixel",
-	(point: Point, { getState, dispatch }) => {
+	async (point: Point, { getState, dispatch }) => {
 		const {
 			canvas: { backgroundColor },
 		} = getState() as AppStateSchema;
@@ -16,6 +16,6 @@ export const drawPixel = createAsyncThunk(
 		} = getState() as AppStateSchema;
 		const color = tool === "eraser" ? backgroundColor : currentColor;
 
-		dispatch(setPixel({ point, color }));
+		await dispatch(drawPixelWithColor({ x: point.x, y: point.y, color }));
 	}
 );

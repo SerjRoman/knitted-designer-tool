@@ -15,7 +15,7 @@ function setSelectedPoints(
 	{ payload }: PayloadAction<Point[]>
 ) {
 	if (state.toolState.tool === "select") {
-		state.toolState.selectedPoints = payload;
+		state.selectedPoints = payload;
 	}
 }
 function addSelectedPoint(
@@ -23,14 +23,14 @@ function addSelectedPoint(
 	{ payload }: PayloadAction<Point>
 ) {
 	if (state.toolState.tool === "select") {
-		if (!state.toolState.selectedPoints) {
-			state.toolState.selectedPoints = [];
+		if (!state.selectedPoints) {
+			state.selectedPoints = [];
 		}
-		const isPointInSelected = state.toolState.selectedPoints.find(
+		const isPointInSelected = state.selectedPoints.find(
 			(p) => p.x === payload.x && p.y === payload.y
 		);
 		if (isPointInSelected) return;
-		state.toolState.selectedPoints.push(payload);
+		state.selectedPoints.push(payload);
 	}
 }
 
@@ -38,8 +38,8 @@ function removeSelectedPoint(
 	state: EditorState,
 	{ payload }: PayloadAction<Point>
 ) {
-	if (state.toolState.tool === "select" && state.toolState.selectedPoints) {
-		state.toolState.selectedPoints = state.toolState.selectedPoints.filter(
+	if (state.toolState.tool === "select" && state.selectedPoints) {
+		state.selectedPoints = state.selectedPoints.filter(
 			(point) => {
 				const isX = point.x === payload.x;
 				const isY = point.y === payload.y;
@@ -53,16 +53,11 @@ function clearSelectStartPoint(state: EditorState) {
 		state.toolState.startPoint = null;
 	}
 }
-function clearSelectedPoints(state: EditorState) {
-	if (state.toolState.tool === "select") {
-		state.toolState.selectedPoints = null;
-	}
-}
+
 
 export const selectReducers = {
 	addSelectedPoint,
 	removeSelectedPoint,
-	clearSelectedPoints,
 	setSelectStartPoint,
 	setSelectedPoints,
 	clearSelectStartPoint,

@@ -1,5 +1,5 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import { COLORS } from "@shared/lib";
+import { COLORS, type Point, type PointWithColor } from "@shared/lib";
 import {
 	lineReducers,
 	rectReducers,
@@ -11,6 +11,11 @@ import type { EditorState, EditorTools } from "../types";
 const initialState: EditorState = {
 	toolState: { tool: "brush" },
 	currentColor: COLORS.black,
+	selectedPoints: null,
+	clipboard: {
+		points: null,
+		origin: null,
+	},
 };
 
 export const editorSlice = createSlice({
@@ -22,6 +27,22 @@ export const editorSlice = createSlice({
 		},
 		setCurrentColor(state, { payload }: PayloadAction<string>) {
 			state.currentColor = payload;
+		},
+		setClipboardPoints(
+			state,
+			{ payload }: PayloadAction<PointWithColor[]>
+		) {
+			state.clipboard.points = payload;
+		},
+		setClipboardOrigin(state, { payload }: PayloadAction<Point>) {
+			state.clipboard.origin = payload;
+		},
+		clearSelectedPoints(state: EditorState) {
+			state.selectedPoints = null;
+		},
+		clearClipboard(state: EditorState) {
+			state.clipboard.points = null;
+			state.clipboard.origin = null;
 		},
 		...lineReducers,
 		...rectReducers,
@@ -42,4 +63,7 @@ export const {
 	clearSelectedPoints,
 	setSelectedPoints,
 	clearSelectStartPoint,
+	setClipboardPoints,
+	setClipboardOrigin,
+	clearClipboard,
 } = editorSlice.actions;

@@ -7,17 +7,22 @@ import type {
 	EditorToolState,
 	EditorTools,
 	SelectState,
+	CopyState,
+	PasteState,
+	CutState,
 } from "../types";
 
 const brushInitialState: BrushState = { tool: "brush" };
 const eraserInitialState: EraserState = { tool: "eraser" };
 const colorPickerInitialState: ColorPickerState = { tool: "colorPicker" };
+const copyInitialState: CopyState = { tool: "copy" };
+const cutInitialState: CutState = { tool: "cut" };
+const pasteInitialState: PasteState = { tool: "paste" };
 const lineInitialState: LineState = { tool: "line", startPoint: null };
 const rectInitialState: RectState = { tool: "rect", startPoint: null };
 const selectInitialState: SelectState = {
 	tool: "select",
 	startPoint: null,
-	selectedPoints: null,
 };
 
 export const toolInitialStates: Record<EditorTools, EditorToolState> = {
@@ -26,5 +31,8 @@ export const toolInitialStates: Record<EditorTools, EditorToolState> = {
 	rect: rectInitialState,
 	eraser: eraserInitialState,
 	colorPicker: colorPickerInitialState,
-    select: selectInitialState
+	select: selectInitialState,
+	copy: copyInitialState,
+	cut: cutInitialState,
+	paste: pasteInitialState,
 };
