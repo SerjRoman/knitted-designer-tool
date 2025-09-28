@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { drawPixelWithColor } from "@/features/draw-pixel";
+import { drawPixelWithColor } from "@/features/draw-with-tool";
 import { clearClipboard, selectTool } from "@/entities/editor";
 import type { AppStateSchema, Point } from "@/shared/lib";
 
