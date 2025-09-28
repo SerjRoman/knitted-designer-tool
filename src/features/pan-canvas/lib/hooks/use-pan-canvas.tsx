@@ -20,15 +20,12 @@ export function usePanCanvas(ref: RefObject<HTMLDivElement | null>) {
 		}
 		function handleMouseMove(event: MouseEvent) {
 			if (event.altKey && isPanning) {
-				// обновляем pan относительно прошлого значения
 				dispatch(
 					setOffset({
 						x: offsets.x + event.movementX,
 						y: offsets.y + event.movementY,
 					})
 				);
-
-				// обновляем lastPos для следующего кадра
 			}
 		}
 		containerElement.addEventListener("mousedown", handleMouseDown);
