@@ -6,6 +6,7 @@ import {
 	createSizesFrom,
 	type Grid,
 	type Point,
+	type PointWithColor,
 } from "@/shared/lib";
 import {
 	INITIAL_COLUMNS,
@@ -24,7 +25,7 @@ interface CanvasSlice {
 }
 
 const initialState: CanvasSlice = {
-	grid: createEmptyGrid(INITIAL_ROWS, INITIAL_COLUMNS, BACKGROUND_COLOR),
+	grid: createEmptyGrid(INITIAL_COLUMNS, INITIAL_ROWS, BACKGROUND_COLOR),
 	backgroundColor: BACKGROUND_COLOR,
 	pixelSize: INITIAL_PIXEL_SIZE,
 	numberColumns: INITIAL_COLUMNS,
@@ -53,14 +54,48 @@ export const canvsaSlice = createSlice({
 				state.grid[y][x] = color;
 			}
 		},
+		setPixels(
+			state,
+			{
+				payload,
+			}: PayloadAction<{
+				points: Point[];
+				color: string;
+			}>
+		) {
+			payload.points.forEach((point) => {
+				const { x, y } = point;
+				if (state.grid[y] && state.grid[y][x] !== undefined) {
+					state.grid[y][x] = payload.color;
+				}
+			});
+		},
+		setPixelsWithColor(
+			state,
+			{
+				payload,
+			}: PayloadAction<{
+				points: PointWithColor[];
+			}>
+		) {
+			payload.points.forEach((point) => {
+				const { x, y } = point;
+				if (state.grid[y] && state.grid[y][x] !== undefined) {
+					state.grid[y][x] = point.color;
+				}
+			});
+		},
 		setPixelSize(state, { payload }: PayloadAction<number>) {
 			state.pixelSize = payload;
+			state.rowHeights = createSizesFrom(state.numberRows, payload);
+			state.columnWidths = createSizesFrom(state.numberColumns, payload);
 		},
 		addRow(state) {
 			state.numberRows++;
 			state.grid.push(
 				createRow(state.backgroundColor, state.numberColumns)
 			);
+			state.rowHeights.push(state.pixelSize);
 		},
 		addColumn(state) {
 			state.numberColumns++;
@@ -68,16 +103,19 @@ export const canvsaSlice = createSlice({
 				...row,
 				state.backgroundColor,
 			]);
+			state.columnWidths.push(state.pixelSize);
 		},
 		removeRow(state) {
 			state.numberRows--;
 			state.grid.pop();
+			state.rowHeights.pop();
 		},
 		removeColumn(state) {
 			state.numberColumns--;
 			state.grid.map((row) => {
 				return row.pop();
 			});
+			state.columnWidths.pop();
 		},
 		updateGridSizes(state) {
 			state.columnWidths = createSizesFrom(
@@ -101,4 +139,6 @@ export const {
 	addColumn,
 	removeColumn,
 	updateGridSizes,
+	setPixels,
+	setPixelsWithColor,
 } = canvsaSlice.actions;

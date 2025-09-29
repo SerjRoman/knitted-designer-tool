@@ -4,21 +4,31 @@ export function drawClipboardPreview(
 	context: CanvasRenderingContext2D,
 	clipboardPoints: PointWithColor[],
 	origin: Point,
-	pixelSize: number
+	pixelSize: number,
+	numberColumns: number,
+	numberRows: number
 ) {
 	context.globalAlpha = 0.75;
+
 	for (const point of clipboardPoints) {
-		context.fillStyle = point.color;
-		const rectX = (point.x + origin.x) * pixelSize;
-		const rectY = (point.y + origin.y) * pixelSize;
+		const worldX = point.x + origin.x;
+		const worldY = point.y + origin.y;
+
 		if (
-			rectX >= context.canvas.width ||
-			rectY >= context.canvas.height ||
-			rectX < 0 ||
-			rectY < 0
-		)
+			worldX >= numberColumns ||
+			worldY >= numberRows ||
+			worldX < 0 ||
+			worldY < 0
+		) {
 			continue;
+		}
+
+		context.fillStyle = point.color;
+		const rectX = worldX * pixelSize;
+		const rectY = worldY * pixelSize;
+		
 		context.fillRect(rectX, rectY, pixelSize, pixelSize);
 	}
+
 	context.globalAlpha = 1.0;
 }

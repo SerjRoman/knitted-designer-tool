@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { setPixel } from "@/entities/canvas";
+import { setPixels } from "@/entities/canvas";
 import type { AppStateSchema } from "@/shared/lib";
 import { copySelection } from "./copy-selection";
 
@@ -16,8 +16,6 @@ export const cutSelection = createAsyncThunk(
 		const pointsToClear = [...selectedPoints];
 		await dispatch(copySelection());
 
-		pointsToClear.forEach((point) => {
-			dispatch(setPixel({ point, color: backgroundColor }));
-		});
+		dispatch(setPixels({ points: pointsToClear, color: backgroundColor }));
 	}
 );

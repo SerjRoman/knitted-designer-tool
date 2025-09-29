@@ -9,7 +9,9 @@ interface ClipboardPreview {
 
 export function useClipboardPreview(): ClipboardPreview {
 	const { clipboard } = useAppSelector((state) => state.editor);
-	const { pixelSize } = useAppSelector((state) => state.canvas);
+	const { pixelSize, numberColumns, numberRows } = useAppSelector(
+		(state) => state.canvas
+	);
 
 	const draw = useCallback(
 		(context: CanvasRenderingContext2D, point: Point) => {
@@ -22,9 +24,16 @@ export function useClipboardPreview(): ClipboardPreview {
 				y: point.y - clipboard.origin.y,
 			};
 
-			drawClipboardPreview(context, clipboard.points, offset, pixelSize);
+			drawClipboardPreview(
+				context,
+				clipboard.points,
+				offset,
+				pixelSize,
+				numberColumns,
+				numberRows
+			);
 		},
-		[clipboard.points, clipboard.origin, pixelSize]
+		[clipboard, pixelSize, numberColumns, numberRows]
 	);
 
 	if (!clipboard.points) {

@@ -1,6 +1,11 @@
 import { useCallback } from "react";
 import { drawGridLayer } from "@/entities/canvas";
-import { RULER_SIZE, useAppSelector } from "@/shared/lib";
+import {
+	CANVAS_HEIGHT,
+	CANVAS_WIDTH,
+	RULER_SIZE,
+	useAppSelector,
+} from "@/shared/lib";
 import { Canvas } from "@/shared/ui";
 
 export function GridLayer() {
@@ -10,17 +15,16 @@ export function GridLayer() {
 	const { scale, offsets } = useAppSelector((state) => state.viewport);
 	const handleDrawGrid = useCallback(
 		(context: CanvasRenderingContext2D) => {
-			context.imageSmoothingEnabled = false;
 			context.resetTransform();
 			context.clearRect(
 				0,
 				0,
-				pixelSize * numberColumns + RULER_SIZE,
-				pixelSize * numberRows + RULER_SIZE
+				context.canvas.width,
+				context.canvas.height
 			);
 			context.translate(offsets.x, offsets.y);
 			context.scale(scale, scale);
-			drawGridLayer(context, pixelSize, numberColumns, numberRows);
+			drawGridLayer(context, pixelSize, numberColumns, numberRows, scale);
 		},
 		[numberColumns, numberRows, pixelSize, scale, offsets]
 	);
@@ -35,8 +39,8 @@ export function GridLayer() {
 				top: RULER_SIZE,
 				left: RULER_SIZE,
 			}}
-			width={pixelSize * numberColumns}
-			height={pixelSize * numberRows}
+			width={CANVAS_WIDTH}
+			height={CANVAS_HEIGHT}
 		/>
 	);
 }

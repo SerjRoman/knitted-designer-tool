@@ -1,12 +1,15 @@
 import { useCallback } from "react";
 import { drawVerticalRulerLayer } from "@/entities/canvas";
-import { RULER_SIZE, useAppSelector } from "@/shared/lib";
+import {
+	CANVAS_HEIGHT,
+	CANVAS_WIDTH,
+	RULER_SIZE,
+	useAppSelector,
+} from "@/shared/lib";
 import { Canvas } from "@/shared/ui";
 
 export function VerticalRulerLayer() {
-	const { numberColumns, numberRows, pixelSize } = useAppSelector(
-		(state) => state.canvas
-	);
+	const { numberRows, pixelSize } = useAppSelector((state) => state.canvas);
 	const { scale, offsets } = useAppSelector((state) => state.viewport);
 
 	const handleDrawRuler = useCallback(
@@ -16,8 +19,8 @@ export function VerticalRulerLayer() {
 			context.clearRect(
 				0,
 				0,
-				pixelSize * numberColumns + RULER_SIZE,
-				pixelSize * numberRows + RULER_SIZE
+				context.canvas.width,
+				context.canvas.height
 			);
 			drawVerticalRulerLayer(
 				context,
@@ -27,7 +30,7 @@ export function VerticalRulerLayer() {
 				offsets
 			);
 		},
-		[numberColumns, numberRows, offsets, pixelSize, scale]
+		[numberRows, offsets, pixelSize, scale]
 	);
 	return (
 		<Canvas
@@ -37,8 +40,8 @@ export function VerticalRulerLayer() {
 				zIndex: 0,
 				top: RULER_SIZE,
 			}}
-			width={pixelSize * numberColumns}
-			height={pixelSize * numberRows}
+			width={CANVAS_WIDTH}
+			height={CANVAS_HEIGHT}
 		/>
 	);
 }

@@ -8,4 +8,5 @@ export const COLORS = {
 };
 export const BACKGROUND_COLOR = COLORS.white;
 export const RULER_TEXT_COLOR = COLORS.red;
-export const RULER_LINE_COLOR = COLORS.blue
+export const RULER_LINE_COLOR = COLORS.blue;
+export const GRID_COLOR = COLORS.black;

@@ -9,7 +9,13 @@ import {
 	useSelectTool,
 } from "@/features/draw-with-tool";
 import { drawCrosshair, drawSelectedPoints } from "@/entities/canvas";
-import { RULER_SIZE, useAppSelector, usePointFromEvent } from "@/shared/lib";
+import {
+	CANVAS_HEIGHT,
+	CANVAS_WIDTH,
+	RULER_SIZE,
+	useAppSelector,
+	usePointFromEvent,
+} from "@/shared/lib";
 import { Canvas } from "@/shared/ui";
 
 export function UILayer() {
@@ -119,8 +125,8 @@ export function UILayer() {
 				top: RULER_SIZE,
 				left: RULER_SIZE,
 			}}
-			width={800}
-			height={800}
+			width={CANVAS_WIDTH}
+			height={CANVAS_HEIGHT}
 			onMouseDown={handleMouseDown}
 			onMouseUp={handleMouseUp}
 			onMouseMove={handleMouseMove}

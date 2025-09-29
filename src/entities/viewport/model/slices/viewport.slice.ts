@@ -7,7 +7,7 @@ interface ViewportSlice {
 }
 
 const initialState: ViewportSlice = {
-	scale: 0.9,
+	scale: 1,
 	offsets: { x: 50, y: 50 },
 	isPanning: false,
 };
@@ -25,10 +25,7 @@ export const viewportSlice = createSlice({
 		setZoomScale(state, { payload }: PayloadAction<number>) {
 			state.scale = payload;
 		},
-		setOffset(
-			state,
-			{ payload }: PayloadAction<{ x: number; y: number }>
-		) {
+		setOffset(state, { payload }: PayloadAction<{ x: number; y: number }>) {
 			state.offsets.x = payload.x;
 			state.offsets.y = payload.y;
 		},

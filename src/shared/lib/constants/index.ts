@@ -1,3 +1,3 @@
 export * from "./colors";
 export * from "./sizes";
-export * from "./grid";
+export * from "./canvas";

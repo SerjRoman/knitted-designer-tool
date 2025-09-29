@@ -11,7 +11,6 @@ export function usePointFromEvent() {
 		const { offsetX, offsetY } = event.nativeEvent;
 		const gridX = Math.floor((offsetX - offsets.x) / pixelSize / scale);
 		const gridY = Math.floor((offsetY - offsets.y) / pixelSize / scale);
-
 		if (grid[gridY]?.[gridX] !== undefined) {
 			setPoint({ x: gridX, y: gridY });
 		} else {

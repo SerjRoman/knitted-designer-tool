@@ -15,7 +15,6 @@ export function drawPixelLayer(
 			const color = grid[y][x];
 			if (color !== BACKGROUND_COLOR) {
 				context.fillStyle = color;
-
 				context.fillRect(
 					columnOffsets[x],
 					rowOffsets[y],

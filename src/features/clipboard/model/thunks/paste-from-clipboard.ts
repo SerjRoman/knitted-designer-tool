@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { drawPixelWithColor } from "@/features/draw-with-tool";
+import { setPixelsWithColor } from "@/entities/canvas";
 import { clearClipboard, selectTool } from "@/entities/editor";
 import type { AppStateSchema, Point } from "@/shared/lib";
 
@@ -20,15 +20,12 @@ export const pasteFromClipboard = createAsyncThunk(
 			x: offsetPoint.x - clipboard.origin.x,
 			y: offsetPoint.y - clipboard.origin.y,
 		};
-		clipboard.points.forEach((point) => {
-			dispatch(
-				drawPixelWithColor({
-					x: point.x + origin.x,
-					y: point.y + origin.y,
-					color: point.color,
-				})
-			);
-		});
+		const pointsToFill = clipboard.points.map((point) => ({
+			x: point.x + origin.x,
+			y: point.y + origin.y,
+			color: point.color,
+		}));
+		dispatch(setPixelsWithColor({ points: pointsToFill }));
 		dispatch(clearClipboard());
 		dispatch(selectTool("select"));
 	}

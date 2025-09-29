@@ -87,18 +87,20 @@ export function SelectToolPanel() {
 			</button>
 			<button
 				className={tool === "copy" ? styles.active : undefined}
-				onClick={() => {
+				onClick={async () => {
 					dispatch(selectTool("copy"));
-					dispatch(copySelection());
+					await dispatch(copySelection());
+					selectTool("paste");
 				}}
 			>
 				Copy
 			</button>
 			<button
 				className={tool === "cut" ? styles.active : undefined}
-				onClick={() => {
+				onClick={async () => {
 					dispatch(selectTool("cut"));
-					dispatch(cutSelection());
+					await dispatch(cutSelection());
+					selectTool("paste");
 				}}
 			>
 				Cut

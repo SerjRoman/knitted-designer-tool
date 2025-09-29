@@ -4,6 +4,7 @@ import {
 	RULER_SIZE,
 	RULER_LINE_COLOR,
 } from "@/shared/lib";
+import { getMajorTickMultiplier } from "./get-major-tick-multiplier";
 
 export function drawVerticalRulerLayer(
 	context: CanvasRenderingContext2D,
@@ -22,11 +23,12 @@ export function drawVerticalRulerLayer(
 
 	const tickSpacing = pixelSize * scale;
 	const step = 1;
+	const majorTickMultiplier = getMajorTickMultiplier(tickSpacing);
 	for (let i = 0; i <= numberRows; i += step) {
 		const screenY = offsets.y + i * tickSpacing;
 		if (screenY >= pixelSize * numberRows || offsets.x < 0) continue;
 
-		const isMajorTick = i % (step * 5) === 0;
+		const isMajorTick = i % (step * majorTickMultiplier) === 0;
 		const tickHeight = isMajorTick ? RULER_SIZE / 2 : RULER_SIZE / 4;
 
 		context.beginPath();
@@ -35,7 +37,8 @@ export function drawVerticalRulerLayer(
 		context.stroke();
 
 		if (isMajorTick) {
-			context.fillText(String(i), offsets.x + RULER_SIZE / 3, screenY);
+			const gap = i.toString().length >= 3 ? 5 : 10;
+			context.fillText(String(i), offsets.x + gap, screenY);
 		}
 	}
 }

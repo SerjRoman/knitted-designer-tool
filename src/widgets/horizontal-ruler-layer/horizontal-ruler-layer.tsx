@@ -1,10 +1,15 @@
 import { useCallback } from "react";
 import { drawHorizontalRulerLayer } from "@/entities/canvas";
-import { RULER_SIZE, useAppSelector } from "@/shared/lib";
+import {
+	CANVAS_HEIGHT,
+	CANVAS_WIDTH,
+	RULER_SIZE,
+	useAppSelector,
+} from "@/shared/lib";
 import { Canvas } from "@/shared/ui";
 
 export function HorizontalRulerLayer() {
-	const { numberColumns, numberRows, pixelSize } = useAppSelector(
+	const { numberColumns, pixelSize } = useAppSelector(
 		(state) => state.canvas
 	);
 	const { scale, offsets } = useAppSelector((state) => state.viewport);
@@ -39,8 +44,8 @@ export function HorizontalRulerLayer() {
 				left: RULER_SIZE,
 				zIndex: 0,
 			}}
-			width={pixelSize * numberColumns + RULER_SIZE}
-			height={pixelSize * numberRows + RULER_SIZE}
+			width={CANVAS_WIDTH}
+			height={CANVAS_HEIGHT}
 		/>
 	);
 }
