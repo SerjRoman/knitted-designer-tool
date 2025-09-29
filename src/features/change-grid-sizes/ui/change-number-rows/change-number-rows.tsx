@@ -5,7 +5,7 @@ export function ChangeNumberRows() {
 	const dipsatch = useAppDispatch();
 	return (
 		<div>
-			<button onClick={() => dipsatch(addRow())}>Add rows</button>
+			<button onClick={() => dipsatch(addRow())}>Add row</button>
 			<button onClick={() => dipsatch(removeRow())}>Remove row</button>
 		</div>
 	);

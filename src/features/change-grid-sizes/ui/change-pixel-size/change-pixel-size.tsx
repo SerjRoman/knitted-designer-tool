@@ -6,6 +6,7 @@ export function ChangePixelSize() {
 	const { pixelSize } = useAppSelector((state) => state.canvas);
 	return (
 		<div>
+            <span>Select pixel size:</span>
 			<select
 				onChange={(event) => {
 					dispatch(setPixelSize(+event.target.value));
