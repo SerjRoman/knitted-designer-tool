@@ -4,6 +4,7 @@ import { GridLayer } from "@/widgets/grid-layer";
 import { HorizontalRulerLayer } from "@/widgets/horizontal-ruler-layer";
 import { UILayer } from "@/widgets/ui-layer/ui-layer";
 import { VerticalRulerLayer } from "@/widgets/vertical-ruler-layer";
+import { ApplyHistoryBlock } from "@/features/action-history";
 import {
 	ChangeNumberColumns,
 	ChangeNumberRows,
@@ -27,6 +28,7 @@ export function App() {
 			<ChangeNumberColumns />
 			<ChangeNumberRows />
 			<ChangePixelSize />
+			<ApplyHistoryBlock />
 			<div
 				ref={containerRef}
 				style={{

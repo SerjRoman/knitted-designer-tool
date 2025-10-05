@@ -90,7 +90,7 @@ export function SelectToolPanel() {
 				onClick={async () => {
 					dispatch(selectTool("copy"));
 					await dispatch(copySelection());
-					selectTool("paste");
+					dispatch(selectTool("paste"));
 				}}
 			>
 				Copy
@@ -100,7 +100,7 @@ export function SelectToolPanel() {
 				onClick={async () => {
 					dispatch(selectTool("cut"));
 					await dispatch(cutSelection());
-					selectTool("paste");
+					dispatch(selectTool("paste"));
 				}}
 			>
 				Cut

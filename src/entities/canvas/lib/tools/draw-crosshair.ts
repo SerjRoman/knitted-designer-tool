@@ -18,20 +18,17 @@ export function drawCrosshair(
 	const transform = context.getTransform();
 	const invTransform = transform.inverse();
 
-	// Находим, каким координатам мира соответствуют углы канваса
 	const topLeft = invTransform.transformPoint({ x: 0, y: 0 });
 	const bottomRight = invTransform.transformPoint({
 		x: context.canvas.width,
 		y: context.canvas.height,
 	});
 
-	// Рисуем вертикальную линию от верхнего до нижнего видимого края
 	context.beginPath();
 	context.moveTo(centerX, topLeft.y);
 	context.lineTo(centerX, bottomRight.y);
 	context.stroke();
 
-	// Рисуем горизонтальную линию от левого до правого видимого края
 	context.beginPath();
 	context.moveTo(topLeft.x, centerY);
 	context.lineTo(bottomRight.x, centerY);

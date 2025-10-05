@@ -6,14 +6,15 @@ export function ChangePixelSize() {
 	const { pixelSize } = useAppSelector((state) => state.canvas);
 	return (
 		<div>
-            <span>Select pixel size:</span>
+			<span>Select pixel size:</span>
 			<select
+				value={pixelSize}
 				onChange={(event) => {
 					dispatch(setPixelSize(+event.target.value));
 				}}
 			>
 				{Array.from({ length: 100 }, (_, k) => k).map((num) => (
-					<option selected={pixelSize === num} value={num}>
+					<option key={num} value={num}>
 						{num}
 					</option>
 				))}

@@ -1,6 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { setPixelsWithColor } from "@/entities/canvas";
-import { clearClipboard, selectTool } from "@/entities/editor";
 import type { AppStateSchema, Point } from "@/shared/lib";
 
 export const pasteFromClipboard = createAsyncThunk(
@@ -26,7 +25,5 @@ export const pasteFromClipboard = createAsyncThunk(
 			color: point.color,
 		}));
 		dispatch(setPixelsWithColor({ points: pointsToFill }));
-		dispatch(clearClipboard());
-		dispatch(selectTool("select"));
 	}
 );
