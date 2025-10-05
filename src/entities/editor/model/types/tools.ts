@@ -12,6 +12,7 @@ export type EditorTools =
 	| "paste";
 export interface BrushState {
 	tool: "brush";
+	strokedPoints: PointWithColor[] | null;
 }
 export interface LineState {
 	tool: "line";
@@ -23,6 +24,7 @@ export interface RectState {
 }
 export interface EraserState {
 	tool: "eraser";
+	strokedPoints: PointWithColor[] | null;
 }
 export interface ColorPickerState {
 	tool: "colorPicker";

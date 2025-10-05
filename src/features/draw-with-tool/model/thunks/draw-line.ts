@@ -26,7 +26,7 @@ export const drawLine = createAsyncThunk(
 		const pointsBefore: PointWithColor[] = [];
 		const pointsAfter: PointWithColor[] = [];
 		pointsToFill.forEach((point) => {
-			const oldColor = grid[point.x][point.y];
+			const oldColor = grid[point.y][point.x];
 			pointsBefore.push({ ...point, color: oldColor });
 			pointsAfter.push({ ...point, color: currentColor });
 		});
