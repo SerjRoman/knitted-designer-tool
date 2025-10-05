@@ -4,6 +4,14 @@ import { GridLayer } from "@/widgets/grid-layer";
 import { HorizontalRulerLayer } from "@/widgets/horizontal-ruler-layer";
 import { UILayer } from "@/widgets/ui-layer/ui-layer";
 import { VerticalRulerLayer } from "@/widgets/vertical-ruler-layer";
+
+import { ApplyHistoryBlock } from "@/features/action-history";
+import {
+  ChangeNumberColumns,
+  ChangeNumberRows,
+  ChangePixelSize,
+} from "@/features/change-grid-sizes";
+
 import { usePanCanvas } from "@/features/pan-canvas";
 import { useCanvasZoom } from "@/features/zoom-canvas";
 import { useAppSelector, useAppDispatch } from "@/shared/lib";
@@ -56,6 +64,31 @@ export function App() {
 
         {/* Toolbar Component */}
         <Toolbar />
+      </div>
+    </div>
+  );
+
+  return (
+    <div>
+      <SelectColor />
+      <SelectToolPanel />
+      <ChangeNumberColumns />
+      <ChangeNumberRows />
+      <ChangePixelSize />
+      <ApplyHistoryBlock />
+      <div
+        ref={containerRef}
+        style={{
+          position: "relative",
+          width: `${900}px`,
+          height: `${900}px`,
+        }}
+      >
+        <CanvasLayer />
+        <GridLayer />
+        <HorizontalRulerLayer />
+        <VerticalRulerLayer />
+        <UILayer />
       </div>
     </div>
   );

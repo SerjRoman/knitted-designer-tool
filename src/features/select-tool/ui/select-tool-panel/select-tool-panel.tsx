@@ -212,4 +212,78 @@ export function SelectToolPanel() {
       </div>
     </div>
   );
+
+		window.addEventListener("keydown", handleKeyDown);
+		return () => window.removeEventListener("keydown", handleKeyDown);
+	}, [dispatch, clipboard, selectedPoints, tool]);
+	return (
+		<div>
+			<button
+				onClick={() => dispatch(selectTool("brush"))}
+				className={tool === "brush" ? styles.active : undefined}
+			>
+				Brush
+			</button>
+			<button
+				className={tool === "eraser" ? styles.active : undefined}
+				onClick={() => dispatch(selectTool("eraser"))}
+			>
+				Eraser
+			</button>
+			<button
+				className={tool === "colorPicker" ? styles.active : undefined}
+				onClick={() => dispatch(selectTool("colorPicker"))}
+			>
+				Picker
+			</button>
+			<button
+				className={tool === "line" ? styles.active : undefined}
+				onClick={() => dispatch(selectTool("line"))}
+			>
+				Line
+			</button>
+			<button
+				className={tool === "rect" ? styles.active : undefined}
+				onClick={() => dispatch(selectTool("rect"))}
+			>
+				Rect
+			</button>
+			<button
+				className={tool === "select" ? styles.active : undefined}
+				onClick={() => {
+					dispatch(selectTool("select"));
+					dispatch(clearClipboard());
+				}}
+			>
+				Select
+			</button>
+			<button
+				className={tool === "copy" ? styles.active : undefined}
+				onClick={async () => {
+					dispatch(selectTool("copy"));
+					await dispatch(copySelection());
+					dispatch(selectTool("paste"));
+				}}
+			>
+				Copy
+			</button>
+			<button
+				className={tool === "cut" ? styles.active : undefined}
+				onClick={async () => {
+					dispatch(selectTool("cut"));
+					await dispatch(cutSelection());
+					dispatch(selectTool("paste"));
+				}}
+			>
+				Cut
+			</button>
+			<button
+				className={tool === "paste" ? styles.active : undefined}
+				onClick={() => dispatch(selectTool("paste"))}
+				disabled={clipboard.points ? false : true}
+			>
+				Paste
+			</button>
+		</div>
+	);
 }

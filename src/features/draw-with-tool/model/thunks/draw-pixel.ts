@@ -15,7 +15,6 @@ export const drawPixel = createAsyncThunk(
 			},
 		} = getState() as AppStateSchema;
 		const color = tool === "eraser" ? backgroundColor : currentColor;
-
 		await dispatch(drawPixelWithColor({ x: point.x, y: point.y, color }));
 	}
 );

@@ -52,12 +52,26 @@ export type EditorToolState =
 	| CopyState
 	| PasteState;
 
+export interface Action {
+	id: string;
+	toolUsed: EditorTools;
+	pointsAfter: PointWithColor[];
+	pointsBefore: PointWithColor[];
+}
+export interface HistoryState {
+	currentActionId: string | null;
+	undoActions: Action[];
+	redoActions: Action[];
+}
+
+export interface ClipboardState {
+	points: null | PointWithColor[];
+	origin: null | Point;
+}
 export interface EditorState {
 	toolState: EditorToolState;
 	currentColor: string;
 	selectedPoints: null | Point[];
-	clipboard: {
-		points: null | PointWithColor[];
-		origin: null | Point;
-	};
+	clipboard: ClipboardState;
+	history: HistoryState;
 }

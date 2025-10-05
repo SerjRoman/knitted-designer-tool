@@ -2,6 +2,7 @@ import { setPixelSize } from "@/entities/canvas";
 import { useAppDispatch, useAppSelector } from "@/shared/lib";
 
 export function ChangePixelSize() {
+<<<<<<< HEAD
   const dispatch = useAppDispatch();
   const { pixelSize } = useAppSelector((state) => state.canvas);
 
@@ -25,4 +26,25 @@ export function ChangePixelSize() {
       </select>
     </div>
   );
+=======
+	const dispatch = useAppDispatch();
+	const { pixelSize } = useAppSelector((state) => state.canvas);
+	return (
+		<div>
+			<span>Select pixel size:</span>
+			<select
+				value={pixelSize}
+				onChange={(event) => {
+					dispatch(setPixelSize(+event.target.value));
+				}}
+			>
+				{Array.from({ length: 100 }, (_, k) => k).map((num) => (
+					<option key={num} value={num}>
+						{num}
+					</option>
+				))}
+			</select>
+		</div>
+	);
+>>>>>>> 0e706c3 (feat: Implement action history functionality with undo and redo capabilities. To be finished due to perfomance issues)
 }
