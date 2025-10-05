@@ -1,12 +1,13 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { setPixel } from "@/entities/canvas";
+import { addStrokedPoint } from "@/entities/editor";
 import type { AppStateSchema, Point } from "@/shared/lib";
-import { drawPixelWithColor } from "./draw-pixel-with-color";
 
 export const drawPixel = createAsyncThunk(
 	"canvas/draw-pixel",
 	async (point: Point, { getState, dispatch }) => {
 		const {
-			canvas: { backgroundColor },
+			canvas: { backgroundColor, grid },
 		} = getState() as AppStateSchema;
 		const {
 			editor: {
@@ -15,6 +16,8 @@ export const drawPixel = createAsyncThunk(
 			},
 		} = getState() as AppStateSchema;
 		const color = tool === "eraser" ? backgroundColor : currentColor;
-		await dispatch(drawPixelWithColor({ x: point.x, y: point.y, color }));
+		const oldColor = grid[point.y][point.x];
+		dispatch(addStrokedPoint({ ...point, color: oldColor }));
+		dispatch(setPixel({ point: point, color }));
 	}
 );

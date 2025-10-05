@@ -8,11 +8,11 @@ export const applyUndo = createAsyncThunk(
 	(_, { getState, dispatch }) => {
 		const {
 			editor: {
-				history: { undoActions, currentActionId },
+				history: { undoActions },
 			},
 		} = getState() as AppStateSchema;
 		if (undoActions.length === 0) return;
-		const currentAction = undoActions.find((a) => a.id === currentActionId);
+		const currentAction = undoActions.at(-1);
 		if (!currentAction) {
 			return;
 		}

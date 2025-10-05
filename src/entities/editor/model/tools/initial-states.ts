@@ -12,8 +12,14 @@ import type {
 	CutState,
 } from "../types";
 
-const brushInitialState: BrushState = { tool: "brush" };
-const eraserInitialState: EraserState = { tool: "eraser" };
+const brushInitialState: BrushState = {
+	tool: "brush",
+	strokedPoints: null,
+};
+const eraserInitialState: EraserState = {
+	tool: "eraser",
+	strokedPoints: null,
+};
 const colorPickerInitialState: ColorPickerState = { tool: "colorPicker" };
 const copyInitialState: CopyState = { tool: "copy" };
 const cutInitialState: CutState = { tool: "cut" };

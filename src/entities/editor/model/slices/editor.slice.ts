@@ -1,6 +1,7 @@
 import { createSlice, nanoid, type PayloadAction } from "@reduxjs/toolkit";
 import { COLORS, type Point, type PointWithColor } from "@shared/lib";
 import {
+	drawingReducers,
 	lineReducers,
 	rectReducers,
 	selectReducers,
@@ -9,7 +10,7 @@ import {
 import type { Action, EditorState, EditorTools } from "../types";
 
 const initialState: EditorState = {
-	toolState: { tool: "brush" },
+	toolState: { tool: "brush", strokedPoints: null },
 	currentColor: COLORS.black,
 	selectedPoints: null,
 	clipboard: {
@@ -50,20 +51,14 @@ export const editorSlice = createSlice({
 			state.clipboard.origin = null;
 		},
 		undoAction(state) {
-			const { undoActions, currentActionId } = state.history;
-
-			const currentActionIndex = undoActions.findIndex(
-				(action) => action.id === currentActionId
-			);
-			if (currentActionIndex <= 0) {
+			const { undoActions } = state.history;
+			const lastAction = undoActions.pop();
+			if (!lastAction) {
 				return;
 			}
-			const actionToUndo = undoActions[currentActionIndex];
-
-			state.history.redoActions.unshift(actionToUndo);
-
-			state.history.currentActionId =
-				undoActions[currentActionIndex - 1].id;
+			state.history.redoActions.unshift(lastAction);
+			const element = undoActions.at(-1);
+			state.history.currentActionId = element ? element.id : null;
 		},
 
 		redoAction(state) {
@@ -74,6 +69,7 @@ export const editorSlice = createSlice({
 			const actionToRedo = state.history.redoActions.shift();
 			if (actionToRedo) {
 				state.history.currentActionId = actionToRedo.id;
+				state.history.undoActions.push(actionToRedo);
 			}
 		},
 		addActionToHistory(
@@ -110,6 +106,7 @@ export const editorSlice = createSlice({
 		...lineReducers,
 		...rectReducers,
 		...selectReducers,
+		...drawingReducers,
 	},
 });
 
@@ -132,4 +129,6 @@ export const {
 	addActionToHistory,
 	undoAction,
 	redoAction,
+	addStrokedPoint,
+	clearStrokedPoints,
 } = editorSlice.actions;

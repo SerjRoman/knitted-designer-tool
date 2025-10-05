@@ -9,21 +9,17 @@ export function useDrawingTool(): ToolHandlers {
 		toolState: { tool },
 	} = useAppSelector((state) => state.editor);
 
-	const strokePointsRef = useRef<Point[]>([]);
 	const lastPointRef = useRef<Point>(null);
-
 	const handleMouseDown: ToolHandler = useCallback(
 		({ point }) => {
+			if (tool !== "brush" && tool !== "eraser") return;
 			lastPointRef.current = point;
-			strokePointsRef.current = [point];
-			if (tool === "brush" || tool === "eraser") {
-				dispatch(drawPixel(point));
-			}
+			dispatch(drawPixel(point));
 		},
 		[dispatch, tool]
 	);
 	const handleMouseMove: ToolHandler = useCallback(
-		({ point }) => {
+		async ({ point }) => {
 			if (tool !== "brush" && tool !== "eraser") return;
 			if (
 				lastPointRef.current?.x === point.x &&
@@ -32,17 +28,13 @@ export function useDrawingTool(): ToolHandlers {
 				return;
 			}
 			lastPointRef.current = point;
-			strokePointsRef.current.push(point);
 			dispatch(drawPixel(point));
 		},
 		[dispatch, tool]
 	);
 	const handleMouseUp: ToolHandler = useCallback(() => {
-		console.log(strokePointsRef.current);
-		if (strokePointsRef.current.length <= 0) return;
-		dispatch(completeBrushStroke(strokePointsRef.current));
+		dispatch(completeBrushStroke());
 
-		strokePointsRef.current = [];
 		lastPointRef.current = null;
 	}, [dispatch]);
 
