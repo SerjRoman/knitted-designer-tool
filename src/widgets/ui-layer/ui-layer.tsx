@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState, type MouseEvent } from "react";
-import { useClipboardPreview } from "@/features/clipboard";
+import { useClipboardPreview } from "@/features/clipboard-control";
 import {
 	useColorPickerTool,
 	useDrawingTool,
