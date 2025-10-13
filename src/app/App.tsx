@@ -14,6 +14,29 @@ import {
 
 import { usePanCanvas } from "@/features/pan-canvas";
 import { useCanvasZoom } from "@/features/zoom-canvas";
+
+import { useAppSelector, useAppDispatch } from "@/shared/lib";
+import { setZoomScale } from "@/entities/viewport";
+import { Toolbar } from "../features/components/toolbar";
+
+
+import { useAppSelector } from "@/shared/lib";
+import { ActionButtons } from "../features/components/ActionButtons";
+import { SelectColor } from "../features/select-color";
+
+
+export function App() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const dispatch = useAppDispatch();
+  const { numberColumns, numberRows, pixelSize } = useAppSelector(
+    (state) => state.canvas
+  );
+  const { scale } = useAppSelector((state) => state.viewport);
+
+
+  useCanvasZoom(containerRef);
+  usePanCanvas(containerRef);
+
 import { useAppSelector, useAppDispatch } from "@/shared/lib";
 import { setZoomScale } from "@/entities/viewport";
 import { Toolbar } from "../features/components/toolbar";
@@ -26,8 +49,10 @@ export function App() {
   );
   const { scale } = useAppSelector((state) => state.viewport);
 
-  useCanvasZoom(containerRef);
-  usePanCanvas(containerRef);
+
+	useCanvasZoom(containerRef);
+	usePanCanvas(containerRef);
+
 
   // Calculate and set initial zoom to fill the entire frame
   useEffect(() => {
@@ -45,6 +70,34 @@ export function App() {
     const scaleX = availableWidth / gridWidth;
     const scaleY = availableHeight / gridHeight;
     const fillScale = Math.max(scaleX, scaleY);
+
+
+					{/* Actions */}
+					<div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+						<ActionButtons />
+					</div>
+				</div>
+			</div>
+		</div>
+	);
+
+  // Calculate and set initial zoom to fill the entire frame
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const container = containerRef.current;
+    const rulerSize = 30;
+
+    const availableWidth = container.clientWidth - rulerSize;
+    const availableHeight = container.clientHeight - rulerSize;
+
+    const gridWidth = numberColumns * pixelSize;
+    const gridHeight = numberRows * pixelSize;
+
+    const scaleX = availableWidth / gridWidth;
+    const scaleY = availableHeight / gridHeight;
+    const fillScale = Math.max(scaleX, scaleY);
+
 
     if (Math.abs(scale - fillScale) > 0.1) {
       dispatch(setZoomScale(fillScale));
@@ -67,6 +120,7 @@ export function App() {
       </div>
     </div>
   );
+
 
   return (
     <div>
@@ -92,4 +146,6 @@ export function App() {
       </div>
     </div>
   );
+
+
 }
