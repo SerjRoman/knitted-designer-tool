@@ -76,30 +76,26 @@ export function SelectToolPanel() {
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`flex flex-col items-center justify-center p-2 rounded-lg border-2 transition-all duration-200 ${
+      className={`flex flex-col items-center justify-center p-1.5 rounded border transition-all ${
         tool === toolName
-          ? "bg-blue-500 text-white border-blue-500 shadow-md scale-105"
-          : "bg-white text-gray-700 border-gray-300 hover:border-gray-400 hover:shadow-sm"
-      } ${
-        disabled
-          ? "opacity-50 cursor-not-allowed"
-          : "hover:scale-105 cursor-pointer"
-      }`}
+          ? "bg-blue-500 text-white border-blue-500 shadow-sm"
+          : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+      } ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
       title={label}
     >
-      <Icon size={20} />
-      <span className="text-xs mt-1 font-medium">{label}</span>
+      <Icon size={16} />
+      <span className="text-xs mt-0.5">{label}</span>
     </button>
   );
 
   return (
-    <div className="space-y-4">
-      {/* Drawing Tools Section */}
+    <div className="space-y-3">
+      {/* Drawing Tools - More Compact */}
       <div>
-        <h3 className="text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wide">
-          Drawing Tools
+        <h3 className="text-xs font-semibold text-gray-700 mb-2 uppercase tracking-wide">
+          Drawing
         </h3>
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-3 gap-1">
           <ToolButton
             toolName="brush"
             icon={Brush}
@@ -142,12 +138,12 @@ export function SelectToolPanel() {
         </div>
       </div>
 
-      {/* Clipboard Tools Section */}
+      {/* Clipboard Tools - More Compact */}
       <div>
-        <h3 className="text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wide">
+        <h3 className="text-xs font-semibold text-gray-700 mb-2 uppercase tracking-wide">
           Clipboard
         </h3>
-        <div className="grid grid-cols-4 gap-2">
+        <div className="grid grid-cols-4 gap-1">
           <ToolButton
             toolName="copy"
             icon={Copy}
@@ -188,12 +184,12 @@ export function SelectToolPanel() {
         </div>
       </div>
 
-      {/* Transform Tools Section */}
+      {/* Transform Tools - More Compact */}
       <div>
-        <h3 className="text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wide">
+        <h3 className="text-xs font-semibold text-gray-700 mb-2 uppercase tracking-wide">
           Transform
         </h3>
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-2 gap-1">
           <ToolButton
             toolName="flipVertical"
             icon={FlipVertical}
