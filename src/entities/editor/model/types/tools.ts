@@ -12,6 +12,7 @@ export type EditorTools =
 	| "paste";
 export interface BrushState {
 	tool: "brush";
+	strokedPoints: PointWithColor[] | null;
 }
 export interface LineState {
 	tool: "line";
@@ -23,6 +24,7 @@ export interface RectState {
 }
 export interface EraserState {
 	tool: "eraser";
+	strokedPoints: PointWithColor[] | null;
 }
 export interface ColorPickerState {
 	tool: "colorPicker";
@@ -52,12 +54,26 @@ export type EditorToolState =
 	| CopyState
 	| PasteState;
 
+export interface Action {
+	id: string;
+	toolUsed: EditorTools;
+	pointsAfter: PointWithColor[];
+	pointsBefore: PointWithColor[];
+}
+export interface HistoryState {
+	currentActionId: string | null;
+	undoActions: Action[];
+	redoActions: Action[];
+}
+
+export interface ClipboardState {
+	points: null | PointWithColor[];
+	origin: null | Point;
+}
 export interface EditorState {
 	toolState: EditorToolState;
 	currentColor: string;
 	selectedPoints: null | Point[];
-	clipboard: {
-		points: null | PointWithColor[];
-		origin: null | Point;
-	};
+	clipboard: ClipboardState;
+	history: HistoryState;
 }

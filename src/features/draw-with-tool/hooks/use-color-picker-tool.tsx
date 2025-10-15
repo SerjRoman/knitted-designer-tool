@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { pickColor } from "@/features/select-tool";
+import { pickColor } from "@/features/select-drawing-tool";
 import { useAppDispatch, useAppSelector } from "@/shared/lib";
 import type { ToolHandler, ToolHandlers } from "../lib";
 

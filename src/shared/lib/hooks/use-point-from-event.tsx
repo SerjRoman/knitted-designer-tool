@@ -8,6 +8,10 @@ export function usePointFromEvent() {
 	const { grid, pixelSize } = useAppSelector((state) => state.canvas);
 
 	const updatePointFromEvent = (event: MouseEvent<HTMLCanvasElement>) => {
+		if (!(event.target instanceof HTMLCanvasElement)) {
+			setPoint(null);
+			return;
+		}
 		const { offsetX, offsetY } = event.nativeEvent;
 		const gridX = Math.floor((offsetX - offsets.x) / pixelSize / scale);
 		const gridY = Math.floor((offsetY - offsets.y) / pixelSize / scale);

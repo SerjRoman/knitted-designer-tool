@@ -11,9 +11,11 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.8.2",
+    "@types/nanoid": "^2.1.0",
     "@types/node": "^24.3.0",
     "envalid": "^8.1.0",
     "eslint-plugin-import": "^2.32.0",
+    "nanoid": "^5.1.6",
     "lucide-react": "^0.544.0",
     "react": "^19.1.1",
     "react-color": "^2.19.3",

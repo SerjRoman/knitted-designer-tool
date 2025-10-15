@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { pasteFromClipboard } from "@/features/clipboard";
+import { pasteFromClipboard } from "@/features/clipboard-control";
 import { useAppDispatch, useAppSelector } from "@/shared/lib";
 import type { ToolHandler, ToolHandlers } from "../lib";
 

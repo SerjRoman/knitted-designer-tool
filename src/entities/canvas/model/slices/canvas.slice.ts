@@ -1,6 +1,7 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import {
 	BACKGROUND_COLOR,
+	COLORS,
 	createEmptyGrid,
 	createRow,
 	createSizesFrom,
@@ -22,6 +23,7 @@ interface CanvasSlice {
 	numberRows: number;
 	rowHeights: number[];
 	columnWidths: number[];
+	colors: string[];
 }
 
 const initialState: CanvasSlice = {
@@ -32,9 +34,10 @@ const initialState: CanvasSlice = {
 	numberRows: INITIAL_ROWS,
 	rowHeights: createSizesFrom(INITIAL_ROWS, INITIAL_PIXEL_SIZE),
 	columnWidths: createSizesFrom(INITIAL_COLUMNS, INITIAL_PIXEL_SIZE),
+	colors: Object.values(COLORS),
 };
 
-export const canvsaSlice = createSlice({
+export const canvasSlice = createSlice({
 	initialState,
 	name: "canvas",
 	reducers: {
@@ -127,6 +130,54 @@ export const canvsaSlice = createSlice({
 				state.pixelSize
 			);
 		},
+		addColor(state, { payload }: PayloadAction<string>) {
+			if (state.colors.includes(payload)) return;
+			state.colors.push(payload);
+		},
+		changeColorInGrid(
+			state,
+			{
+				payload,
+			}: PayloadAction<{ colorToChange: string; newColor: string }>
+		) {
+			const { colorToChange, newColor } = payload;
+			const colorInArrayIndex = state.colors.findIndex(
+				(color) => color === colorToChange
+			);
+			if (colorInArrayIndex === -1) return;
+			state.colors.splice(colorInArrayIndex, 1, newColor);
+
+			for (let y = 0; y < state.grid.length; y++) {
+				for (let x = 0; x < state.grid[y].length; x++) {
+					const color = state.grid[y][x];
+					if (color !== colorToChange) continue;
+					state.grid[y][x] = newColor;
+				}
+			}
+		},
+		applyFlip(
+			state,
+			{
+				payload,
+			}: PayloadAction<{
+				pixelsToClear: Point[];
+				pixelsToApply: PointWithColor[];
+			}>
+		) {
+			const { pixelsToClear, pixelsToApply } = payload;
+
+			for (const point of pixelsToClear) {
+				const { x, y } = point;
+				if (state.grid[y]?.[x] !== undefined) {
+					state.grid[y][x] = state.backgroundColor;
+				}
+			}
+			for (const { x, y, color } of pixelsToApply) {
+				if (state.grid[y]?.[x] !== undefined) {
+					state.grid[y][x] = color;
+				}
+			}
+		},
 	},
 });
 
@@ -141,4 +192,7 @@ export const {
 	updateGridSizes,
 	setPixels,
 	setPixelsWithColor,
-} = canvsaSlice.actions;
+	addColor,
+	changeColorInGrid,
+    applyFlip
+} = canvasSlice.actions;
