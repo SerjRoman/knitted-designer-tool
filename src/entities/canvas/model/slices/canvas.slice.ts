@@ -120,15 +120,37 @@ export const canvasSlice = createSlice({
 			});
 			state.columnWidths.pop();
 		},
-		updateGridSizes(state) {
+		updateGridSizes(
+			state,
+			{
+				payload,
+			}: PayloadAction<{ numberOfRows: number; numberOfColumns: number }>
+		) {
+			const { numberOfRows, numberOfColumns } = payload;
+			state.numberColumns = numberOfColumns;
+			state.numberRows = numberOfRows;
 			state.columnWidths = createSizesFrom(
-				state.numberColumns,
+				numberOfColumns,
 				state.pixelSize
 			);
-			state.rowHeights = createSizesFrom(
-				state.numberRows,
-				state.pixelSize
-			);
+			state.rowHeights = createSizesFrom(numberOfRows, state.pixelSize);
+			const newGrid = createEmptyGrid(
+				numberOfColumns,
+				numberOfRows,
+				state.backgroundColor
+			).map((row, indexY) => {
+				if (indexY > state.grid.length) return row;
+				return row.map((cell, indexX) => {
+					if (
+						state.grid[indexY] &&
+						indexX < state.grid[indexY].length
+					) {
+						return state.grid[indexY][indexX];
+					}
+					return cell;
+				});
+			});
+			state.grid = newGrid;
 		},
 		addColor(state, { payload }: PayloadAction<string>) {
 			if (state.colors.includes(payload)) return;
@@ -194,5 +216,5 @@ export const {
 	setPixelsWithColor,
 	addColor,
 	changeColorInGrid,
-    applyFlip
+	applyFlip,
 } = canvasSlice.actions;

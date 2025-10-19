@@ -5,11 +5,7 @@ import { HorizontalRulerLayer } from "@/widgets/horizontal-ruler-layer";
 import { ToolPanel } from "@/widgets/tool-panel";
 import { UILayer } from "@/widgets/ui-layer/ui-layer";
 import { VerticalRulerLayer } from "@/widgets/vertical-ruler-layer";
-import {
-	ChangeNumberColumns,
-	ChangeNumberRows,
-	ChangePixelSize,
-} from "@/features/change-grid-sizes";
+import { ChangeGridSizes, ChangePixelSize } from "@/features/change-grid-sizes";
 import { usePanCanvas } from "@/features/pan-canvas";
 import { useCanvasZoom } from "@/features/zoom-canvas";
 import { useAppSelector } from "@/shared/lib";
@@ -74,8 +70,7 @@ export function App() {
 							Grid Controls
 						</h3>
 						<div className="space-y-4">
-							<ChangeNumberColumns />
-							<ChangeNumberRows />
+							<ChangeGridSizes />
 							<ChangePixelSize />
 						</div>
 					</div>
