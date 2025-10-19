@@ -3,6 +3,7 @@ import { useClipboardPreview } from "@/features/clipboard-control";
 import {
 	useColorPickerTool,
 	useDrawingTool,
+	useFillTool,
 	useLineTool,
 	usePasteTool,
 	useRectTool,
@@ -27,6 +28,7 @@ export function UILayer() {
 	const pasteHandlers = usePasteTool();
 	const drawingHandlers = useDrawingTool();
 	const colorPickerHandlers = useColorPickerTool();
+	const fillHandlers = useFillTool();
 	const drawClipboard = useClipboardPreview();
 	const { pixelSize } = useAppSelector((state) => state.canvas);
 	const { scale, offsets, isPanning } = useAppSelector(
@@ -48,6 +50,8 @@ export function UILayer() {
 				return pasteHandlers;
 			case "rect":
 				return rectHandlers;
+			case "fill":
+				return fillHandlers;
 			case "select":
 				return selectHandlers;
 			default:
@@ -55,6 +59,7 @@ export function UILayer() {
 		}
 	}, [
 		colorPickerHandlers,
+		fillHandlers,
 		drawingHandlers,
 		lineHandlers,
 		pasteHandlers,

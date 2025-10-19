@@ -5,3 +5,4 @@ export { getLinePixels } from "./get-line-pixels";
 export { getRectPixels } from "./get-rect-pixels";
 export { isPointInPoints } from "./is-point-in-points";
 export { getBoundingBox } from "./get-bounding-rect";
+export { getAdjacentPoints } from "./get-adjacent-points";
