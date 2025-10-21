@@ -200,6 +200,22 @@ export const canvasSlice = createSlice({
 				}
 			}
 		},
+		setGrid(state, { payload }: PayloadAction<Grid>) {
+			state.grid = payload;
+			const setColors = new Set<string>();
+			payload.forEach((row) => {
+				row.forEach((cell) => {
+					if (!setColors.has(cell)) {
+						setColors.add(cell);
+					}
+				});
+			});
+			const colors: string[] = Array.from(setColors);
+			state.colors = colors;
+		},
+		setColors(state, { payload }: PayloadAction<string[]>) {
+			state.colors = payload;
+		},
 	},
 });
 
@@ -217,4 +233,6 @@ export const {
 	addColor,
 	changeColorInGrid,
 	applyFlip,
+	setGrid,
+	setColors,
 } = canvasSlice.actions;
