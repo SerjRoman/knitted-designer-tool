@@ -9,7 +9,8 @@ export type EditorTools =
 	| "select"
 	| "copy"
 	| "cut"
-	| "paste";
+	| "paste"
+	| "fill";
 export interface BrushState {
 	tool: "brush";
 	strokedPoints: PointWithColor[] | null;
@@ -42,6 +43,9 @@ export interface CopyState {
 export interface PasteState {
 	tool: "paste";
 }
+export interface FillState {
+	tool: "fill";
+}
 
 export type EditorToolState =
 	| BrushState
@@ -52,7 +56,8 @@ export type EditorToolState =
 	| SelectState
 	| CutState
 	| CopyState
-	| PasteState;
+	| PasteState
+	| FillState;
 
 export interface Action {
 	id: string;
