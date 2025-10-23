@@ -1,5 +1,9 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { clearSelectedPoints, setClipboardOrigin, setClipboardPoints } from "@/entities/editor";
+import {
+	clearSelectedPoints,
+	setClipboardOrigin,
+	setClipboardPoints,
+} from "@/entities/editor";
 import {
 	getBoundingBox,
 	type AppStateSchema,
