@@ -1,20 +1,16 @@
 import { useRef } from "react";
+import { ActionButtonsBlock } from "@/widgets/action-buttons-block";
 import { CanvasLayer } from "@/widgets/canvas-layer";
 import { GridLayer } from "@/widgets/grid-layer";
 import { HorizontalRulerLayer } from "@/widgets/horizontal-ruler-layer";
 import { ToolPanel } from "@/widgets/tool-panel";
 import { UILayer } from "@/widgets/ui-layer/ui-layer";
 import { VerticalRulerLayer } from "@/widgets/vertical-ruler-layer";
-import {
-	ChangeNumberColumns,
-	ChangeNumberRows,
-	ChangePixelSize,
-} from "@/features/change-grid-sizes";
+import { ChangeGridSizes, ChangePixelSize } from "@/features/change-grid-sizes";
 import { usePanCanvas } from "@/features/pan-canvas";
+import { SelectColor } from "@/features/select-color";
 import { useCanvasZoom } from "@/features/zoom-canvas";
 import { useAppSelector } from "@/shared/lib";
-import { ActionButtons } from "../features/components/ActionButtons";
-import { SelectColor } from "../features/select-color";
 
 export function App() {
 	const containerRef = useRef<HTMLDivElement>(null);
@@ -74,15 +70,14 @@ export function App() {
 							Grid Controls
 						</h3>
 						<div className="space-y-4">
-							<ChangeNumberColumns />
-							<ChangeNumberRows />
+							<ChangeGridSizes />
 							<ChangePixelSize />
 						</div>
 					</div>
 
 					{/* Actions */}
 					<div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-						<ActionButtons />
+						<ActionButtonsBlock />
 					</div>
 				</div>
 			</div>
