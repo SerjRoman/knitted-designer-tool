@@ -16,7 +16,6 @@ export const pasteFromClipboard = createAsyncThunk(
 			toolState.tool !== "paste"
 		)
 			return;
-
 		const origin = {
 			x: offsetPoint.x - clipboard.origin.x,
 			y: offsetPoint.y - clipboard.origin.y,
@@ -25,6 +24,7 @@ export const pasteFromClipboard = createAsyncThunk(
 		const pointsAfter: PointWithColor[] = [];
 		clipboard.points.forEach((point) => {
 			const [x, y] = [point.x + origin.x, point.y + origin.y];
+			if (x < 0 || y < 0) return;
 			const pointAfter = {
 				x: x,
 				y: y,
