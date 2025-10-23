@@ -5,3 +5,6 @@ export { getLinePixels } from "./get-line-pixels";
 export { getRectPixels } from "./get-rect-pixels";
 export { isPointInPoints } from "./is-point-in-points";
 export { getBoundingBox } from "./get-bounding-rect";
+export { calculateColorDistance } from "./calculate-color-distance";
+export { getPopularColorsFromRGBArray } from "./get-popular-colors-from-rgb-array";
+export { getImageDataFromImage } from "./get-image-data-from-image";
