@@ -1,1 +1,5 @@
-export type { AppStateSchema, AppDispatch } from "./store.types";
+export {
+	type AppStateSchema,
+	type AppDispatch,
+	createAppAsyncThunk,
+} from "./store.ts";

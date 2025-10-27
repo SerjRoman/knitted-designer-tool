@@ -1,4 +1,5 @@
-import { Eye, Crop, Download } from "lucide-react";
+import { Eye, Crop } from "lucide-react";
+import { SaveImageButton } from "@/features/save-image";
 import { UploadImageButton } from "@/features/upload-image";
 
 export function ActionButtonsBlock() {
@@ -21,10 +22,7 @@ export function ActionButtonsBlock() {
 						<Crop size={24} />
 						<span className="font-semibold">Resize</span>
 					</button>
-					<button className="flex flex-col items-center gap-3 p-4 bg-purple-500 text-white rounded-xl hover:bg-purple-600 transition-all">
-						<Download size={24} />
-						<span className="font-semibold">Save</span>
-					</button>
+					<SaveImageButton />
 					<UploadImageButton />
 				</div>
 			</div>
