@@ -26,8 +26,8 @@ export function ChangeGridSizesModal({
 	}, [isOpen, numberColumns, numberRows]);
 
 	function handleChangeSizes() {
-		const numberOfRows = Number(columns);
-		const numberOfColumns = Number(rows);
+		const numberOfColumns = Number(columns);
+		const numberOfRows = Number(rows);
 		if (isNaN(numberOfRows) || isNaN(numberOfColumns)) {
 			alert("Please enter valid numbers");
 			return;
