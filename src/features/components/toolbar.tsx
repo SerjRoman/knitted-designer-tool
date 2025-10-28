@@ -1,5 +1,5 @@
 import { SelectColor } from "../select-color/ui/index";
-import { SelectToolPanel } from "../select-tool/ui/index";
+import { SelectDrawingTool } from "../select-drawing-tool/ui/index";
 import { ChangeNumberColumns } from "../change-grid-sizes/ui/index";
 import { ChangeNumberRows } from "../change-grid-sizes/ui/index";
 import { ChangePixelSize } from "../change-grid-sizes/ui/index";
@@ -39,7 +39,7 @@ export function Toolbar() {
             <h3 className="text-xs font-bold text-gray-700 mb-2 uppercase tracking-wide">
               Tools
             </h3>
-            <SelectToolPanel />
+            <SelectDrawingTool />
           </div>
 
           {/* Grid Controls - More Compact */}
