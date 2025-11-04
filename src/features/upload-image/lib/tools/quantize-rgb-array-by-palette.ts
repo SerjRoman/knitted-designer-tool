@@ -27,8 +27,8 @@ export function quantizeRGBArrayByPalette(
 			}
 			newColor = closestColor;
 			colorMap.set(key, newColor);
-			newRGBArray[i] = newColor;
 		}
+		newRGBArray[i] = newColor;
 	}
 	return newRGBArray;
 }

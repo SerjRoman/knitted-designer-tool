@@ -61,6 +61,7 @@ export const processAndUploadImage = createAsyncThunk<
 					width,
 					height
 				);
+                
 				const { maxX, maxY, minX, minY } = getBoundingBox(points);
 				const centerX = Math.floor((minX + maxX) / 2);
 				const centerY = Math.floor((minY + maxY) / 2);

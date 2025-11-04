@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { RGBAToHEX, useAppDispatch, useAppSelector } from "@/shared/lib";
+import { HEXToRGB, RGBAToHEX, useAppDispatch, useAppSelector } from "@/shared/lib";
 import { Modal } from "@/shared/ui";
 import { changeColorToCustom } from "../../model";
 import type { SelectCustomColorModalProps } from "./select-custom-color-modal.types";
@@ -43,7 +43,7 @@ export function SelectCustomColorModal({
 							value={hexColor}
 							onChange={(e) => {
 								const newHexColor = e.target.value;
-								setCustomColor(RGBAToHEX(newHexColor));
+								setCustomColor(HEXToRGB(newHexColor));
 							}}
 							className="w-8 h-8 cursor-pointer"
 						/>
