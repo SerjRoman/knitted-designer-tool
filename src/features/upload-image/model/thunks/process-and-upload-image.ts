@@ -1,5 +1,3 @@
-// src/features/upload-image/model/thunks.ts
-
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { setColors } from "@/entities/canvas";
 import {
@@ -8,10 +6,13 @@ import {
 	selectTool,
 } from "@/entities/editor";
 import {
+	approximateColors,
 	getBoundingBox,
 	getImageDataFromImage,
 	getPopularColorsFromRGBArray,
 	MAX_COLORS,
+	type AppStateSchema,
+	type RGBColor,
 } from "@/shared/lib";
 import {
 	convertImageDataToRGBArray,
@@ -30,12 +31,14 @@ export const processAndUploadImage = createAsyncThunk<
 	ProcessImagePayload
 >(
 	"features/uploadImage/process",
-	async ({ file, width, height }, { dispatch }) => {
+	async ({ file, width, height }, { dispatch, getState }) => {
 		function onError() {
 			new Error("Failed to read file as string.");
 		}
 		const reader = new FileReader();
-
+		const {
+			canvas: { grid },
+		} = getState() as AppStateSchema;
 		reader.onload = (e: ProgressEvent<FileReader>) => {
 			const img = new Image();
 			img.onload = () => {
@@ -45,28 +48,46 @@ export const processAndUploadImage = createAsyncThunk<
 					height,
 				});
 				const RGBArray = convertImageDataToRGBArray(resizedImageData);
-				const colors = getPopularColorsFromRGBArray(
+				const sameColors = new Set<string>();
+				const usedColors: RGBColor[] = [];
+				grid.forEach((row) => {
+					row.forEach((cell) => {
+						const [r, g, b] = cell.match(/\d+/g)!.map(Number);
+						const key = `r${r},g${g},b${b}}`;
+						const rgbColor: RGBColor = { r, g, b };
+						if (!sameColors.has(key)) {
+							usedColors.push(rgbColor);
+							sameColors.add(key);
+						}
+					});
+				});
+				const popularColors = getPopularColorsFromRGBArray(
 					RGBArray,
 					MAX_COLORS
 				);
-				const stringifiedColors = colors.map(
+				const finalColors = approximateColors(
+					usedColors,
+					popularColors
+				);
+				console.log(finalColors);
+				const stringifiedColors = finalColors.map(
 					(color) => `rgb(${color.r}, ${color.g}, ${color.b})`
 				);
 				const quantizedRGBArray = quantizeRGBArrayByPalette(
 					RGBArray,
-					colors
+					finalColors
 				);
 				const points = createPointsFromImage(
 					quantizedRGBArray,
 					width,
 					height
 				);
-                
+
 				const { maxX, maxY, minX, minY } = getBoundingBox(points);
 				const centerX = Math.floor((minX + maxX) / 2);
 				const centerY = Math.floor((minY + maxY) / 2);
 				const originPoint = { x: centerX, y: centerY };
-                
+
 				dispatch(setClipboardPoints(points));
 				dispatch(setClipboardOrigin(originPoint));
 				dispatch(selectTool("paste"));

@@ -12,3 +12,4 @@ export { getPopularColorsFromRGBArray } from "./get-popular-colors-from-rgb-arra
 export { getImageDataFromImage } from "./get-image-data-from-image";
 export { RGBAToHEX } from "./rgba-to-hex";
 export { HEXToRGB } from "./hex-to-rgb";
+export { approximateColors } from "./approximate-colors";

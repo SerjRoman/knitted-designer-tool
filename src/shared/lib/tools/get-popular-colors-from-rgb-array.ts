@@ -1,7 +1,7 @@
+import { SIMILARITY_THRESHOLD } from "../constants";
 import type { RGBColor } from "../types";
 import { calculateColorDistance } from "./calculate-color-distance";
 
-const SIMILARITY_THRESHOLD = 70;
 
 export function getPopularColorsFromRGBArray(
 	colorsArray: RGBColor[],
@@ -72,3 +72,4 @@ export function getPopularColorsFromRGBArray(
 
 	return palette;
 }
+
