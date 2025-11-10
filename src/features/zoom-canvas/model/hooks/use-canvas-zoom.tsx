@@ -14,14 +14,14 @@ export function useCanvasZoom(containerRef: RefObject<HTMLDivElement | null>) {
 		(state) => state.canvas
 	);
 	const { scale } = useAppSelector((state) => state.viewport);
-	useEffect(() => {
-		const divElement = containerRef.current;
-		if (!divElement) return;
-		const scaleX = divElement.clientWidth / (numberColumns * 10);
-		const scaleY = divElement.clientHeight / (numberRows * 10);
-		const zoom = Math.min(scaleX, scaleY);
-		dispatch(setZoomScale(zoom));
-	}, [containerRef, dispatch, numberColumns, numberRows]);
+	// useEffect(() => {
+	// 	const divElement = containerRef.current;
+	// 	if (!divElement) return;
+	// 	const scaleX = divElement.clientWidth / (numberColumns * 10);
+	// 	const scaleY = divElement.clientHeight / (numberRows * 10);
+	// 	const zoom = Math.min(scaleX, scaleY);
+	// 	dispatch(setZoomScale(zoom));
+	// }, [containerRef, dispatch, numberColumns, numberRows]);
 
 	useEffect(() => {
 		const divElement = containerRef.current;

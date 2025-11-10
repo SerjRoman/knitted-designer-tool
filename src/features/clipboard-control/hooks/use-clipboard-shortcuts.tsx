@@ -16,6 +16,7 @@ export function useClipboardShortucts() {
 	} = useAppSelector((state) => state.editor);
 	useEffect(() => {
 		const handleKeyDown = (e: KeyboardEvent) => {
+			if (document.querySelector('[data-modal-open="true"]')) return;
 			if (e.ctrlKey || e.metaKey) {
 				switch (e.key.toLowerCase()) {
 					case "c":

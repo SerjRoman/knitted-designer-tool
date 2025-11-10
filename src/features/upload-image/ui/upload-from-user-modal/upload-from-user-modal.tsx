@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from "@/shared/lib";
 import { Modal } from "@/shared/ui";
 import { processAndUploadImage } from "../../model";
 
-export function UploadImageModal({
+export function UploadFromUserModal({
 	isOpen,
 	onClose,
 }: {
@@ -16,7 +16,7 @@ export function UploadImageModal({
 	);
 	const [width, setWidth] = useState<number>(numberColumns);
 	const [height, setHeight] = useState<number>(numberRows);
-	const handleFileUpload = (event:ChangeEvent<HTMLInputElement>) => {
+	const handleFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
 		const file = event.target.files?.[0];
 		if (!file) return;
 
