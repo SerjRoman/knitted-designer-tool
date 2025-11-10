@@ -1,11 +1,6 @@
 import { useCallback } from "react";
-import { drawGridLayer } from "@/entities/canvas";
-import {
-	CANVAS_HEIGHT,
-	CANVAS_WIDTH,
-	RULER_SIZE,
-	useAppSelector,
-} from "@/shared/lib";
+import { CANVAS_HEIGHT, CANVAS_WIDTH, drawGridLayer } from "@/entities/canvas";
+import { useAppSelector } from "@/shared/lib";
 import { Canvas } from "@/shared/ui";
 
 export function GridLayer() {
@@ -36,8 +31,6 @@ export function GridLayer() {
 				position: "absolute",
 				zIndex: 3,
 				pointerEvents: "none",
-				top: RULER_SIZE,
-				left: RULER_SIZE,
 			}}
 			width={CANVAS_WIDTH}
 			height={CANVAS_HEIGHT}
