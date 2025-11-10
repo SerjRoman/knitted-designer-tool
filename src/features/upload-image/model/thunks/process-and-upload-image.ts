@@ -69,7 +69,6 @@ export const processAndUploadImage = createAsyncThunk<
 					usedColors,
 					popularColors
 				);
-				console.log(finalColors);
 				const stringifiedColors = finalColors.map(
 					(color) => `rgb(${color.r}, ${color.g}, ${color.b})`
 				);

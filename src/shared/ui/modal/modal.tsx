@@ -20,7 +20,7 @@ export function Modal(props: IModalProps) {
 	});
 	if (!isOpen) return null;
 	return createPortal(
-		<div className={styles.overlay}>
+		<div className={styles.overlay} data-modal-open="true">
 			<div className={className} ref={contentRef}>
 				{children}
 			</div>

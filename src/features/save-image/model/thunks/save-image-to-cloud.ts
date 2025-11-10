@@ -1,15 +1,12 @@
-import { createAppAsyncThunk, RGBAToHEX } from "@/shared/lib";
-
-type Pixel = { color: number; count: number };
-
-type Row = {
-	index: number;
-	pixels: Pixel[];
-};
+import {
+	createAppAsyncThunk,
+	RGBAToHEX,
+	type RowInUploadedImage,
+} from "@/shared/lib";
 
 export const saveImageToCloud = createAppAsyncThunk(
 	"editor/save-image-to-cloud",
-	(_, { getState }) => {
+	async (_, { getState }) => {
 		const {
 			canvas: { colors, grid, numberColumns, numberRows },
 		} = getState();
@@ -18,9 +15,9 @@ export const saveImageToCloud = createAppAsyncThunk(
 		for (let index = 0; index < hexColors.length; index++) {
 			colorsMap.set(colors[index], index);
 		}
-		const rows: Row[] = [];
+		const rows: RowInUploadedImage[] = [];
 		for (let y = 0; y < grid.length; y++) {
-			const row: Row = { index: y, pixels: [] };
+			const row: RowInUploadedImage = { index: y, pixels: [] };
 			for (let x = 0; x < grid[y].length; x++) {
 				const lastPixel = row.pixels.at(-1);
 				const currentColor = grid[y][x];
@@ -40,7 +37,26 @@ export const saveImageToCloud = createAppAsyncThunk(
 			colors: hexColors,
 			rows,
 		};
-		console.log(dataToSend);
+		try {
+			const response = await fetch(
+				"https://assets.knittedforyou.com/save-json",
+				{
+					headers: { "Content-Type": "application/json" },
+					method: "POST",
+					body: JSON.stringify({
+						filename: Date.now().toString() + "saved_image.json",
+						content: dataToSend,
+					}),
+				}
+			);
+			const body = await response.json();
+			alert(
+				"Image successfully uploaded and accessible by this filename: " +
+					body.filename
+			);
+		} catch (error) {
+			console.log(error);
+		}
 		return dataToSend;
 	}
 );
