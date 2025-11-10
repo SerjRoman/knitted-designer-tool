@@ -2,10 +2,9 @@ import { useRef } from "react";
 import { ActionButtonsBlock } from "@/widgets/action-buttons-block";
 import { CanvasLayer } from "@/widgets/canvas-layer";
 import { GridLayer } from "@/widgets/grid-layer";
-import { HorizontalRulerLayer } from "@/widgets/horizontal-ruler-layer";
+import { RulersLayer } from "@/widgets/rulers-layer";
 import { ToolPanel } from "@/widgets/tool-panel";
 import { UILayer } from "@/widgets/ui-layer/ui-layer";
-import { VerticalRulerLayer } from "@/widgets/vertical-ruler-layer";
 import { ChangeGridSizes, ChangePixelSize } from "@/features/change-grid-sizes";
 import { usePanCanvas } from "@/features/pan-canvas";
 import { SelectColor } from "@/features/select-color";
@@ -23,9 +22,7 @@ export function App() {
 
 	return (
 		<div className="h-screen w-screen flex bg-white overflow-hidden">
-			{/* Main Layout: Full width */}
 			<div className="flex flex-1">
-				{/* Canvas Area — takes all available space */}
 				<div className="flex-1 relative overflow-hidden">
 					<div
 						ref={containerRef}
@@ -33,8 +30,7 @@ export function App() {
 					>
 						<CanvasLayer />
 						<GridLayer />
-						<HorizontalRulerLayer />
-						<VerticalRulerLayer />
+						<RulersLayer />
 						<UILayer />
 					</div>
 				</div>

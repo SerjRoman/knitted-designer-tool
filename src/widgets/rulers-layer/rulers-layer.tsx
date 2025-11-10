@@ -1,15 +1,15 @@
 import { useCallback } from "react";
-import { drawHorizontalRulerLayer } from "@/entities/canvas";
 import {
 	CANVAS_HEIGHT,
 	CANVAS_WIDTH,
-	RULER_SIZE,
-	useAppSelector,
-} from "@/shared/lib";
+	drawHorizontalRulerLayer,
+	drawVerticalRulerLayer,
+} from "@/entities/canvas";
+import { useAppSelector } from "@/shared/lib";
 import { Canvas } from "@/shared/ui";
 
-export function HorizontalRulerLayer() {
-	const { numberColumns, pixelSize } = useAppSelector(
+export function RulersLayer() {
+	const { numberRows, numberColumns, pixelSize } = useAppSelector(
 		(state) => state.canvas
 	);
 	const { scale, offsets } = useAppSelector((state) => state.viewport);
@@ -24,7 +24,13 @@ export function HorizontalRulerLayer() {
 				context.canvas.width,
 				context.canvas.height
 			);
-
+			drawVerticalRulerLayer(
+				context,
+				numberRows,
+				pixelSize,
+				scale,
+				offsets
+			);
 			drawHorizontalRulerLayer(
 				context,
 				numberColumns,
@@ -33,15 +39,13 @@ export function HorizontalRulerLayer() {
 				offsets
 			);
 		},
-		[numberColumns, offsets, pixelSize, scale]
+		[numberColumns, numberRows, offsets, pixelSize, scale]
 	);
 	return (
 		<Canvas
 			draw={handleDrawRuler}
 			style={{
 				position: "absolute",
-				top: 0,
-				left: RULER_SIZE,
 				zIndex: 0,
 			}}
 			width={CANVAS_WIDTH}

@@ -1,11 +1,11 @@
 import { useCallback } from "react";
-import { drawPixelLayer, selectOffsets } from "@/entities/canvas";
 import {
 	CANVAS_HEIGHT,
 	CANVAS_WIDTH,
-	RULER_SIZE,
-	useAppSelector,
-} from "@/shared/lib";
+	drawPixelLayer,
+	selectOffsets,
+} from "@/entities/canvas";
+import { useAppSelector } from "@/shared/lib";
 import { Canvas } from "@/shared/ui";
 
 export function CanvasLayer() {
@@ -54,8 +54,6 @@ export function CanvasLayer() {
 			style={{
 				position: "absolute",
 				zIndex: 2,
-				top: RULER_SIZE,
-				left: RULER_SIZE,
 				pointerEvents: "none",
 			}}
 			width={CANVAS_WIDTH}
