@@ -1,2 +1,1 @@
-export { Modal } from "./modal";
 export { StatusModal } from "./status-modal";
