@@ -1,3 +1,5 @@
+import { AxiosError } from "axios";
+import { ApiClient } from "@/shared/api";
 import {
 	createAppAsyncThunk,
 	RGBAToHEX,
@@ -6,7 +8,7 @@ import {
 
 export const saveImageToCloud = createAppAsyncThunk(
 	"editor/save-image-to-cloud",
-	async (_, { getState }) => {
+	async (_, { getState, rejectWithValue }) => {
 		const {
 			canvas: { colors, grid, numberColumns, numberRows },
 		} = getState();
@@ -38,25 +40,25 @@ export const saveImageToCloud = createAppAsyncThunk(
 			rows,
 		};
 		try {
-			const response = await fetch(
+			const filename = Date.now().toString() + "saved_image.json";
+			await ApiClient.Post(
 				"https://assets.knittedforyou.com/save-json",
-				{
-					headers: { "Content-Type": "application/json" },
-					method: "POST",
-					body: JSON.stringify({
-						filename: Date.now().toString() + "saved_image.json",
-						content: dataToSend,
-					}),
-				}
+				JSON.stringify({
+					filename: filename,
+					content: dataToSend,
+				})
 			);
-			const body = await response.json();
-			alert(
-				"Image successfully uploaded and accessible by this filename: " +
-					body.filename
-			);
+			return filename;
 		} catch (error) {
 			console.log(error);
+			if (error instanceof AxiosError) {
+				return rejectWithValue({
+					message: "Unknown server error. Please try again later!",
+				});
+			}
+			return rejectWithValue({
+				message: "Unhandled server error. Please try again later!",
+			});
 		}
-		return dataToSend;
 	}
 );
