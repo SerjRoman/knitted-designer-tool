@@ -1,2 +1,2 @@
 export { Canvas } from "./canvas";
-export { Modal } from "./modal";
+export { Modal, StatusModal } from "./modal";
