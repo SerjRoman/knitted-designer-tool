@@ -1,12 +1,7 @@
 import { useState } from "react";
-import { setColors, setGrid, updateGridSizes } from "@/entities/canvas";
-import {
-	HEXToRGB,
-	useAppDispatch,
-	type Grid,
-	type UploadedImage,
-} from "@/shared/lib";
+import { useAppDispatch } from "@/shared/lib";
 import { Modal } from "@/shared/ui";
+import { uploadImageFromCloud } from "../../model";
 
 export function UploadFromCloudModal({
 	isOpen,
@@ -19,37 +14,7 @@ export function UploadFromCloudModal({
 	const [filename, setFilename] = useState<string>("");
 	const handleFileUpload = async () => {
 		if (!filename) return;
-
-		const response = await fetch(
-			`https://assets.knittedforyou.com/motif/${filename}`
-		);
-		const body: UploadedImage = await response.json();
-		const { width, height, colors, rows } = body;
-		const RGBColors = colors.map(HEXToRGB);
-		dispatch(
-			updateGridSizes({ numberOfColumns: width, numberOfRows: height })
-		);
-		const grid: Grid = Array.from<[]>({ length: height }).fill([]);
-		for (const row of rows) {
-			const transformedRow = row.pixels
-				.map((pixel) => {
-					const array = Array.from<string>({
-						length: pixel.count,
-					}).fill(RGBColors[pixel.color]);
-					return array;
-				})
-				.reduce(
-					(prevValue, currentValue) => [
-						...prevValue,
-						...currentValue,
-					],
-					[]
-				);
-			grid[row.index] = transformedRow;
-		}
-
-		dispatch(setColors(RGBColors));
-		dispatch(setGrid(grid));
+		dispatch(uploadImageFromCloud(`${filename}`));
 		onClose();
 	};
 	return (
