@@ -1,4 +1,4 @@
-import type { RGBColor } from "../constants";
+import type { RGBColor } from "../types";
 
 export function calculateColorDistance(
 	color1: RGBColor,
