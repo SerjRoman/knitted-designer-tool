@@ -3,6 +3,7 @@ import { AxiosError } from "axios";
 import { updateGridSizes, setColors, setGrid } from "@/entities/canvas";
 import { ApiClient } from "@/shared/api";
 import { HEXToRGB, type Grid, type UploadedImage } from "@/shared/lib";
+import { setCurrentColor } from "@/entities/editor";
 
 export const uploadImageFromCloud = createAsyncThunk(
 	"features/upload-image-from-cloud",
@@ -39,6 +40,7 @@ export const uploadImageFromCloud = createAsyncThunk(
 			}
 
 			dispatch(setColors(RGBColors));
+			dispatch(setCurrentColor(RGBColors[0]));
 			dispatch(setGrid(grid));
 		} catch (error) {
 			console.log(error);

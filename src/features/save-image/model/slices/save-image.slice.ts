@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { saveImageToCloud } from "../thunks";
 
 interface SaveImageState {
@@ -18,6 +18,9 @@ export const saveImageSlice = createSlice({
 	initialState,
 	reducers: {
 		resetUploadState: () => initialState,
+		setFilename(state, { payload }: PayloadAction<string>) {
+			state.filename = payload;
+		},
 	},
 	extraReducers: (builder) => {
 		builder
@@ -25,9 +28,8 @@ export const saveImageSlice = createSlice({
 				state.status = "loading";
 				state.error = null;
 			})
-			.addCase(saveImageToCloud.fulfilled, (state, action) => {
+			.addCase(saveImageToCloud.fulfilled, (state) => {
 				state.status = "succeeded";
-				state.filename = action.payload;
 			})
 			.addCase(saveImageToCloud.rejected, (state, action) => {
 				state.status = "failed";
@@ -45,5 +47,5 @@ export const saveImageSlice = createSlice({
 	},
 });
 
-export const { resetUploadState } = saveImageSlice.actions;
+export const { resetUploadState, setFilename } = saveImageSlice.actions;
 export default saveImageSlice.reducer;

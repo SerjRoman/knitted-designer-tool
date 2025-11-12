@@ -11,7 +11,9 @@ export const saveImageToCloud = createAppAsyncThunk(
 	async (_, { getState, rejectWithValue }) => {
 		const {
 			canvas: { colors, grid, numberColumns, numberRows },
+			"features/saveImage": { filename },
 		} = getState();
+
 		const hexColors = colors.map((color) => RGBAToHEX(color));
 		const colorsMap = new Map<string, number>();
 		for (let index = 0; index < hexColors.length; index++) {
@@ -40,7 +42,6 @@ export const saveImageToCloud = createAppAsyncThunk(
 			rows,
 		};
 		try {
-			const filename = Date.now().toString() + "saved_image.json";
 			await ApiClient.Post(
 				"https://assets.knittedforyou.com/save-json",
 				JSON.stringify({
@@ -48,7 +49,6 @@ export const saveImageToCloud = createAppAsyncThunk(
 					content: dataToSend,
 				})
 			);
-			return filename;
 		} catch (error) {
 			console.log(error);
 			if (error instanceof AxiosError) {

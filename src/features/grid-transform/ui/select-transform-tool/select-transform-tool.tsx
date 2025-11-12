@@ -12,7 +12,7 @@ export function SelectTransformTool() {
 			<h3 className="text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wide">
 				Transform
 			</h3>
-			<div className="grid grid-cols-2 gap-2">
+			<div className="grid grid-cols-2 rows-1 gap-2">
 				<ToolButton
 					icon={FlipVertical}
 					label="Flip V"

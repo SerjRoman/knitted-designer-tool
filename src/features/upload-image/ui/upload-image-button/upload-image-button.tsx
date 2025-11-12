@@ -5,6 +5,7 @@ import { StatusModal } from "@/shared/ui";
 import { UploadFromCloudModal } from "../upload-from-cloud-modal";
 import { UploadFromUserModal } from "../upload-from-user-modal";
 import { UploadTypeModal } from "../upload-type-modal";
+import { ToolButton } from "@/entities/editor";
 
 export function UploadImageButton() {
 	const { error, status } = useAppSelector(
@@ -35,13 +36,12 @@ export function UploadImageButton() {
 
 	return (
 		<>
-			<label
-				className="flex flex-col items-center justify-center gap-3 p-4 bg-indigo-500 text-white rounded-xl hover:bg-indigo-600 transition-all cursor-pointer"
+			<ToolButton
+				icon={Upload}
+				iconProps={{ size: 24 }}
+				label={"Upload"}
 				onClick={() => openUploadType({ openModal })}
-			>
-				<Upload size={24} />
-				<span className="font-semibold">Upload</span>
-			</label>
+			/>
 			<UserUploadModalProvider ModalComponent={UploadFromUserModal} />
 			<CloudUploadModalProvider ModalComponent={UploadFromCloudModal} />
 			<UploadModalTypeProvider ModalComponent={UploadTypeModal} />

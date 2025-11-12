@@ -1,1 +1,5 @@
-export { saveImageSlice } from "./save-image.slice";
+export {
+	saveImageSlice,
+	setFilename,
+	resetUploadState,
+} from "./save-image.slice";

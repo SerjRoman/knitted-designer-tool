@@ -1,2 +1,2 @@
 export { saveImageToCloud } from "./thunks";
-export { saveImageSlice } from "./slices";
+export { saveImageSlice, setFilename, resetUploadState } from "./slices";

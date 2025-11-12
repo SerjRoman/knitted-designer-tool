@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { HEXToRGB, RGBAToHEX, useAppDispatch, useAppSelector } from "@/shared/lib";
+import { HEXToRGB, RGBAToHEX, useAppDispatch } from "@/shared/lib";
 import { Modal } from "@/shared/ui";
 import { changeColorToCustom } from "../../model";
 import type { SelectCustomColorModalProps } from "./select-custom-color-modal.types";
@@ -7,13 +7,13 @@ import type { SelectCustomColorModalProps } from "./select-custom-color-modal.ty
 export function SelectCustomColorModal({
 	isOpen,
 	onClose,
+	selectedColor,
 }: SelectCustomColorModalProps) {
-	const { currentColor } = useAppSelector((state) => state.editor);
-
-	const [customColor, setCustomColor] = useState(currentColor);
+	const [customColor, setCustomColor] = useState(selectedColor);
 	const dispatch = useAppDispatch();
-
+	if (!isOpen) return;
 	const handleSaveColor = () => {
+		if (!selectedColor) return;
 		dispatch(changeColorToCustom(customColor));
 		onClose();
 	};
@@ -21,8 +21,9 @@ export function SelectCustomColorModal({
 	const handleCancel = () => {
 		onClose();
 	};
+	if (!selectedColor) return;
 
-	const hexColor = RGBAToHEX(currentColor);
+	const hexColor = RGBAToHEX(selectedColor);
 
 	return (
 		<Modal isOpen={isOpen} onClose={onClose}>

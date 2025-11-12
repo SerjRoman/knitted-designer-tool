@@ -6,6 +6,7 @@ export const ToolButton = ({
 	icon: Icon,
 	label,
 	onClick,
+	iconProps,
 	disabled = false,
 }: ToolButtonProps) => {
 	const { tool } = useAppSelector((state) => state.editor.toolState);
@@ -25,7 +26,7 @@ export const ToolButton = ({
 			}`}
 			title={label}
 		>
-			<Icon size={20} />
+			<Icon size={20} {...iconProps} />
 			<span className="text-xs mt-1 font-medium">{label}</span>
 		</button>
 	);

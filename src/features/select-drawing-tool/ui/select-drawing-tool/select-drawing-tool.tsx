@@ -4,10 +4,9 @@ import {
 	Square,
 	Eraser,
 	Pipette,
-	MousePointer,
 	PaintBucket,
 } from "lucide-react";
-import { ToolButton, clearClipboard, selectTool } from "@/entities/editor";
+import { ToolButton, selectTool } from "@/entities/editor";
 import { useAppDispatch } from "@/shared/lib";
 
 export function SelectDrawingTool() {
@@ -48,15 +47,7 @@ export function SelectDrawingTool() {
 					label="Picker"
 					onClick={() => dispatch(selectTool("colorPicker"))}
 				/>
-				<ToolButton
-					toolName="select"
-					icon={MousePointer}
-					label="Select"
-					onClick={() => {
-						dispatch(selectTool("select"));
-						dispatch(clearClipboard());
-					}}
-				/>
+
 				<ToolButton
 					toolName="fill"
 					icon={PaintBucket}

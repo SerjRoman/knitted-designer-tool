@@ -1,10 +1,10 @@
-import { Copy, Scissors, Clipboard } from "lucide-react";
+import { Copy, Scissors, Clipboard, MousePointer } from "lucide-react";
 import {
 	copySelection,
 	cutSelection,
 	useClipboardShortucts,
 } from "@/features/clipboard-control";
-import { selectTool, ToolButton } from "@/entities/editor";
+import { clearClipboard, selectTool, ToolButton } from "@/entities/editor";
 import { useAppDispatch, useAppSelector } from "@/shared/lib";
 
 export function ClipboardControl() {
@@ -19,6 +19,15 @@ export function ClipboardControl() {
 				Clipboard
 			</h3>
 			<div className="grid grid-cols-4 gap-2">
+				<ToolButton
+					toolName="select"
+					icon={MousePointer}
+					label="Select"
+					onClick={() => {
+						dispatch(selectTool("select"));
+						dispatch(clearClipboard());
+					}}
+				/>
 				<ToolButton
 					toolName="copy"
 					icon={Copy}
