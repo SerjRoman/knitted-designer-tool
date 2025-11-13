@@ -34,7 +34,7 @@ export function SaveImageButton() {
 		const url = convertColorsArrayToUrl(colorsArray, width, height);
 		await dispatch(saveImageToCloud());
 
-		downloadImage(url);
+		//downloadImage(url);
 	}
 	useEffect(() => {
 		if (status === "failed") {
@@ -65,13 +65,13 @@ export function SaveImageButton() {
 							}
 							title={
 								status === "succeeded"
-									? "Upload Successful"
-									: "Upload Failed"
+									? "Motif Saved Successfully"
+									: "Motif Save Failed"
 							}
 							message={
 								status === "succeeded"
-									? "Your motif has been successfully uploaded and processed."
-									: "An error occurred while uploading the motif. Please try again later."
+									? "Your motif has been successfully saved."
+									: "An error occurred while saving the motif. Please try again later."
 							}
 							details={error}
 						/>
