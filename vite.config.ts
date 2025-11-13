@@ -19,4 +19,9 @@ export default defineConfig({
 		},
 	},
 	plugins: [react(), svgr({ include: `${root}/assets/svg/*.svg` })],
+	server: {
+    	host: '0.0.0.0',                   // allow external connections
+    	port: 5173,                        
+    	allowedHosts: ['editor.knittedforyou.com'], 
+  	}
 });

@@ -23,13 +23,12 @@ export function App() {
 	usePanCanvas(containerRef);
 
 	useEffect(() => {
-		const filename =
-			"APP_CHOICE" in window && typeof window.APP_CHOICE === "string"
-				? window.APP_CHOICE
-				: localStorage.getItem("APP_CHOICE")
-				? localStorage.getItem("APP_CHOICE")
-				: null;
+		const params = new URLSearchParams(window.location.search);
+		const queryChoice = params.get("choice");
+
+		const filename = queryChoice ? queryChoice : null;
 		if (filename) {
+			console.log("file loaded", filename);
 			dispatch(uploadImageFromCloud(`${filename}`));
 			dispatch(setFilename(filename));
 		} else {
