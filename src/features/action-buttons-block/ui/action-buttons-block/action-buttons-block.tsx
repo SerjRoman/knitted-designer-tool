@@ -1,4 +1,5 @@
 import { Eye } from "lucide-react";
+import { SaveImageButton } from "@/features/save-image";
 import { UploadImageButton } from "@/features/upload-image";
 import { ToolButton } from "@/entities/editor";
 
@@ -19,6 +20,7 @@ export function ActionButtonsBlock() {
 				/>
 
 				<UploadImageButton />
+				<SaveImageButton />
 			</div>
 		</div>
 	);

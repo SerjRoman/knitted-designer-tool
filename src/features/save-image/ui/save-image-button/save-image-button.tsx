@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector, useModal } from "@/shared/lib";
 import { StatusModal } from "@/shared/ui";
 import { convertGridToColorsArray, convertColorsArrayToUrl } from "../../lib";
 import { saveImageToCloud } from "../../model";
+import { ToolButton } from "@/entities/editor";
 
 export function SaveImageButton() {
 	const { grid, numberColumns, numberRows } = useAppSelector(
@@ -43,14 +44,15 @@ export function SaveImageButton() {
 		}
 	}, [error, openStatusModal, status]);
 	return (
-		<>
-			<button
+		<div className="flex justify-center col-span-2">
+			<ToolButton
+				icon={Download}
+				iconProps={{ size: 24 }}
+				label={"Save"}
 				onClick={handleClick}
-				className="flex flex-col items-center gap-3 p-4 bg-purple-500 text-white rounded-xl hover:bg-purple-600 transition-all"
-			>
-				<Download size={24} />
-				<span className="font-semibold">Save</span>
-			</button>
+				className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white flex-1 "
+			></ToolButton>
+
 			<ModalStatusProvider
 				ModalComponent={({ isOpen, onClose }) => {
 					if (status === "loading" || status === "idle") return;
@@ -76,6 +78,6 @@ export function SaveImageButton() {
 					);
 				}}
 			/>
-		</>
+		</div>
 	);
 }

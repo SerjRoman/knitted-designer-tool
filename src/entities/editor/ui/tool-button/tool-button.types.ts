@@ -8,4 +8,5 @@ export interface ToolButtonProps {
 	label: string;
 	onClick: () => void;
 	disabled?: boolean;
+	className?: string;
 }

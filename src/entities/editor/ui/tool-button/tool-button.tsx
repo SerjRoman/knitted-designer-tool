@@ -7,6 +7,7 @@ export const ToolButton = ({
 	label,
 	onClick,
 	iconProps,
+	className,
 	disabled = false,
 }: ToolButtonProps) => {
 	const { tool } = useAppSelector((state) => state.editor.toolState);
@@ -23,7 +24,7 @@ export const ToolButton = ({
 				disabled
 					? "opacity-50 cursor-not-allowed"
 					: "hover:scale-105 cursor-pointer"
-			}`}
+			} ${className}`}
 			title={label}
 		>
 			<Icon size={20} {...iconProps} />
