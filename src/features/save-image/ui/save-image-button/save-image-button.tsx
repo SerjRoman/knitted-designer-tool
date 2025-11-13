@@ -1,16 +1,12 @@
 import { Download } from "lucide-react";
 import { useEffect } from "react";
+import { ToolButton } from "@/entities/editor";
 import { useAppDispatch, useAppSelector, useModal } from "@/shared/lib";
 import { StatusModal } from "@/shared/ui";
-import { convertGridToColorsArray, convertColorsArrayToUrl } from "../../lib";
 import { saveImageToCloud } from "../../model";
-import { ToolButton } from "@/entities/editor";
 
 export function SaveImageButton() {
-	const { grid, numberColumns, numberRows } = useAppSelector(
-		(state) => state.canvas
-	);
-	const { error, status, filename } = useAppSelector(
+	const { error, status } = useAppSelector(
 		(state) => state["features/saveImage"]
 	);
 	const [{ open: openStatusModal }, ModalStatusProvider] = useModal<{
@@ -18,23 +14,8 @@ export function SaveImageButton() {
 		status: typeof status;
 	}>();
 	const dispatch = useAppDispatch();
-	function downloadImage(url: string) {
-		const link = document.createElement("a");
-		link.href = url;
-		link.download = `${filename ? filename : Date.now()}.png`;
-		link.style.display = "none";
-		document.body.appendChild(link);
-		link.click();
-		document.body.removeChild(link);
-	}
 	async function handleClick() {
-		const width = numberColumns;
-		const height = numberRows;
-		const colorsArray = convertGridToColorsArray(grid);
-		const url = convertColorsArrayToUrl(colorsArray, width, height);
 		await dispatch(saveImageToCloud());
-
-		//downloadImage(url);
 	}
 	useEffect(() => {
 		if (status === "failed") {
