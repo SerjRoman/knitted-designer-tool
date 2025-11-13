@@ -26,12 +26,7 @@ export function App() {
 		const params = new URLSearchParams(window.location.search);
 		const queryChoice = params.get("choice");
 
-		const filename = queryChoice ? queryChoice
-			: (window as any).APP_CHOICE
-				? window.APP_CHOICE
-				: localStorage.getItem("APP_CHOICE")
-				? localStorage.getItem("APP_CHOICE")
-				: null;
+		const filename = queryChoice ? queryChoice : null;
 		if (filename) {
 			console.log("file loaded", filename);
 			dispatch(uploadImageFromCloud(`${filename}`));
