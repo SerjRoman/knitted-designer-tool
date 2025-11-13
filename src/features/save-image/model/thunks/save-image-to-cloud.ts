@@ -45,7 +45,7 @@ export const saveImageToCloud = createAppAsyncThunk(
 			await ApiClient.Post(
 				"https://assets.knittedforyou.com/save-json",
 				JSON.stringify({
-					filename: filename,
+					filename: filename+'.json',
 					content: dataToSend,
 				})
 			);
