@@ -1,17 +1,24 @@
-import { Copy, Scissors, Clipboard, MousePointer } from "lucide-react";
+import { Copy, Scissors, Clipboard, MousePointer, X } from "lucide-react";
 import {
 	copySelection,
 	cutSelection,
 	useClipboardShortucts,
 } from "@/features/clipboard-control";
-import { clearClipboard, selectTool, ToolButton } from "@/entities/editor";
+import {
+	clearClipboard,
+	clearSelectedPoints,
+	selectTool,
+	ToolButton,
+} from "@/entities/editor";
 import { useAppDispatch, useAppSelector } from "@/shared/lib";
 
 export function ClipboardControl() {
 	const dispatch = useAppDispatch();
-	const { clipboard, selectedPoints } = useAppSelector(
-		(state) => state.editor
-	);
+	const {
+		clipboard,
+		selectedPoints,
+		toolState: { tool },
+	} = useAppSelector((state) => state.editor);
 	useClipboardShortucts();
 	return (
 		<div>
@@ -19,15 +26,26 @@ export function ClipboardControl() {
 				Clipboard
 			</h3>
 			<div className="grid grid-cols-4 gap-2">
-				<ToolButton
-					toolName="select"
-					icon={MousePointer}
-					label="Select"
-					onClick={() => {
-						dispatch(selectTool("select"));
-						dispatch(clearClipboard());
-					}}
-				/>
+				{tool === "select" ? (
+					<ToolButton
+						icon={X}
+						label="Clear"
+						onClick={() => {
+							dispatch(clearClipboard());
+							dispatch(clearSelectedPoints());
+						}}
+					/>
+				) : (
+					<ToolButton
+						toolName="select"
+						icon={MousePointer}
+						label="Select"
+						onClick={() => {
+							dispatch(selectTool("select"));
+							dispatch(clearClipboard());
+						}}
+					/>
+				)}
 				<ToolButton
 					toolName="copy"
 					icon={Copy}

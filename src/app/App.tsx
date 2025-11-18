@@ -10,6 +10,7 @@ import { setFilename } from "@/features/save-image";
 import { SelectColor } from "@/features/select-color";
 import { uploadImageFromCloud } from "@/features/upload-image";
 import { useCanvasZoom } from "@/features/zoom-canvas";
+import { CANVAS_WIDTH, CANVAS_HEIGHT } from "@/entities/canvas";
 import { useAppDispatch, useAppSelector } from "@/shared/lib";
 import { Loader } from "@/shared/ui";
 
@@ -21,18 +22,17 @@ export function App() {
 
 	useCanvasZoom(containerRef);
 	usePanCanvas(containerRef);
-
 	useEffect(() => {
 		const params = new URLSearchParams(window.location.search);
 		const queryChoice = params.get("choice");
 
 		const filename = queryChoice ? queryChoice : null;
 		if (filename) {
-			console.log("file loaded", filename);
+			console.warn("file loaded", filename);
 			dispatch(uploadImageFromCloud(`${filename}`));
 			dispatch(setFilename(filename));
 		} else {
-			console.log("No initial motif provided: ", filename);
+			console.warn("No initial motif provided: ", filename);
 		}
 	}, [dispatch]);
 
@@ -42,7 +42,8 @@ export function App() {
 				<div className="flex-1 relative overflow-hidden">
 					<div
 						ref={containerRef}
-						className="absolute inset-0 bg-white"
+						className="relative bg-white"
+						style={{ width: CANVAS_WIDTH, height: CANVAS_HEIGHT }}
 					>
 						{status === "loading" ? (
 							<div className="h-full w-full flex items-center justify-center">

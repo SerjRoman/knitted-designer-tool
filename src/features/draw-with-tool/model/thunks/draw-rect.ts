@@ -2,7 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { setPixels } from "@/entities/canvas";
 import {
 	addActionToHistory,
-	clearLineStartPoint,
+	clearRectState,
 	type Action,
 } from "@/entities/editor";
 import {
@@ -33,7 +33,7 @@ export const drawRect = createAsyncThunk(
 		});
 
 		dispatch(setPixels({ points: pointsToFill, color: currentColor }));
-		dispatch(clearLineStartPoint());
+		dispatch(clearRectState());
 
 		const historyAction: Omit<Action, "id" | "toolUsed"> = {
 			pointsBefore,

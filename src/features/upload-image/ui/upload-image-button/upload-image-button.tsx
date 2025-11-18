@@ -1,11 +1,11 @@
 import { Upload } from "lucide-react";
 import { useEffect } from "react";
+import { ToolButton } from "@/entities/editor";
 import { useAppSelector, useModal } from "@/shared/lib";
 import { StatusModal } from "@/shared/ui";
 import { UploadFromCloudModal } from "../upload-from-cloud-modal";
 import { UploadFromUserModal } from "../upload-from-user-modal";
 import { UploadTypeModal } from "../upload-type-modal";
-import { ToolButton } from "@/entities/editor";
 
 export function UploadImageButton() {
 	const { error, status } = useAppSelector(

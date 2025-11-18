@@ -45,12 +45,12 @@ export const saveImageToCloud = createAppAsyncThunk(
 			await ApiClient.Post(
 				"https://assets.knittedforyou.com/save-json",
 				JSON.stringify({
-					filename: filename+'.json',
+					filename: filename + ".json",
 					content: dataToSend,
 				})
 			);
 		} catch (error) {
-			console.log(error);
+			console.error(error);
 			if (error instanceof AxiosError) {
 				return rejectWithValue({
 					message: "Unknown server error. Please try again later!",

@@ -24,7 +24,8 @@ export const pasteFromClipboard = createAsyncThunk(
 		const pointsAfter: PointWithColor[] = [];
 		clipboard.points.forEach((point) => {
 			const [x, y] = [point.x + origin.x, point.y + origin.y];
-			if (x < 0 || y < 0) return;
+			if (x < 0 || y < 0 || y >= grid.length || x >= grid[y].length)
+				return;
 			const pointAfter = {
 				x: x,
 				y: y,

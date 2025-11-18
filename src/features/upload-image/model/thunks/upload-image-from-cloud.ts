@@ -1,9 +1,9 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 import { updateGridSizes, setColors, setGrid } from "@/entities/canvas";
+import { setCurrentColor } from "@/entities/editor";
 import { ApiClient } from "@/shared/api";
 import { HEXToRGB, type Grid, type UploadedImage } from "@/shared/lib";
-import { setCurrentColor } from "@/entities/editor";
 
 export const uploadImageFromCloud = createAsyncThunk(
 	"features/upload-image-from-cloud",
@@ -42,8 +42,14 @@ export const uploadImageFromCloud = createAsyncThunk(
 			dispatch(setColors(RGBColors));
 			dispatch(setCurrentColor(RGBColors[0]));
 			dispatch(setGrid(grid));
+			dispatch(
+				updateGridSizes({
+					numberOfColumns: width,
+					numberOfRows: height,
+				})
+			);
 		} catch (error) {
-			console.log(error);
+			console.error(error);
 			if (error instanceof AxiosError) {
 				if (error.status === 500) {
 					return rejectWithValue(

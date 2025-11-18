@@ -1,4 +1,10 @@
-import { useCallback, useMemo, useState, type MouseEvent } from "react";
+import {
+	useCallback,
+	useEffect,
+	useMemo,
+	useState,
+	type MouseEvent,
+} from "react";
 import { useClipboardPreview } from "@/features/clipboard-control";
 import {
 	useColorPickerTool,
@@ -15,12 +21,13 @@ import {
 	drawCrosshair,
 	drawSelectedPoints,
 } from "@/entities/canvas";
+import { TOOLS } from "@/entities/editor";
 import { useAppSelector, usePointFromEvent } from "@/shared/lib";
 import { Canvas } from "@/shared/ui";
 
 export function UILayer() {
 	const [isDrawing, setIsDrawing] = useState(false);
-	const { point, updatePointFromEvent } = usePointFromEvent();
+	const { point, lastPoint, updatePointFromEvent } = usePointFromEvent();
 	const lineHandlers = useLineTool();
 	const selectHandlers = useSelectTool();
 	const rectHandlers = useRectTool();
@@ -30,12 +37,19 @@ export function UILayer() {
 	const fillHandlers = useFillTool();
 	const drawClipboard = useClipboardPreview();
 	const { pixelSize } = useAppSelector((state) => state.canvas);
+
 	const { scale, offsets, isPanning } = useAppSelector(
 		(state) => state.viewport
 	);
 	const { toolState, selectedPoints } = useAppSelector(
 		(state) => state.editor
 	);
+	useEffect(() => {
+		if (!drawClipboard.clear) return;
+		if (!TOOLS.CLIPBOARD_TOOLS.some((tool) => tool === toolState.tool)) {
+			drawClipboard.clear();
+		}
+	}, [toolState.tool, drawClipboard]);
 	const activeToolHandlers = useMemo(() => {
 		switch (toolState.tool) {
 			case "brush":
@@ -66,6 +80,7 @@ export function UILayer() {
 		selectHandlers,
 		toolState.tool,
 	]);
+
 	const handleDraw = useCallback(
 		(context: CanvasRenderingContext2D) => {
 			const canvas = context.canvas;
@@ -79,26 +94,27 @@ export function UILayer() {
 			if (selectedPoints) {
 				drawSelectedPoints(context, selectedPoints, pixelSize);
 			}
-
-			if (!point || isPanning) return;
-
-			drawClipboard.draw?.(context, point);
+			if (isPanning || !lastPoint) return;
+			drawClipboard.draw?.(context, lastPoint);
 			if (isDrawing) {
-				activeToolHandlers.onDrawPreview?.(context, { point });
+				activeToolHandlers.onDrawPreview?.(context, {
+					point: lastPoint,
+				});
 			} else {
-				drawCrosshair(context, point, pixelSize);
+				if (point) drawCrosshair(context, point, pixelSize);
 			}
 		},
 		[
 			offsets,
 			scale,
 			selectedPoints,
-			point,
 			isPanning,
+			lastPoint,
 			drawClipboard,
 			isDrawing,
 			pixelSize,
 			activeToolHandlers,
+			point,
 		]
 	);
 

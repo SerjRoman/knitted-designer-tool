@@ -11,11 +11,11 @@ export function useLineTool(): ToolHandlers {
 	const pixelSize = useAppSelector((state) => state.canvas.pixelSize);
 	const onMouseDown: ToolHandler = useCallback(
 		({ point }) => {
-			if (toolState.tool === "line") {
+			if (toolState.tool === "line" && !toolState.startPoint) {
 				dispatch(setLineStartPoint(point));
 			}
 		},
-		[dispatch, toolState.tool]
+		[dispatch, toolState]
 	);
 	const onMouseUp: ToolHandler = useCallback(
 		({ point }) => {

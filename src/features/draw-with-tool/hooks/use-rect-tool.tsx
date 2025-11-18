@@ -11,11 +11,11 @@ export function useRectTool(): ToolHandlers {
 	const pixelSize = useAppSelector((state) => state.canvas.pixelSize);
 	const onMouseDown: ToolHandler = useCallback(
 		({ point }) => {
-			if (toolState.tool === "rect") {
+			if (toolState.tool === "rect" && !toolState.startPoint) {
 				dispatch(setRectStartPoint(point));
 			}
 		},
-		[dispatch, toolState.tool]
+		[dispatch, toolState]
 	);
 	const onMouseUp: ToolHandler = useCallback(
 		({ point }) => {

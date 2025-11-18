@@ -6,7 +6,7 @@ export function usePointFromEvent() {
 	const [point, setPoint] = useState<Point | null>(null);
 	const { scale, offsets } = useAppSelector((state) => state.viewport);
 	const { grid, pixelSize } = useAppSelector((state) => state.canvas);
-
+	const [lastPoint, setLastPoint] = useState<Point | null>(null);
 	const updatePointFromEvent = (event: MouseEvent<HTMLCanvasElement>) => {
 		if (!(event.target instanceof HTMLCanvasElement)) {
 			setPoint(null);
@@ -17,9 +17,10 @@ export function usePointFromEvent() {
 		const gridY = Math.floor((offsetY - offsets.y) / pixelSize / scale);
 		if (grid[gridY]?.[gridX] !== undefined) {
 			setPoint({ x: gridX, y: gridY });
+			setLastPoint({ x: gridX, y: gridY });
 		} else {
 			setPoint(null);
 		}
 	};
-	return { point, updatePointFromEvent };
+	return { point, updatePointFromEvent, lastPoint };
 }
