@@ -2,13 +2,13 @@ import { useState } from "react";
 import { HEXToRGB, RGBAToHEX, useAppDispatch } from "@/shared/lib";
 import { Modal } from "@/shared/ui";
 import { changeColorToCustom } from "../../model";
-import type { SelectCustomColorModalProps } from "./select-custom-color-modal.types";
+import type { EditCustomColorModalProps } from "./edit-custom-color-modal.types";
 
-export function SelectCustomColorModal({
+export function EditCustomColorModal({
 	isOpen,
 	onClose,
 	selectedColor,
-}: SelectCustomColorModalProps) {
+}: EditCustomColorModalProps) {
 	const [customColor, setCustomColor] = useState(selectedColor);
 	const dispatch = useAppDispatch();
 	if (!isOpen) return;

@@ -1,4 +1,6 @@
 import { PlusIcon } from "lucide-react";
+import { AddColorModal } from "@/features/add-color";
+import { EditCustomColorModal } from "@/features/edit-color";
 import { setCurrentColor } from "@/entities/editor";
 import {
 	MAX_COLORS,
@@ -6,21 +8,24 @@ import {
 	useAppSelector,
 	useModal,
 } from "@/shared/lib";
-import { SelectCustomColorModal } from "../select-custom-color-modal";
 
-export function SelectColor() {
+export default function SelectColor() {
 	const dispatch = useAppDispatch();
 	const { currentColor } = useAppSelector((state) => state.editor);
 	const { colors } = useAppSelector((state) => state.canvas);
-	const [{ open: openModal }, ModalProvider] = useModal<{
+	const [{ open: openEditColorModal }, EditColorModalProvider] = useModal<{
 		selectedColor: string;
 	}>();
+	const [{ open: openAddNewColorModal }, ModalAddNewColorProvider] =
+		useModal();
 	const maxColorsExceeded = MAX_COLORS <= colors.length;
 	return (
 		<div className="grid grid-cols-7 gap-3 ">
 			<div className="col-span-2 grid grid-rows-2 gap-3">
 				<button
-					onClick={() => openModal({ selectedColor: currentColor })}
+					onClick={() =>
+						openEditColorModal({ selectedColor: currentColor })
+					}
 					className="row-span-1 flex items-center justify-center border border-gray-300 rounded-lg transition hover:brightness-90"
 					style={{ backgroundColor: currentColor }}
 				></button>
@@ -29,6 +34,7 @@ export function SelectColor() {
 						maxColorsExceeded && "opacity-50 cursor-not-allowed"
 					}`}
 					disabled={maxColorsExceeded}
+					onClick={() => openAddNewColorModal()}
 				>
 					<PlusIcon size={20} /> Add
 				</button>
@@ -44,7 +50,8 @@ export function SelectColor() {
 				))}
 			</div>
 
-			<ModalProvider ModalComponent={SelectCustomColorModal} />
+			<EditColorModalProvider ModalComponent={EditCustomColorModal} />
+			<ModalAddNewColorProvider ModalComponent={AddColorModal} />
 		</div>
 	);
 }

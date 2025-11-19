@@ -7,7 +7,7 @@ import { UILayer } from "@/widgets/ui-layer/ui-layer";
 import { ChangeGridSizes } from "@/features/change-grid-sizes";
 import { usePanCanvas } from "@/features/pan-canvas";
 import { setFilename } from "@/features/save-image";
-import { SelectColor } from "@/features/select-color";
+import { SelectColor } from "@/widgets/select-color";
 import { uploadImageFromCloud } from "@/features/upload-image";
 import { useCanvasZoom } from "@/features/zoom-canvas";
 import { CANVAS_WIDTH, CANVAS_HEIGHT } from "@/entities/canvas";
