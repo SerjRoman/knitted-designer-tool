@@ -5,9 +5,15 @@ import {
 	addSelectedPoint,
 	clearSelectedPoints,
 	setSelectStartPoint,
+	clearSelectStartPoint,
 } from "@/entities/editor";
 import { isPointInPoints, useAppDispatch, useAppSelector } from "@/shared/lib";
-import type { PreviewToolHandler, ToolHandler, ToolHandlers } from "../lib";
+import type {
+	PreviewToolHandler,
+	ToolHandler,
+	ToolHandlers,
+	ToolHandlerWithoutPoint,
+} from "../lib";
 import { drawSelect } from "../model";
 
 export function useSelectTool(): ToolHandlers {
@@ -74,5 +80,9 @@ export function useSelectTool(): ToolHandlers {
 		},
 		[pixelSize, toolState]
 	);
-	return { onMouseDown, onDrawPreview, onMouseMove, onMouseUp };
+	const onMouseLeave: ToolHandlerWithoutPoint = useCallback(() => {
+		dispatch(clearSelectStartPoint());
+		dispatch(clearSelectedPoints());
+	}, [dispatch]);
+	return { onMouseDown, onDrawPreview, onMouseMove, onMouseUp, onMouseLeave };
 }

@@ -1,12 +1,20 @@
-import { COLORS, type Point } from "@/shared/lib";
+import {
+	COLORS,
+	CROSSHAIR_ALPHA,
+	CROSSHAIR_RECT_COLOR,
+	type Point,
+} from "@/shared/lib";
 export function drawCrosshair(
 	context: CanvasRenderingContext2D,
 	point: Point,
-	pixelSize: number
+	pixelSize: number,
+	columns: number,
+	rows: number
 ) {
-	context.strokeStyle = COLORS.blue;
-	context.fillStyle = "rgba(0, 150, 255, 0.2)";
-	context.lineWidth = 2 / context.getTransform().a;
+	context.strokeStyle = COLORS.crosshair;
+	context.globalAlpha = CROSSHAIR_ALPHA;
+	context.fillStyle = CROSSHAIR_RECT_COLOR;
+	context.lineWidth = 1 / context.getTransform().a;
 
 	const cellX = point.x * pixelSize;
 	const cellY = point.y * pixelSize;
@@ -15,14 +23,15 @@ export function drawCrosshair(
 
 	const centerX = cellX + pixelSize / 2;
 	const centerY = cellY + pixelSize / 2;
-	const transform = context.getTransform();
-	const invTransform = transform.inverse();
 
-	const topLeft = invTransform.transformPoint({ x: 0, y: 0 });
-	const bottomRight = invTransform.transformPoint({
-		x: context.canvas.width,
-		y: context.canvas.height,
-	});
+	const topLeft = {
+		x: 0,
+		y: 0,
+	};
+	const bottomRight = {
+		x: columns * pixelSize,
+		y: rows * pixelSize,
+	};
 
 	context.beginPath();
 	context.moveTo(centerX, topLeft.y);
@@ -33,4 +42,5 @@ export function drawCrosshair(
 	context.moveTo(topLeft.x, centerY);
 	context.lineTo(bottomRight.x, centerY);
 	context.stroke();
+	context.globalAlpha = 1.0;
 }

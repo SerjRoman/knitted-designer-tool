@@ -1,8 +1,13 @@
 import { useCallback } from "react";
 import { drawPreviewRect } from "@/entities/canvas";
-import { setRectStartPoint } from "@/entities/editor";
+import { clearRectState, setRectStartPoint } from "@/entities/editor";
 import { useAppDispatch, useAppSelector } from "@/shared/lib";
-import type { PreviewToolHandler, ToolHandler, ToolHandlers } from "../lib";
+import type {
+	PreviewToolHandler,
+	ToolHandler,
+	ToolHandlers,
+	ToolHandlerWithoutPoint,
+} from "../lib";
 import { drawRect } from "../model";
 
 export function useRectTool(): ToolHandlers {
@@ -38,5 +43,8 @@ export function useRectTool(): ToolHandlers {
 		},
 		[toolState, pixelSize]
 	);
-	return { onMouseDown, onMouseUp, onDrawPreview };
+	const onMouseLeave: ToolHandlerWithoutPoint = useCallback(() => {
+		dispatch(clearRectState());
+	}, [dispatch]);
+	return { onMouseDown, onMouseUp, onDrawPreview, onMouseLeave };
 }

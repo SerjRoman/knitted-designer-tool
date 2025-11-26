@@ -26,10 +26,12 @@ export function ClipboardControl() {
 				Clipboard
 			</h3>
 			<div className="grid grid-cols-4 gap-2">
-				{tool === "select" ? (
+				{tool === "select" &&
+				selectedPoints &&
+				selectedPoints?.length > 0 ? (
 					<ToolButton
 						icon={X}
-						label="Clear"
+						label="Deselect"
 						onClick={() => {
 							dispatch(clearClipboard());
 							dispatch(clearSelectedPoints());

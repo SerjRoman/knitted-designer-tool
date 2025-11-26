@@ -11,8 +11,12 @@ export interface ToolHandlers {
 	onMouseMove?: ToolHandler;
 	onMouseUp?: ToolHandler;
 	onDrawPreview?: PreviewToolHandler;
+	onMouseLeave?: ToolHandlerWithoutPoint;
 }
 export type ToolHandler = (params: ToolHandlerParams) => void;
+export type ToolHandlerWithoutPoint = (
+	params: Omit<ToolHandlerParams, "point">
+) => void;
 export type PreviewToolHandler = (
 	context: CanvasRenderingContext2D,
 	params: Omit<ToolHandlerParams, "event">

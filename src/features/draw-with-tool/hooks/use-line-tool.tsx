@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { drawPreviewLine } from "@/entities/canvas";
-import { setLineStartPoint } from "@/entities/editor";
+import { clearLineStartPoint, setLineStartPoint } from "@/entities/editor";
 import { useAppDispatch, useAppSelector } from "@/shared/lib";
 import type { PreviewToolHandler, ToolHandler, ToolHandlers } from "../lib";
 import { drawLine } from "../model";
@@ -38,5 +38,8 @@ export function useLineTool(): ToolHandlers {
 		},
 		[toolState, pixelSize]
 	);
-	return { onMouseDown, onMouseUp, onDrawPreview };
+	const onMouseLeave = useCallback(() => {
+		dispatch(clearLineStartPoint());
+	}, [dispatch]);
+	return { onMouseDown, onMouseUp, onDrawPreview, onMouseLeave };
 }

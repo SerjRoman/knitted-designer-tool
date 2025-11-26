@@ -1,6 +1,10 @@
 import { useCallback, useRef } from "react";
 import { useAppDispatch, useAppSelector, type Point } from "@/shared/lib";
-import type { ToolHandler, ToolHandlers } from "../lib";
+import type {
+	ToolHandler,
+	ToolHandlers,
+	ToolHandlerWithoutPoint,
+} from "../lib";
 import { completeBrushStroke, drawPixel } from "../model";
 
 export function useDrawingTool(): ToolHandlers {
@@ -38,9 +42,14 @@ export function useDrawingTool(): ToolHandlers {
 		lastPointRef.current = null;
 	}, [dispatch]);
 
+	const onMouseLeave: ToolHandlerWithoutPoint = useCallback(() => {
+		lastPointRef.current = null;
+	}, []);
+
 	return {
 		onMouseDown: handleMouseDown,
 		onMouseMove: handleMouseMove,
 		onMouseUp: handleMouseUp,
+		onMouseLeave,
 	};
 }

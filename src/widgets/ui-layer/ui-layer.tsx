@@ -1,20 +1,6 @@
-import {
-	useCallback,
-	useEffect,
-	useMemo,
-	useState,
-	type MouseEvent,
-} from "react";
+import { useCallback, useEffect, useState, type MouseEvent } from "react";
 import { useClipboardPreview } from "@/features/clipboard-control";
-import {
-	useColorPickerTool,
-	useDrawingTool,
-	useFillTool,
-	useLineTool,
-	usePasteTool,
-	useRectTool,
-	useSelectTool,
-} from "@/features/draw-with-tool";
+import { useActiveToolHandlers } from "@/features/draw-with-tool";
 import {
 	CANVAS_HEIGHT,
 	CANVAS_WIDTH,
@@ -28,15 +14,11 @@ import { Canvas } from "@/shared/ui";
 export function UILayer() {
 	const [isDrawing, setIsDrawing] = useState(false);
 	const { point, lastPoint, updatePointFromEvent } = usePointFromEvent();
-	const lineHandlers = useLineTool();
-	const selectHandlers = useSelectTool();
-	const rectHandlers = useRectTool();
-	const pasteHandlers = usePasteTool();
-	const drawingHandlers = useDrawingTool();
-	const colorPickerHandlers = useColorPickerTool();
-	const fillHandlers = useFillTool();
 	const drawClipboard = useClipboardPreview();
-	const { pixelSize } = useAppSelector((state) => state.canvas);
+	const { pixelSize, numberColumns, numberRows } = useAppSelector(
+		(state) => state.canvas
+	);
+	const activeToolHandlers = useActiveToolHandlers();
 
 	const { scale, offsets, isPanning } = useAppSelector(
 		(state) => state.viewport
@@ -44,42 +26,13 @@ export function UILayer() {
 	const { toolState, selectedPoints } = useAppSelector(
 		(state) => state.editor
 	);
+
 	useEffect(() => {
 		if (!drawClipboard.clear) return;
 		if (!TOOLS.CLIPBOARD_TOOLS.some((tool) => tool === toolState.tool)) {
 			drawClipboard.clear();
 		}
 	}, [toolState.tool, drawClipboard]);
-	const activeToolHandlers = useMemo(() => {
-		switch (toolState.tool) {
-			case "brush":
-			case "eraser":
-				return drawingHandlers;
-			case "colorPicker":
-				return colorPickerHandlers;
-			case "line":
-				return lineHandlers;
-			case "paste":
-				return pasteHandlers;
-			case "rect":
-				return rectHandlers;
-			case "fill":
-				return fillHandlers;
-			case "select":
-				return selectHandlers;
-			default:
-				return {};
-		}
-	}, [
-		colorPickerHandlers,
-		fillHandlers,
-		drawingHandlers,
-		lineHandlers,
-		pasteHandlers,
-		rectHandlers,
-		selectHandlers,
-		toolState.tool,
-	]);
 
 	const handleDraw = useCallback(
 		(context: CanvasRenderingContext2D) => {
@@ -101,7 +54,14 @@ export function UILayer() {
 					point: lastPoint,
 				});
 			} else {
-				if (point) drawCrosshair(context, point, pixelSize);
+				if (point)
+					drawCrosshair(
+						context,
+						point,
+						pixelSize,
+						numberColumns,
+						numberRows
+					);
 			}
 		},
 		[
@@ -115,6 +75,8 @@ export function UILayer() {
 			pixelSize,
 			activeToolHandlers,
 			point,
+			numberColumns,
+			numberRows,
 		]
 	);
 
@@ -129,13 +91,23 @@ export function UILayer() {
 		activeToolHandlers.onMouseUp?.({ point, event });
 		setIsDrawing(false);
 	}
+	function outOfDrawinArea(event: MouseEvent<HTMLCanvasElement>) {
+		activeToolHandlers.onMouseLeave?.({ event });
+		setIsDrawing(false);
+	}
 
 	function handleMouseMove(event: MouseEvent<HTMLCanvasElement>) {
 		updatePointFromEvent(event);
-		if (!point || !isDrawing) return;
+		if (!point) {
+			outOfDrawinArea(event);
+			return;
+		}
+		if (!isDrawing) return;
 		activeToolHandlers.onMouseMove?.({ event, point });
 	}
-
+	function handleMouseLeave(event: MouseEvent<HTMLCanvasElement>) {
+		outOfDrawinArea(event);
+	}
 	return (
 		<Canvas
 			draw={handleDraw}
@@ -148,7 +120,7 @@ export function UILayer() {
 			onMouseDown={handleMouseDown}
 			onMouseUp={handleMouseUp}
 			onMouseMove={handleMouseMove}
-			onMouseLeave={handleMouseUp}
+			onMouseLeave={handleMouseLeave}
 		/>
 	);
 }

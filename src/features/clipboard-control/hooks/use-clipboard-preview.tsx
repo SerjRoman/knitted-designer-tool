@@ -45,6 +45,7 @@ export function useClipboardPreview(): ClipboardPreview {
 		dispatch(clearSelectedPoints());
 		dispatch(clearClipboard());
 	}
+    
 
 	return { draw, clear };
 }

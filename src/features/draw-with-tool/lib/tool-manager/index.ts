@@ -3,4 +3,5 @@ export type {
 	ToolHandlers,
 	ToolHandler,
 	PreviewToolHandler,
+	ToolHandlerWithoutPoint,
 } from "./types";
