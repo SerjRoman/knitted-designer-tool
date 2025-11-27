@@ -52,18 +52,6 @@ export type EditorToolState =
 	| PasteState
 	| FillState;
 
-export interface Action {
-	id: string;
-	toolUsed: EditorTools;
-	pointsAfter: PointWithColor[];
-	pointsBefore: PointWithColor[];
-}
-export interface HistoryState {
-	currentActionId: string | null;
-	undoActions: Action[];
-	redoActions: Action[];
-}
-
 export interface ClipboardState {
 	points: null | PointWithColor[];
 	origin: null | Point;
@@ -73,5 +61,4 @@ export interface EditorState {
 	currentColor: string;
 	selectedPoints: null | Point[];
 	clipboard: ClipboardState;
-	history: HistoryState;
 }

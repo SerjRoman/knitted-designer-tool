@@ -1,29 +1,70 @@
 import { useEffect, useState } from "react";
 import { updateGridSizes } from "@/entities/canvas";
-import { useAppDispatch, useAppSelector } from "@/shared/lib";
+import { addActionToHistory } from "@/entities/history";
+import {
+	useAppDispatch,
+	useAppSelector,
+	type PointWithColor,
+} from "@/shared/lib";
 
 export function ChangeGridSizesModal({ onClose }: { onClose: () => void }) {
-	const { numberColumns, numberRows } = useAppSelector(
+	const { numberOfColumns, numberOfRows, grid } = useAppSelector(
 		(state) => state.canvas
 	);
-	const [columns, setColumns] = useState(String(numberColumns));
-	const [rows, setRows] = useState(String(numberRows));
+	const [columns, setColumns] = useState(String(numberOfColumns));
+	const [rows, setRows] = useState(String(numberOfRows));
 
 	const dispatch = useAppDispatch();
 
 	useEffect(() => {
-		setColumns(String(numberColumns));
-		setRows(String(numberRows));
-	}, [numberColumns, numberRows]);
+		setColumns(String(numberOfColumns));
+		setRows(String(numberOfRows));
+	}, [numberOfColumns, numberOfRows]);
 
 	function handleChangeSizes() {
-		const numberOfColumns = Number(columns);
-		const numberOfRows = Number(rows);
+		const newNumberOfColumns = Number(columns);
+		const newNumberOfRows = Number(rows);
 		if (isNaN(numberOfRows) || isNaN(numberOfColumns)) {
 			alert("Please enter valid numbers");
 			return;
 		}
-		dispatch(updateGridSizes({ numberOfColumns, numberOfRows }));
+		const newSizes = {
+			numberOfColumns: newNumberOfColumns,
+			numberOfRows: newNumberOfRows,
+		};
+		const lostPixels: PointWithColor[]= [];
+
+		if (
+			newNumberOfColumns < numberOfColumns ||
+			newNumberOfRows < numberOfRows
+		) {
+			grid.forEach((row, rowIndex) => {
+				row.forEach((color, colIndex) => {
+					const isOutsideNewRows = rowIndex >= newNumberOfRows;
+					const isOutsideNewCols = colIndex >= newNumberOfColumns;
+
+					if (isOutsideNewRows || isOutsideNewCols) {
+						lostPixels.push({
+							x: colIndex,
+							y: rowIndex,
+							color: color,
+						});
+					}
+				});
+			});
+		}
+		dispatch(
+			addActionToHistory({
+				type: "CHANGE_GRID_SIZES",
+				payload: {
+					lostPixels,
+					sizesAfter: newSizes,
+					sizesBefore: { numberOfColumns, numberOfRows },
+				},
+			})
+		);
+		dispatch(updateGridSizes(newSizes));
+
 		onClose();
 	}
 	return (

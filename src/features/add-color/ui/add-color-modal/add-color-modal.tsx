@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { addColor } from "@/entities/canvas";
-import { COLORS, HEXToRGB, RGBAToHEX, useAppDispatch } from "@/shared/lib";
+import { setCurrentColor } from "@/entities/editor";
+import { addActionToHistory } from "@/entities/history";
+import { HEXToRGB, RGBAToHEX, useAppDispatch } from "@/shared/lib";
 import { Modal } from "@/shared/ui";
 
 export function AddColorModal({
@@ -10,12 +12,14 @@ export function AddColorModal({
 	isOpen: boolean;
 	onClose: () => void;
 }) {
-	const [color, setColor] = useState(COLORS.white);
+	const [color, setColor] = useState("");
 	const dispatch = useAppDispatch();
 	if (!isOpen) return;
 	const handleSaveColor = () => {
 		if (!color) return;
 		dispatch(addColor(color));
+		dispatch(setCurrentColor(color));
+		dispatch(addActionToHistory({ type: "ADD_COLOR", payload: { color } }));
 		onClose();
 	};
 

@@ -1,5 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { addActionToHistory, clearStrokedPoints } from "@/entities/editor";
+import { clearStrokedPoints } from "@/entities/editor";
+import { addActionToHistory } from "@/entities/history";
 import type { AppStateSchema, PointWithColor } from "@/shared/lib";
 
 export const completeBrushStroke = createAsyncThunk(
@@ -25,8 +26,11 @@ export const completeBrushStroke = createAsyncThunk(
 		if (pointsAfter.length > 0) {
 			dispatch(
 				addActionToHistory({
-					pointsBefore,
-					pointsAfter,
+					type: "DRAW",
+					payload: {
+						pointsBefore,
+						pointsAfter,
+					},
 				})
 			);
 		}

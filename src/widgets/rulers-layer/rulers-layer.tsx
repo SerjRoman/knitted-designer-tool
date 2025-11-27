@@ -9,7 +9,7 @@ import { useAppSelector } from "@/shared/lib";
 import { Canvas } from "@/shared/ui";
 
 export function RulersLayer() {
-	const { numberRows, numberColumns, pixelSize } = useAppSelector(
+	const { numberOfRows, numberOfColumns, pixelSize } = useAppSelector(
 		(state) => state.canvas
 	);
 	const { scale, offsets } = useAppSelector((state) => state.viewport);
@@ -26,20 +26,20 @@ export function RulersLayer() {
 			);
 			drawVerticalRulerLayer(
 				context,
-				numberRows,
+				numberOfRows,
 				pixelSize,
 				scale,
 				offsets
 			);
 			drawHorizontalRulerLayer(
 				context,
-				numberColumns,
+				numberOfColumns,
 				pixelSize,
 				scale,
 				offsets
 			);
 		},
-		[numberColumns, numberRows, offsets, pixelSize, scale]
+		[numberOfColumns, numberOfRows, offsets, pixelSize, scale]
 	);
 	return (
 		<Canvas

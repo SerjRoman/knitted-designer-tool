@@ -1,6 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { changeColorInGrid } from "@/entities/canvas";
-import { addActionToHistory, setCurrentColor } from "@/entities/editor";
+import { setCurrentColor } from "@/entities/editor";
+import { addActionToHistory } from "@/entities/history";
 import type { AppStateSchema, PointWithColor } from "@/shared/lib";
 
 export const changeColorToCustom = createAsyncThunk(
@@ -21,8 +22,16 @@ export const changeColorToCustom = createAsyncThunk(
 			}
 		}
 		dispatch(changeColorInGrid({ colorToChange: currentColor, newColor }));
-		dispatch(setCurrentColor(newColor));
 
-		dispatch(addActionToHistory({ pointsAfter, pointsBefore }));
+		dispatch(
+			addActionToHistory({
+				type: "EDIT_COLOR",
+				payload: {
+					colorBefore: currentColor,
+					colorAfter: newColor,
+				},
+			})
+		);
+		dispatch(setCurrentColor(newColor));
 	}
 );

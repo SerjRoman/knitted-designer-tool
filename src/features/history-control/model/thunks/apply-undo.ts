@@ -1,22 +1,40 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
-import { setPixelsWithColor } from "@/entities/canvas";
-import { undoAction } from "@/entities/editor";
-import type { AppStateSchema } from "@/shared/lib";
+import { undoAction } from "@/entities/history";
+import { createAppAsyncThunk, type AppStateSchema } from "@/shared/lib";
+import { undoAddColorAction } from "./restore-add-color-action";
+import { undoDrawAction } from "./restore-draw-action";
+import { undoEditColorAction } from "./restore-edit-color-action";
+import { undoChangeGridSizesAction } from "./restore-grid-sizes";
 
-export const applyUndo = createAsyncThunk(
+export const applyUndo = createAppAsyncThunk(
 	"editor/apply-undo-action",
-	(_, { getState, dispatch }) => {
+	async (_, { getState, dispatch }) => {
 		const {
-			editor: {
-				history: { undoActions },
-			},
+			history: { undoActions, currentActionId },
 		} = getState() as AppStateSchema;
 		if (undoActions.length === 0) return;
-		const currentAction = undoActions.at(-1);
+		const currentAction = undoActions.find(
+			(action) => action.id === currentActionId
+		);
 		if (!currentAction) {
 			return;
 		}
-		dispatch(setPixelsWithColor({ points: currentAction.pointsBefore }));
+		switch (currentAction.type) {
+			case "DRAW":
+				await dispatch(undoDrawAction(currentAction.payload));
+				break;
+			case "ADD_COLOR":
+				await dispatch(undoAddColorAction(currentAction.payload));
+				break;
+			case "EDIT_COLOR":
+				await dispatch(undoEditColorAction(currentAction.payload));
+				break;
+			case "CHANGE_GRID_SIZES":
+				await dispatch(
+					undoChangeGridSizesAction(currentAction.payload)
+				);
+				break;
+		}
+
 		dispatch(undoAction());
 	}
 );

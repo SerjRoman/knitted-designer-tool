@@ -15,7 +15,7 @@ export function UILayer() {
 	const [isDrawing, setIsDrawing] = useState(false);
 	const { point, lastPoint, updatePointFromEvent } = usePointFromEvent();
 	const drawClipboard = useClipboardPreview();
-	const { pixelSize, numberColumns, numberRows } = useAppSelector(
+	const { pixelSize, numberOfColumns, numberOfRows } = useAppSelector(
 		(state) => state.canvas
 	);
 	const activeToolHandlers = useActiveToolHandlers();
@@ -59,8 +59,8 @@ export function UILayer() {
 						context,
 						point,
 						pixelSize,
-						numberColumns,
-						numberRows
+						numberOfColumns,
+						numberOfRows
 					);
 			}
 		},
@@ -75,8 +75,8 @@ export function UILayer() {
 			pixelSize,
 			activeToolHandlers,
 			point,
-			numberColumns,
-			numberRows,
+			numberOfColumns,
+			numberOfRows,
 		]
 	);
 
