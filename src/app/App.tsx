@@ -58,7 +58,7 @@ export function App() {
 							</>
 						)}
 					</div>
-					<span>Tips:...</span>
+					{/* <span>Tips:...</span> */}
 				</div>
 
 				<div className="w-96 h-screen overflow-y-auto p-6 bg-white border-l border-gray-200 shadow-lg space-y-6">
