@@ -1,10 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { setPixels } from "@/entities/canvas";
-import {
-	addActionToHistory,
-	clearRectState,
-	type Action,
-} from "@/entities/editor";
+import { clearRectState } from "@/entities/editor";
+import { addActionToHistory } from "@/entities/history";
 import {
 	getRectPixels,
 	type AppStateSchema,
@@ -35,10 +32,14 @@ export const drawRect = createAsyncThunk(
 		dispatch(setPixels({ points: pointsToFill, color: currentColor }));
 		dispatch(clearRectState());
 
-		const historyAction: Omit<Action, "id" | "toolUsed"> = {
-			pointsBefore,
-			pointsAfter,
-		};
-		dispatch(addActionToHistory(historyAction));
+		dispatch(
+			addActionToHistory({
+				type: "DRAW",
+				payload: {
+					pointsBefore,
+					pointsAfter,
+				},
+			})
+		);
 	}
 );

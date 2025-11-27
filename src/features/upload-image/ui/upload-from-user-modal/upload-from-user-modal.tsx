@@ -11,11 +11,11 @@ export function UploadFromUserModal({
 	onClose: () => void;
 }) {
 	const dispatch = useAppDispatch();
-	const { numberColumns, numberRows } = useAppSelector(
+	const { numberOfColumns, numberOfRows } = useAppSelector(
 		(state) => state.canvas
 	);
-	const [width, setWidth] = useState<number>(numberColumns);
-	const [height, setHeight] = useState<number>(numberRows);
+	const [width, setWidth] = useState<number>(numberOfColumns);
+	const [height, setHeight] = useState<number>(numberOfRows);
 	const handleFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
 		const file = event.target.files?.[0];
 		if (!file) return;

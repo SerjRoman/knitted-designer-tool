@@ -4,7 +4,7 @@ import { useAppSelector } from "@/shared/lib";
 import { Canvas } from "@/shared/ui";
 
 export function GridLayer() {
-	const { pixelSize, numberColumns, numberRows } = useAppSelector(
+	const { pixelSize, numberOfColumns, numberOfRows } = useAppSelector(
 		(state) => state.canvas
 	);
 	const { scale, offsets } = useAppSelector((state) => state.viewport);
@@ -19,9 +19,15 @@ export function GridLayer() {
 			);
 			context.translate(offsets.x, offsets.y);
 			context.scale(scale, scale);
-			drawGridLayer(context, pixelSize, numberColumns, numberRows, scale);
+			drawGridLayer(
+				context,
+				pixelSize,
+				numberOfColumns,
+				numberOfRows,
+				scale
+			);
 		},
-		[numberColumns, numberRows, pixelSize, scale, offsets]
+		[numberOfColumns, numberOfRows, pixelSize, scale, offsets]
 	);
 
 	return (

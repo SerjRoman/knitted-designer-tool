@@ -10,18 +10,18 @@ import {
 
 export function useCanvasZoom(containerRef: RefObject<HTMLDivElement | null>) {
 	const dispatch = useAppDispatch();
-	const { pixelSize, numberColumns, numberRows } = useAppSelector(
+	const { pixelSize, numberOfColumns, numberOfRows } = useAppSelector(
 		(state) => state.canvas
 	);
 	const { scale } = useAppSelector((state) => state.viewport);
 	// useEffect(() => {
 	// 	const divElement = containerRef.current;
 	// 	if (!divElement) return;
-	// 	const scaleX = divElement.clientWidth / (numberColumns * 10);
-	// 	const scaleY = divElement.clientHeight / (numberRows * 10);
+	// 	const scaleX = divElement.clientWidth / (numberOfColumns * 10);
+	// 	const scaleY = divElement.clientHeight / (numberOfRows * 10);
 	// 	const zoom = Math.min(scaleX, scaleY);
 	// 	dispatch(setZoomScale(zoom));
-	// }, [containerRef, dispatch, numberColumns, numberRows]);
+	// }, [containerRef, dispatch, numberOfColumns, numberOfRows]);
 
 	useEffect(() => {
 		const divElement = containerRef.current;
@@ -44,5 +44,12 @@ export function useCanvasZoom(containerRef: RefObject<HTMLDivElement | null>) {
 		return () => {
 			divElement.removeEventListener("wheel", handleWheel);
 		};
-	}, [containerRef, dispatch, numberColumns, numberRows, pixelSize, scale]);
+	}, [
+		containerRef,
+		dispatch,
+		numberOfColumns,
+		numberOfRows,
+		pixelSize,
+		scale,
+	]);
 }

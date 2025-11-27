@@ -19,8 +19,8 @@ interface CanvasSlice {
 	grid: Grid;
 	backgroundColor: string;
 	pixelSize: number;
-	numberColumns: number;
-	numberRows: number;
+	numberOfColumns: number;
+	numberOfRows: number;
 	rowHeights: number[];
 	columnWidths: number[];
 	colors: string[];
@@ -30,8 +30,8 @@ const initialState: CanvasSlice = {
 	grid: createEmptyGrid(INITIAL_COLUMNS, INITIAL_ROWS, BACKGROUND_COLOR),
 	backgroundColor: BACKGROUND_COLOR,
 	pixelSize: INITIAL_PIXEL_SIZE,
-	numberColumns: INITIAL_COLUMNS,
-	numberRows: INITIAL_ROWS,
+	numberOfColumns: INITIAL_COLUMNS,
+	numberOfRows: INITIAL_ROWS,
 	rowHeights: createSizesFrom(INITIAL_ROWS, INITIAL_PIXEL_SIZE),
 	columnWidths: createSizesFrom(INITIAL_COLUMNS, INITIAL_PIXEL_SIZE),
 	colors: Object.values(COLORS),
@@ -90,18 +90,21 @@ export const canvasSlice = createSlice({
 		},
 		setPixelSize(state, { payload }: PayloadAction<number>) {
 			state.pixelSize = payload;
-			state.rowHeights = createSizesFrom(state.numberRows, payload);
-			state.columnWidths = createSizesFrom(state.numberColumns, payload);
+			state.rowHeights = createSizesFrom(state.numberOfRows, payload);
+			state.columnWidths = createSizesFrom(
+				state.numberOfColumns,
+				payload
+			);
 		},
 		addRow(state) {
-			state.numberRows++;
+			state.numberOfRows++;
 			state.grid.push(
-				createRow(state.backgroundColor, state.numberColumns)
+				createRow(state.backgroundColor, state.numberOfColumns)
 			);
 			state.rowHeights.push(state.pixelSize);
 		},
 		addColumn(state) {
-			state.numberColumns++;
+			state.numberOfColumns++;
 			state.grid = state.grid.map((row) => [
 				...row,
 				state.backgroundColor,
@@ -109,12 +112,12 @@ export const canvasSlice = createSlice({
 			state.columnWidths.push(state.pixelSize);
 		},
 		removeRow(state) {
-			state.numberRows--;
+			state.numberOfRows--;
 			state.grid.pop();
 			state.rowHeights.pop();
 		},
 		removeColumn(state) {
-			state.numberColumns--;
+			state.numberOfColumns--;
 			state.grid.map((row) => {
 				return row.pop();
 			});
@@ -127,8 +130,8 @@ export const canvasSlice = createSlice({
 			}: PayloadAction<{ numberOfRows: number; numberOfColumns: number }>
 		) {
 			const { numberOfRows, numberOfColumns } = payload;
-			state.numberColumns = numberOfColumns;
-			state.numberRows = numberOfRows;
+			state.numberOfColumns = numberOfColumns;
+			state.numberOfRows = numberOfRows;
 			state.columnWidths = createSizesFrom(
 				numberOfColumns,
 				state.pixelSize
@@ -167,7 +170,9 @@ export const canvasSlice = createSlice({
 				(color) => color === colorToChange
 			);
 			if (colorInArrayIndex === -1) return;
-			state.colors.splice(colorInArrayIndex, 1, newColor);
+			if (!state.colors.includes(newColor)) {
+				state.colors.splice(colorInArrayIndex, 1, newColor);
+			}
 
 			for (let y = 0; y < state.grid.length; y++) {
 				for (let x = 0; x < state.grid[y].length; x++) {
@@ -216,6 +221,9 @@ export const canvasSlice = createSlice({
 		setColors(state, { payload }: PayloadAction<string[]>) {
 			state.colors = payload;
 		},
+		removeColor(state, { payload }: PayloadAction<string>) {
+			state.colors = state.colors.filter((color) => color !== payload);
+		},
 	},
 });
 
@@ -235,4 +243,5 @@ export const {
 	applyFlip,
 	setGrid,
 	setColors,
+	removeColor,
 } = canvasSlice.actions;

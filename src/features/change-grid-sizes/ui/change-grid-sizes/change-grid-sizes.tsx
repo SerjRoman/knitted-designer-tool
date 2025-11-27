@@ -3,7 +3,7 @@ import { ChangeGridSizesModal } from "../change-grid-sizes-modal";
 
 export function ChangeGridSizes() {
 	const [{ open, close }, ModalProvider] = useModal();
-	const { numberColumns, numberRows } = useAppSelector(
+	const { numberOfColumns, numberOfRows } = useAppSelector(
 		(state) => state.canvas
 	);
 	return (
@@ -14,7 +14,7 @@ export function ChangeGridSizes() {
 			>
 				<div className="text-sm opacity-90">Grid Size / Resize</div>
 				<div className="text-3xl font-bold mt-1 tracking-wide">
-					{numberColumns} × {numberRows}
+					{numberOfColumns} × {numberOfRows}
 				</div>
 			</button>
 			<ModalProvider>

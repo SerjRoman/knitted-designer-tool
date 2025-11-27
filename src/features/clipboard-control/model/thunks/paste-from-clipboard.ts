@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { setPixelsWithColor } from "@/entities/canvas";
-import { addActionToHistory, type Action } from "@/entities/editor";
+import { addActionToHistory } from "@/entities/history";
 import type { AppStateSchema, Point, PointWithColor } from "@/shared/lib";
 
 export const pasteFromClipboard = createAsyncThunk(
@@ -41,10 +41,14 @@ export const pasteFromClipboard = createAsyncThunk(
 		});
 		dispatch(setPixelsWithColor({ points: pointsAfter }));
 
-		const historyAction: Omit<Action, "id" | "toolUsed"> = {
-			pointsBefore,
-			pointsAfter,
-		};
-		dispatch(addActionToHistory(historyAction));
+		dispatch(
+			addActionToHistory({
+				type: "DRAW",
+				payload: {
+					pointsAfter,
+					pointsBefore,
+				},
+			})
+		);
 	}
 );

@@ -1,6 +1,6 @@
 import {
-	COLORS,
 	CROSSHAIR_ALPHA,
+	CROSSHAIR_COLOR,
 	CROSSHAIR_RECT_COLOR,
 	type Point,
 } from "@/shared/lib";
@@ -11,7 +11,7 @@ export function drawCrosshair(
 	columns: number,
 	rows: number
 ) {
-	context.strokeStyle = COLORS.crosshair;
+	context.strokeStyle = CROSSHAIR_COLOR;
 	context.globalAlpha = CROSSHAIR_ALPHA;
 	context.fillStyle = CROSSHAIR_RECT_COLOR;
 	context.lineWidth = 1 / context.getTransform().a;

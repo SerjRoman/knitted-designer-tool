@@ -1,11 +1,8 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import type { AppStateSchema } from "@/app/ambient";
 import { applyFlip } from "@/entities/canvas";
-import {
-	addActionToHistory,
-	setSelectedPoints,
-	type Action,
-} from "@/entities/editor";
+import { setSelectedPoints } from "@/entities/editor";
+import { addActionToHistory } from "@/entities/history";
 import { getBoundingBox, type PointWithColor } from "@/shared/lib";
 
 type FlipDirection = "horizontal" | "vertical";
@@ -52,10 +49,14 @@ export const flipSelection = createAsyncThunk(
 
 		dispatch(setSelectedPoints(newSelectedPoints));
 
-		const historyAction: Omit<Action, "id" | "toolUsed"> = {
-			pointsBefore,
-			pointsAfter,
-		};
-		dispatch(addActionToHistory(historyAction));
+		dispatch(
+			addActionToHistory({
+				type: "DRAW",
+				payload: {
+					pointsAfter,
+					pointsBefore,
+				},
+			})
+		);
 	}
 );

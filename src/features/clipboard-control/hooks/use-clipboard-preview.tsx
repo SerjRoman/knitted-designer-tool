@@ -11,7 +11,7 @@ interface ClipboardPreview {
 
 export function useClipboardPreview(): ClipboardPreview {
 	const { clipboard } = useAppSelector((state) => state.editor);
-	const { pixelSize, numberColumns, numberRows } = useAppSelector(
+	const { pixelSize, numberOfColumns, numberOfRows } = useAppSelector(
 		(state) => state.canvas
 	);
 	const dispatch = useAppDispatch();
@@ -31,11 +31,11 @@ export function useClipboardPreview(): ClipboardPreview {
 				clipboard.points,
 				offset,
 				pixelSize,
-				numberColumns,
-				numberRows
+				numberOfColumns,
+				numberOfRows
 			);
 		},
-		[clipboard, pixelSize, numberColumns, numberRows]
+		[clipboard, pixelSize, numberOfColumns, numberOfRows]
 	);
 
 	if (!clipboard.points) {
@@ -45,7 +45,6 @@ export function useClipboardPreview(): ClipboardPreview {
 		dispatch(clearSelectedPoints());
 		dispatch(clearClipboard());
 	}
-    
 
 	return { draw, clear };
 }

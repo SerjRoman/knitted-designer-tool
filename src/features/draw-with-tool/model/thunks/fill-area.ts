@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { setPixelsWithColor } from "@/entities/canvas";
-import { addActionToHistory, type Action } from "@/entities/editor";
+import { addActionToHistory } from "@/entities/history";
 import {
 	getAdjacentPoints,
 	type AppStateSchema,
@@ -24,10 +24,14 @@ export const fillArea = createAsyncThunk(
 			pointsAfter.push({ ...point, color: currentColor });
 		});
 		dispatch(setPixelsWithColor({ points: pointsAfter }));
-		const action: Omit<Action, "id" | "toolUsed"> = {
-			pointsAfter,
-			pointsBefore,
-		};
-		dispatch(addActionToHistory(action));
+		dispatch(
+			addActionToHistory({
+				type: "DRAW",
+				payload: {
+					pointsBefore,
+					pointsAfter,
+				},
+			})
+		);
 	}
 );
