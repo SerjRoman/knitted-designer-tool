@@ -16,7 +16,7 @@ export function usePanCanvas(ref: RefObject<HTMLDivElement | null>) {
 			}
 		}
 		function handleMouseUp() {
-			dispatch(endPanning());
+			if (isPanning) dispatch(endPanning());
 		}
 		let animationFrameId: number | null = null;
 		let lastEvent: MouseEvent | null = null;
@@ -64,5 +64,5 @@ export function usePanCanvas(ref: RefObject<HTMLDivElement | null>) {
 			containerElement.removeEventListener("mouseup", handleMouseUp);
 			containerElement.removeEventListener("mousemove", handleMouseMove);
 		};
-	}, [dispatch, isPanning, offsets.x, offsets.y, ref]);
+	}, [dispatch, isPanning, offsets, ref]);
 }

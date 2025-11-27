@@ -44,7 +44,9 @@ export function useRectTool(): ToolHandlers {
 		[toolState, pixelSize]
 	);
 	const onMouseLeave: ToolHandlerWithoutPoint = useCallback(() => {
-		dispatch(clearRectState());
-	}, [dispatch]);
+		if (toolState.tool === "rect" && toolState.startPoint) {
+			dispatch(clearRectState());
+		}
+	}, [dispatch, toolState]);
 	return { onMouseDown, onMouseUp, onDrawPreview, onMouseLeave };
 }

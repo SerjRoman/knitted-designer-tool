@@ -39,7 +39,9 @@ export function useLineTool(): ToolHandlers {
 		[toolState, pixelSize]
 	);
 	const onMouseLeave = useCallback(() => {
-		dispatch(clearLineStartPoint());
-	}, [dispatch]);
+		if (toolState.tool === "line" && toolState.startPoint) {
+			dispatch(clearLineStartPoint());
+		}
+	}, [dispatch, toolState]);
 	return { onMouseDown, onMouseUp, onDrawPreview, onMouseLeave };
 }
