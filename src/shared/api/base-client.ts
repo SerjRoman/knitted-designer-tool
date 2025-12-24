@@ -16,12 +16,12 @@ export class ApiClient {
 			headers: finalHeaders,
 		});
 	}
-	static Post<T extends AxiosResponse>(
+	static Post<T>(
 		url: string,
 		body: unknown,
 		headers?: AxiosHeaders
-	): Promise<T> {
+	): Promise<AxiosResponse<T>> {
 		const finalHeaders = ApiClient.setupBaseHeaders(headers);
-		return axios.post<void, T>(url, body, { headers: finalHeaders });
+		return axios.post(url, body, { headers: finalHeaders });
 	}
 }

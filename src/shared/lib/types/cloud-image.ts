@@ -1,12 +1,12 @@
-export type PixelInUploadedImage = { color: number; count: number };
+export type PixelInApiImageBody = { color: number; count: number };
 
-export type RowInUploadedImage = {
-	index: number;
-	pixels: PixelInUploadedImage[];
+export type RowInApiImageBody = {
+    index: number;
+    pixels: PixelInApiImageBody[];
 };
-export type UploadedImage = {
-	width: number;
-	height: number;
-	colors: string[];
-	rows: RowInUploadedImage[];
+export type ApiImageBody = {
+    width: number;
+    height: number;
+    colors: string[];
+    rows: RowInApiImageBody[];
 };
