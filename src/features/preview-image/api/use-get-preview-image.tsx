@@ -51,7 +51,7 @@ export function useGetPreviewImage({
 	useEffect(() => {
 		if (!body) return;
 		getPreviewImage({ body });
-	}, [body]);
+	}, []);
 
 	return {
 		isLoading,

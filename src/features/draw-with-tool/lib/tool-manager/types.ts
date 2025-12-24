@@ -11,7 +11,7 @@ export interface ToolHandlers {
 	onMouseMove?: ToolHandler;
 	onMouseUp?: ToolHandler;
 	onDrawPreview?: PreviewToolHandler;
-	onMouseLeave?: ToolHandlerWithoutPoint;
+	onMouseLeave?: ToolHandler;
 }
 export type ToolHandler = (params: ToolHandlerParams) => void;
 export type ToolHandlerWithoutPoint = (

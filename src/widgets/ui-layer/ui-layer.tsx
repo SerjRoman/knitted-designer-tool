@@ -49,20 +49,18 @@ export function UILayer() {
 			}
 			if (isPanning || !lastPoint) return;
 			drawClipboard.draw?.(context, lastPoint);
-			if (isDrawing) {
-				activeToolHandlers.onDrawPreview?.(context, {
-					point: lastPoint,
-				});
-			} else {
-				if (point)
-					drawCrosshair(
-						context,
-						point,
-						pixelSize,
-						numberOfColumns,
-						numberOfRows
-					);
-			}
+			activeToolHandlers.onDrawPreview?.(context, {
+				point: lastPoint,
+			});
+
+			if (!isDrawing && point)
+				drawCrosshair(
+					context,
+					point,
+					pixelSize,
+					numberOfColumns,
+					numberOfRows
+				);
 		},
 		[
 			offsets,
@@ -92,7 +90,8 @@ export function UILayer() {
 		setIsDrawing(false);
 	}
 	function outOfDrawinArea(event: MouseEvent<HTMLCanvasElement>) {
-		activeToolHandlers.onMouseLeave?.({ event });
+		if (!lastPoint) return;
+		activeToolHandlers.onMouseLeave?.({ event, point: lastPoint });
 		setIsDrawing(false);
 	}
 

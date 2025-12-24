@@ -22,7 +22,7 @@ interface ModalPropsWithCustomModal<T = object> extends ModalProps {
 
 export function useModal<T = void>(): [
 	{ open: (customProps: T) => void; close: () => void; isOpen: boolean },
-	(props: ModalPropsWithCustomModal<T>) => JSX.Element
+	(props: ModalPropsWithCustomModal<T>) => JSX.Element | null
 ] {
 	const [isOpen, setIsOpen] = useState(false);
 	const [customProps, setCustomProps] = useState<T>();
@@ -46,6 +46,7 @@ export function useModal<T = void>(): [
 					</Modal>
 				);
 			}
+			if (!isOpen) return null;
 			const finalProps = {
 				...restProps,
 				...customProps,

@@ -74,5 +74,13 @@ export function useSelectTool(): ToolHandlers {
 		},
 		[pixelSize, toolState]
 	);
-	return { onMouseDown, onDrawPreview, onMouseMove, onMouseUp };
+	const onMouseLeave: ToolHandler = useCallback(
+		({ point }) => {
+			if (toolState.tool === "select" && toolState.startPoint) {
+				dispatch(drawSelect(point));
+			}
+		},
+		[dispatch, toolState]
+	);
+	return { onMouseDown, onDrawPreview, onMouseMove, onMouseUp, onMouseLeave };
 }
