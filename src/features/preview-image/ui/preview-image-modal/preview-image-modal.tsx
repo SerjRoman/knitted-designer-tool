@@ -43,6 +43,7 @@ export function PreviewImageModal({
 					width: verticalCenter,
 					height: verticalCenter,
 				}}
+                lockAspectRatio={1}
 				minWidth={300}
 				minHeight={200}
 				bounds="window"
