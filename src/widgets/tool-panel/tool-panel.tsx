@@ -10,7 +10,7 @@ import { ToolButton } from "@/entities/editor";
 import { useModal } from "@/shared/lib";
 
 export function ToolPanel() {
-	const [{ open }, ModalWrapper] = useModal();
+	const [{ open,isOpen, close }, ModalWrapper] = useModal();
 	return (
 		<div className="space-y-4">
 			<SelectDrawingTool />
@@ -28,8 +28,8 @@ export function ToolPanel() {
 					<ToolButton
 						icon={Eye}
 						iconProps={{ size: 24 }}
-						label={"Preview"}
-						onClick={open}
+						label={isOpen ? "Close preview" : "Preview"}
+						onClick={isOpen ? close : open}
 					/>
 
 					<UploadImageButton />
