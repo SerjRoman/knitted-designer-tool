@@ -1,16 +1,18 @@
 import {
 	Brush,
 	Minus,
-	Square,
 	Eraser,
 	Pipette,
 	PaintBucket,
+	Square,
+	Circle,
 } from "lucide-react";
-import { ToolButton, selectTool } from "@/entities/editor";
-import { useAppDispatch } from "@/shared/lib";
+import { ToolButton, selectTool, setShape } from "@/entities/editor";
+import { useAppDispatch, useAppSelector } from "@/shared/lib";
 
 export function SelectDrawingTool() {
 	const dispatch = useAppDispatch();
+	const { toolState } = useAppSelector((state) => state.editor);
 	return (
 		<div>
 			<h3 className="text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wide">
@@ -30,10 +32,29 @@ export function SelectDrawingTool() {
 					onClick={() => dispatch(selectTool("line"))}
 				/>
 				<ToolButton
-					toolName="rect"
+					toolName="shape"
 					icon={Square}
 					label="Rectangle"
-					onClick={() => dispatch(selectTool("rect"))}
+					onClick={() => {
+						dispatch(selectTool("shape"));
+						dispatch(setShape("rect"));
+					}}
+					isSelected={
+						toolState.tool === "shape" && toolState.shape === "rect"
+					}
+				/>
+				<ToolButton
+					toolName="shape"
+					icon={Circle}
+					label="Ellipse"
+					onClick={() => {
+						dispatch(selectTool("shape"));
+						dispatch(setShape("ellipse"));
+					}}
+					isSelected={
+						toolState.tool === "shape" &&
+						toolState.shape === "ellipse"
+					}
 				/>
 				<ToolButton
 					toolName="eraser"

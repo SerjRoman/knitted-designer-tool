@@ -7,8 +7,8 @@ import {
 	useFillTool,
 	useLineTool,
 	usePasteTool,
-	useRectTool,
 	useSelectTool,
+	useShapeTool,
 } from "./";
 
 export function useActiveToolHandlers() {
@@ -18,9 +18,10 @@ export function useActiveToolHandlers() {
 	const colorPickerHandlers = useColorPickerTool();
 	const lineHandlers = useLineTool();
 	const pasteHandlers = usePasteTool();
-	const rectHandlers = useRectTool();
 	const fillHandlers = useFillTool();
 	const selectHandlers = useSelectTool();
+	const shapeHandlers = useShapeTool();
+
 	return useMemo(() => {
 		const handlersMap: Record<string, ToolHandlers> = {
 			brush: drawingHandlers,
@@ -28,20 +29,20 @@ export function useActiveToolHandlers() {
 			colorPicker: colorPickerHandlers,
 			line: lineHandlers,
 			paste: pasteHandlers,
-			rect: rectHandlers,
 			fill: fillHandlers,
 			select: selectHandlers,
+			shape: shapeHandlers,
 		};
 
 		return handlersMap[toolName] || {};
 	}, [
-		toolName,
 		drawingHandlers,
 		colorPickerHandlers,
 		lineHandlers,
 		pasteHandlers,
-		rectHandlers,
 		fillHandlers,
 		selectHandlers,
+		shapeHandlers,
+		toolName,
 	]);
 }

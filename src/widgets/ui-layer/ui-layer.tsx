@@ -1,12 +1,7 @@
 import { useCallback, useEffect, useState, type MouseEvent } from "react";
 import { useClipboardPreview } from "@/features/clipboard-control";
 import { useActiveToolHandlers } from "@/features/draw-with-tool";
-import {
-	CANVAS_HEIGHT,
-	CANVAS_WIDTH,
-	drawCrosshair,
-	drawSelectedPoints,
-} from "@/entities/canvas";
+import { CANVAS_HEIGHT, CANVAS_WIDTH, drawCrosshair } from "@/entities/canvas";
 import { TOOLS } from "@/entities/editor";
 import { useAppSelector, usePointFromEvent } from "@/shared/lib";
 import { Canvas } from "@/shared/ui";
@@ -23,9 +18,7 @@ export function UILayer() {
 	const { scale, offsets, isPanning } = useAppSelector(
 		(state) => state.viewport
 	);
-	const { toolState, selectedPoints } = useAppSelector(
-		(state) => state.editor
-	);
+	const { toolState } = useAppSelector((state) => state.editor);
 
 	useEffect(() => {
 		if (!drawClipboard.clear) return;
@@ -44,9 +37,7 @@ export function UILayer() {
 
 			context.translate(offsets.x, offsets.y);
 			context.scale(scale, scale);
-			if (selectedPoints) {
-				drawSelectedPoints(context, selectedPoints, pixelSize);
-			}
+
 			if (isPanning || !lastPoint) return;
 			drawClipboard.draw?.(context, lastPoint);
 			activeToolHandlers.onDrawPreview?.(context, {
@@ -65,7 +56,6 @@ export function UILayer() {
 		[
 			offsets,
 			scale,
-			selectedPoints,
 			isPanning,
 			lastPoint,
 			drawClipboard,

@@ -1,16 +1,16 @@
 import { Eye } from "lucide-react";
 import { ClipboardControl } from "@/features/clipboard-control";
+import { SelectDrawingTool } from "@/features/draw-with-tool";
 import { SelectTransformTool } from "@/features/grid-transform";
 import { HistoryControl } from "@/features/history-control";
 import { PreviewImageModal } from "@/features/preview-image";
 import { SaveImageButton } from "@/features/save-image";
-import { SelectDrawingTool } from "@/features/select-drawing-tool";
 import { UploadImageButton } from "@/features/upload-image";
 import { ToolButton } from "@/entities/editor";
 import { useModal } from "@/shared/lib";
 
 export function ToolPanel() {
-	const [{ open,isOpen, close }, ModalWrapper] = useModal();
+	const [{ open, isOpen, close }, ModalWrapper] = useModal();
 	return (
 		<div className="space-y-4">
 			<SelectDrawingTool />
@@ -30,6 +30,7 @@ export function ToolPanel() {
 						iconProps={{ size: 24 }}
 						label={isOpen ? "Close preview" : "Preview"}
 						onClick={isOpen ? close : open}
+						isSelected={false}
 					/>
 
 					<UploadImageButton />

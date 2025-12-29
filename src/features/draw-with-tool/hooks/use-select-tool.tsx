@@ -1,12 +1,17 @@
 import { useCallback, useRef } from "react";
-import { drawPreviewSelect } from "@/entities/canvas";
+import { drawPreviewPoints } from "@/entities/canvas";
 import {
 	removeSelectedPoint,
 	addSelectedPoint,
 	clearSelectedPoints,
 	setSelectStartPoint,
 } from "@/entities/editor";
-import { isPointInPoints, useAppDispatch, useAppSelector } from "@/shared/lib";
+import {
+	getRectPoints,
+	isPointInPoints,
+	useAppDispatch,
+	useAppSelector,
+} from "@/shared/lib";
 import type { PreviewToolHandler, ToolHandler, ToolHandlers } from "../lib";
 import { drawSelect } from "../model";
 
@@ -63,16 +68,17 @@ export function useSelectTool(): ToolHandlers {
 
 	const onDrawPreview: PreviewToolHandler = useCallback(
 		(context, { point }) => {
-			if (toolState.tool === "select" && toolState.startPoint) {
-				drawPreviewSelect(
-					context,
-					toolState.startPoint,
-					point,
-					pixelSize
-				);
+			if (toolState.tool !== "select") {
+				return;
+			}
+			if (selectedPoints) {
+				drawPreviewPoints(context, selectedPoints, pixelSize);
+			} else if (!selectedPoints && toolState.startPoint) {
+				const points = getRectPoints(toolState.startPoint, point);
+				drawPreviewPoints(context, points, pixelSize);
 			}
 		},
-		[pixelSize, toolState]
+		[pixelSize, selectedPoints, toolState]
 	);
 	const onMouseLeave: ToolHandler = useCallback(
 		({ point }) => {

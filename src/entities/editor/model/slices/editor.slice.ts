@@ -3,7 +3,7 @@ import { COLORS, type Point, type PointWithColor } from "@shared/lib";
 import {
 	drawingReducers,
 	lineReducers,
-	rectReducers,
+	shapeReducers,
 	selectReducers,
 	toolInitialStates,
 } from "../tools";
@@ -46,7 +46,7 @@ export const editorSlice = createSlice({
 			state.clipboard.origin = null;
 		},
 		...lineReducers,
-		...rectReducers,
+		...shapeReducers,
 		...selectReducers,
 		...drawingReducers,
 	},
@@ -56,8 +56,8 @@ export const {
 	selectTool,
 	setCurrentColor,
 	setLineStartPoint,
-	setRectStartPoint,
-	clearRectState,
+	setShapeStartPoint,
+	clearShapeState,
 	clearLineStartPoint,
 	setSelectStartPoint,
 	addSelectedPoint,
@@ -70,4 +70,5 @@ export const {
 	clearClipboard,
 	addStrokedPoint,
 	clearStrokedPoints,
+	setShape,
 } = editorSlice.actions;

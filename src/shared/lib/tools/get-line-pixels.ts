@@ -1,6 +1,6 @@
 import type { Point } from "../types";
 
-export function getLinePixels(p0: Point, p1: Point): Point[] {
+export function getLinePoints(p0: Point, p1: Point): Point[] {
 	const pixels: Point[] = [];
 	let { x: x0, y: y0 } = p0;
 	const { x: x1, y: y1 } = p1;

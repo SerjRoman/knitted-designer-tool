@@ -11,7 +11,7 @@ interface UseGetPreviewImageResponse {
 	data: string;
 	isLoading: boolean;
 	error: null | string;
-	refetch: (params: UseGetPreviewImageParams) => void;
+	refetch: (params: UseGetPreviewImageParams) => Promise<void>;
 }
 
 export function useGetPreviewImage({

@@ -9,6 +9,7 @@ export function HistoryControl() {
 	const { redoActions, currentActionId } = useAppSelector(
 		(state) => state.history
 	);
+
 	useHistoryShortcuts();
 	return (
 		<div>

@@ -1,9 +1,16 @@
 import type { Point, PointWithColor } from "@/shared/lib";
 
 export type ClipboardTools = "cut" | "copy" | "paste" | "select";
-export type DrawingTools = "brush" | "line" | "rect" | "eraser" | "colorPicker";
+export type DrawingTools =
+	| "brush"
+	| "line"
+	| "shape"
+	| "eraser"
+	| "colorPicker";
 
 export type EditorTools = DrawingTools | ClipboardTools | "fill";
+
+export type Shapes = "rect" | "ellipse";
 export interface BrushState {
 	tool: "brush";
 	strokedPoints: PointWithColor[] | null;
@@ -12,8 +19,9 @@ export interface LineState {
 	tool: "line";
 	startPoint: null | Point;
 }
-export interface RectState {
-	tool: "rect";
+export interface ShapeState {
+	tool: "shape";
+	shape: Shapes | null;
 	startPoint: null | Point;
 }
 export interface EraserState {
@@ -43,7 +51,7 @@ export interface FillState {
 export type EditorToolState =
 	| BrushState
 	| LineState
-	| RectState
+	| ShapeState
 	| EraserState
 	| ColorPickerState
 	| SelectState

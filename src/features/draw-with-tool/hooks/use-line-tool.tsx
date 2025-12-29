@@ -1,7 +1,7 @@
 import { useCallback } from "react";
-import { drawPreviewLine } from "@/entities/canvas";
+import { drawPreviewPoints } from "@/entities/canvas";
 import { clearLineStartPoint, setLineStartPoint } from "@/entities/editor";
-import { useAppDispatch, useAppSelector } from "@/shared/lib";
+import { getLinePoints, useAppDispatch, useAppSelector } from "@/shared/lib";
 import type { PreviewToolHandler, ToolHandler, ToolHandlers } from "../lib";
 import { drawLine } from "../model";
 
@@ -28,12 +28,8 @@ export function useLineTool(): ToolHandlers {
 	const onDrawPreview: PreviewToolHandler = useCallback(
 		(context, { point }) => {
 			if (toolState.tool === "line" && toolState.startPoint) {
-				drawPreviewLine(
-					context,
-					toolState.startPoint,
-					point,
-					pixelSize
-				);
+				const points = getLinePoints(toolState.startPoint, point);
+				drawPreviewPoints(context, points, pixelSize);
 			}
 		},
 		[toolState, pixelSize]

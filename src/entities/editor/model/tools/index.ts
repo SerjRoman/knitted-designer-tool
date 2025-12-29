@@ -1,5 +1,5 @@
 export { toolInitialStates } from "./initial-states";
 export { lineReducers } from "./line";
-export { rectReducers } from "./rect";
+export { shapeReducers } from "./shape";
 export { selectReducers } from "./select";
 export { drawingReducers } from "./drawing";

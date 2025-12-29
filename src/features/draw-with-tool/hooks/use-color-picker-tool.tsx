@@ -1,7 +1,7 @@
 import { useCallback } from "react";
-import { pickColor } from "@/features/select-drawing-tool";
 import { useAppDispatch, useAppSelector } from "@/shared/lib";
 import type { ToolHandler, ToolHandlers } from "../lib";
+import { pickColor } from "../model";
 
 export function useColorPickerTool(): ToolHandlers {
 	const dispatch = useAppDispatch();

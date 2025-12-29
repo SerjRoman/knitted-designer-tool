@@ -1,16 +1,14 @@
-import { getRectPixels, type Point } from "@/shared/lib";
+import { type Point } from "@/shared/lib";
 
-export function drawPreviewRect(
+export function drawPreviewPoints(
 	context: CanvasRenderingContext2D,
-	startPoint: Point,
-	endPoint: Point,
+	points: Point[],
 	pixelSize: number,
 	color = "rgba(0, 150, 255, 0.7)"
 ) {
-	const pixelsToDraw: Point[] = getRectPixels(startPoint, endPoint);
 	context.fillStyle = color;
 
-	for (const point of pixelsToDraw) {
+	for (const point of points) {
 		const rectX = point.x * pixelSize;
 		const rectY = point.y * pixelSize;
 		context.fillRect(rectX, rectY, pixelSize, pixelSize);

@@ -1,7 +1,7 @@
 import { useCallback } from "react";
-import { drawPreviewRect } from "@/entities/canvas";
-import { clearRectState, setRectStartPoint } from "@/entities/editor";
-import { useAppDispatch, useAppSelector } from "@/shared/lib";
+import { drawPreviewPoints } from "@/entities/canvas";
+import { clearShapeState, setShapeStartPoint } from "@/entities/editor";
+import { getRectPoints, useAppDispatch, useAppSelector } from "@/shared/lib";
 import type {
 	PreviewToolHandler,
 	ToolHandler,
@@ -14,39 +14,36 @@ export function useRectTool(): ToolHandlers {
 	const dispatch = useAppDispatch();
 	const { toolState } = useAppSelector((state) => state.editor);
 	const pixelSize = useAppSelector((state) => state.canvas.pixelSize);
+	const isRect = toolState.tool === "shape" && toolState.shape === "rect";
 	const onMouseDown: ToolHandler = useCallback(
 		({ point }) => {
-			if (toolState.tool === "rect" && !toolState.startPoint) {
-				dispatch(setRectStartPoint(point));
+			if (isRect && !toolState.startPoint) {
+				dispatch(setShapeStartPoint(point));
 			}
 		},
-		[dispatch, toolState]
+		[dispatch, isRect, toolState]
 	);
 	const onMouseUp: ToolHandler = useCallback(
 		({ point }) => {
-			if (toolState.tool === "rect") {
+			if (isRect) {
 				dispatch(drawRect(point));
 			}
 		},
-		[dispatch, toolState.tool]
+		[dispatch, isRect]
 	);
 	const onDrawPreview: PreviewToolHandler = useCallback(
 		(context, { point }) => {
-			if (toolState.tool === "rect" && toolState.startPoint) {
-				drawPreviewRect(
-					context,
-					toolState.startPoint,
-					point,
-					pixelSize
-				);
+			if (isRect && toolState.startPoint) {
+				const points = getRectPoints(toolState.startPoint, point);
+				drawPreviewPoints(context, points, pixelSize);
 			}
 		},
-		[toolState, pixelSize]
+		[isRect, toolState, pixelSize]
 	);
 	const onMouseLeave: ToolHandlerWithoutPoint = useCallback(() => {
-		if (toolState.tool === "rect" && toolState.startPoint) {
-			dispatch(clearRectState());
+		if (isRect && toolState.startPoint) {
+			dispatch(clearShapeState());
 		}
-	}, [dispatch, toolState]);
+	}, [dispatch, isRect, toolState]);
 	return { onMouseDown, onMouseUp, onDrawPreview, onMouseLeave };
 }
