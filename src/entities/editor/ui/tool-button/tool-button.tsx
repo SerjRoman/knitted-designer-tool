@@ -1,4 +1,4 @@
-import { useAppSelector } from "@/shared/lib";
+import { useAppSelector } from "@/shared/store";
 import type { ToolButtonProps } from "./tool-button.types";
 
 export const ToolButton = ({

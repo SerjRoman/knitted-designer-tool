@@ -38,6 +38,7 @@ export function useModal<T = void>(): [
 	const ModalProvider = useCallback(
 		(props: ModalPropsWithCustomModal<T>) => {
 			const { ModalComponent, ...restProps } = props;
+			if (!isOpen) return null;
 
 			if (!ModalComponent) {
 				return (
@@ -46,7 +47,6 @@ export function useModal<T = void>(): [
 					</Modal>
 				);
 			}
-			if (!isOpen) return null;
 			const finalProps = {
 				...restProps,
 				...customProps,

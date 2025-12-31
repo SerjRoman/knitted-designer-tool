@@ -1,5 +1,5 @@
 import { useState, type ChangeEvent } from "react";
-import { useAppDispatch, useAppSelector } from "@/shared/lib";
+import { useAppDispatch, useAppSelector } from "@/shared/store";
 import { Modal } from "@/shared/ui";
 import { processAndUploadImage } from "../../model";
 

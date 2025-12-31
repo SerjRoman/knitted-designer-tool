@@ -1,11 +1,13 @@
 import { useState, type MouseEvent } from "react";
+import { selectPixelDimensions } from "@/entities/canvas";
+import { useAppSelector } from "@/shared/store";
 import type { Point } from "../types";
-import { useAppSelector } from "./use-app-selector";
 
 export function usePointFromEvent() {
 	const [point, setPoint] = useState<Point | null>(null);
 	const { scale, offsets } = useAppSelector((state) => state.viewport);
-	const { grid, pixelSize } = useAppSelector((state) => state.canvas);
+	const { grid } = useAppSelector((state) => state.canvas);
+	const pixelDimensions = useAppSelector(selectPixelDimensions);
 	const [lastPoint, setLastPoint] = useState<Point | null>(null);
 	const updatePointFromEvent = (event: MouseEvent<HTMLCanvasElement>) => {
 		if (!(event.target instanceof HTMLCanvasElement)) {
@@ -13,9 +15,13 @@ export function usePointFromEvent() {
 			return;
 		}
 		const { offsetX, offsetY } = event.nativeEvent;
-		const gridX = Math.floor((offsetX - offsets.x) / pixelSize / scale);
-		const gridY = Math.floor((offsetY - offsets.y) / pixelSize / scale);
-		if (grid[gridY]?.[gridX] !== undefined) {
+		const gridX = Math.floor(
+			(offsetX - offsets.x) / pixelDimensions.width / scale
+		);
+		const gridY = Math.floor(
+			(offsetY - offsets.y) / pixelDimensions.height / scale
+		);
+		if (grid[gridY]?.[gridX]) {
 			setPoint({ x: gridX, y: gridY });
 			setLastPoint({ x: gridX, y: gridY });
 		} else {

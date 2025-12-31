@@ -1,5 +1,6 @@
 import { useCallback, useRef } from "react";
-import { useAppDispatch, useAppSelector, type Point } from "@/shared/lib";
+import { type Point } from "@/shared/lib";
+import { useAppDispatch, useAppSelector } from "@/shared/store";
 import type {
 	ToolHandler,
 	ToolHandlers,
@@ -23,7 +24,7 @@ export function useDrawingTool(): ToolHandlers {
 		[dispatch, tool]
 	);
 	const handleMouseMove: ToolHandler = useCallback(
-		async ({ point }) => {
+		({ point }) => {
 			if (tool !== "brush" && tool !== "eraser") return;
 			if (
 				lastPointRef.current?.x === point.x &&

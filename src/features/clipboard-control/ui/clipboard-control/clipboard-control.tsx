@@ -10,7 +10,7 @@ import {
 	selectTool,
 	ToolButton,
 } from "@/entities/editor";
-import { useAppDispatch, useAppSelector } from "@/shared/lib";
+import { useAppDispatch, useAppSelector } from "@/shared/store";
 
 export function ClipboardControl() {
 	const dispatch = useAppDispatch();

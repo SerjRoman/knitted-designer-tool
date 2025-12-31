@@ -1,6 +1,6 @@
 import type { PointWithColor } from "@/shared/lib";
 
-interface ChangeGridSizesSizes {
+interface ChangeGridSizesData {
 	numberOfColumns: number;
 	numberOfRows: number;
 }
@@ -11,9 +11,15 @@ export interface DrawActionPayload {
 }
 
 export interface ChangeGridSizesActionPayload {
-	sizesBefore: ChangeGridSizesSizes;
-	sizesAfter: ChangeGridSizesSizes;
+	sizesBefore: ChangeGridSizesData;
+	sizesAfter: ChangeGridSizesData;
 	lostPixels: PointWithColor[];
+}
+export interface ChangePixelDimensionsActionPayload {
+	pixelWidthBefore: number;
+	pixelWidthtAfter: number;
+	pixelHeightBefore: number;
+	pixelHeightAfter: number;
 }
 export type EditColorActionPayload = {
 	colorBefore: string;
@@ -24,7 +30,8 @@ export type AddColorActionPayload = {
 };
 export type ActionType =
 	| "DRAW"
-	| "CHANGE_GRID_SIZES"
+	| "CHANGE_GRID_DIMENSIONS"
+	| "CHANGE_PIXEL_DIMENSIONS"
 	| "ADD_COLOR"
 	| "EDIT_COLOR";
 
@@ -34,7 +41,11 @@ export type DrawAction = {
 };
 export type ChangeGridSizesAction = {
 	payload: ChangeGridSizesActionPayload;
-	type: "CHANGE_GRID_SIZES";
+	type: "CHANGE_GRID_DIMENSIONS";
+};
+export type ChangePixelDimensionsAction = {
+	payload: ChangePixelDimensionsActionPayload;
+	type: "CHANGE_PIXEL_DIMENSIONS";
 };
 export type EditColorAction = {
 	payload: EditColorActionPayload;
@@ -48,10 +59,6 @@ export type ActionInput =
 	| ChangeGridSizesAction
 	| DrawAction
 	| AddColorAction
-	| EditColorAction;
-export type Action = { id: string } & (
-	| DrawAction
-	| ChangeGridSizesAction
 	| EditColorAction
-	| AddColorAction
-);
+	| ChangePixelDimensionsAction;
+export type Action = { id: string } & ActionInput;

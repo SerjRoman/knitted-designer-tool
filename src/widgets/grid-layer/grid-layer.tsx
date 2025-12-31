@@ -1,12 +1,18 @@
 import { useCallback } from "react";
-import { CANVAS_HEIGHT, CANVAS_WIDTH, drawGridLayer } from "@/entities/canvas";
-import { useAppSelector } from "@/shared/lib";
+import {
+	CANVAS_HEIGHT,
+	CANVAS_WIDTH,
+	drawGridLayer,
+	selectPixelDimensions,
+} from "@/entities/canvas";
+import { useAppSelector } from "@/shared/store";
 import { Canvas } from "@/shared/ui";
 
 export function GridLayer() {
-	const { pixelSize, numberOfColumns, numberOfRows } = useAppSelector(
+	const { numberOfColumns, numberOfRows } = useAppSelector(
 		(state) => state.canvas
 	);
+	const pixelDimensions = useAppSelector(selectPixelDimensions);
 	const { scale, offsets } = useAppSelector((state) => state.viewport);
 	const handleDrawGrid = useCallback(
 		(context: CanvasRenderingContext2D) => {
@@ -21,13 +27,14 @@ export function GridLayer() {
 			context.scale(scale, scale);
 			drawGridLayer(
 				context,
-				pixelSize,
+				pixelDimensions.width,
+				pixelDimensions.height,
 				numberOfColumns,
 				numberOfRows,
 				scale
 			);
 		},
-		[numberOfColumns, numberOfRows, pixelSize, scale, offsets]
+		[offsets, scale, pixelDimensions, numberOfColumns, numberOfRows]
 	);
 
 	return (

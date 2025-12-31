@@ -2,12 +2,8 @@ import { PlusIcon } from "lucide-react";
 import { AddColorModal } from "@/features/add-color";
 import { EditCustomColorModal } from "@/features/edit-color";
 import { setCurrentColor } from "@/entities/editor";
-import {
-	MAX_COLORS,
-	useAppDispatch,
-	useAppSelector,
-	useModal,
-} from "@/shared/lib";
+import { MAX_COLORS, useModal } from "@/shared/lib";
+import { useAppDispatch, useAppSelector } from "@/shared/store";
 
 export default function SelectColor() {
 	const dispatch = useAppDispatch();

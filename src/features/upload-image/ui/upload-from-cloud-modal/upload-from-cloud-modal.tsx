@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useAppDispatch } from "@/shared/lib";
+import { useAppDispatch } from "@/shared/store";
 import { Modal } from "@/shared/ui";
 import { uploadImageFromCloud } from "../../model";
 

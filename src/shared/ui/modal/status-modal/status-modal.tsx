@@ -33,7 +33,7 @@ export function StatusModal({
 	details,
 	isOpen,
 	onClose,
-}: StatusModalProps) {
+}: Readonly<StatusModalProps>) {
 	const config = variantConfig[variant];
 	const IconComponent = config.icon;
 

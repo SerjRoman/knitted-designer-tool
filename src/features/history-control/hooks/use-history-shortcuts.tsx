@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useAppDispatch } from "@/shared/lib";
+import { useAppDispatch } from "@/shared/store";
 import { applyRedo, applyUndo } from "../model";
 
 export function useHistoryShortcuts() {

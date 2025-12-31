@@ -1,7 +1,8 @@
 import { useCallback } from "react";
-import { drawPreviewPoints } from "@/entities/canvas";
+import { drawPreviewPoints, selectPixelDimensions } from "@/entities/canvas";
 import { clearShapeState, setShapeStartPoint } from "@/entities/editor";
-import { getRectPoints, useAppDispatch, useAppSelector } from "@/shared/lib";
+import { getRectPoints } from "@/shared/lib";
+import { useAppDispatch, useAppSelector } from "@/shared/store";
 import type {
 	PreviewToolHandler,
 	ToolHandler,
@@ -13,7 +14,9 @@ import { drawRect } from "../model";
 export function useRectTool(): ToolHandlers {
 	const dispatch = useAppDispatch();
 	const { toolState } = useAppSelector((state) => state.editor);
-	const pixelSize = useAppSelector((state) => state.canvas.pixelSize);
+	const { width: pixelWidth, height: pixelHeigth } = useAppSelector(
+		selectPixelDimensions
+	);
 	const isRect = toolState.tool === "shape" && toolState.shape === "rect";
 	const onMouseDown: ToolHandler = useCallback(
 		({ point }) => {
@@ -35,10 +38,10 @@ export function useRectTool(): ToolHandlers {
 		(context, { point }) => {
 			if (isRect && toolState.startPoint) {
 				const points = getRectPoints(toolState.startPoint, point);
-				drawPreviewPoints(context, points, pixelSize);
+				drawPreviewPoints(context, points, pixelWidth, pixelHeigth);
 			}
 		},
-		[isRect, toolState, pixelSize]
+		[isRect, pixelHeigth, pixelWidth, toolState]
 	);
 	const onMouseLeave: ToolHandlerWithoutPoint = useCallback(() => {
 		if (isRect && toolState.startPoint) {

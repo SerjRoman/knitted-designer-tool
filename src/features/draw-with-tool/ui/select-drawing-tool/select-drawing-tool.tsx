@@ -8,7 +8,7 @@ import {
 	Circle,
 } from "lucide-react";
 import { ToolButton, selectTool, setShape } from "@/entities/editor";
-import { useAppDispatch, useAppSelector } from "@/shared/lib";
+import { useAppDispatch, useAppSelector } from "@/shared/store";
 
 export function SelectDrawingTool() {
 	const dispatch = useAppDispatch();

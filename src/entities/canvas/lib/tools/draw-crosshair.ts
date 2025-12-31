@@ -7,7 +7,8 @@ import {
 export function drawCrosshair(
 	context: CanvasRenderingContext2D,
 	point: Point,
-	pixelSize: number,
+	pixelWidth: number,
+	pixelHeight: number,
 	columns: number,
 	rows: number
 ) {
@@ -15,22 +16,21 @@ export function drawCrosshair(
 	context.globalAlpha = CROSSHAIR_ALPHA;
 	context.fillStyle = CROSSHAIR_RECT_COLOR;
 	context.lineWidth = 1 / context.getTransform().a;
+	const cellX = point.x * pixelWidth;
+	const cellY = point.y * pixelHeight;
+	context.fillRect(cellX, cellY, pixelWidth, pixelHeight);
+	context.strokeRect(cellX, cellY, pixelWidth, pixelHeight);
 
-	const cellX = point.x * pixelSize;
-	const cellY = point.y * pixelSize;
-	context.fillRect(cellX, cellY, pixelSize, pixelSize);
-	context.strokeRect(cellX, cellY, pixelSize, pixelSize);
-
-	const centerX = cellX + pixelSize / 2;
-	const centerY = cellY + pixelSize / 2;
+	const centerX = cellX + pixelWidth / 2;
+	const centerY = cellY + pixelHeight / 2;
 
 	const topLeft = {
 		x: 0,
 		y: 0,
 	};
 	const bottomRight = {
-		x: columns * pixelSize,
-		y: rows * pixelSize,
+		x: columns * pixelWidth,
+		y: rows * pixelHeight,
 	};
 
 	context.beginPath();
@@ -42,5 +42,5 @@ export function drawCrosshair(
 	context.moveTo(topLeft.x, centerY);
 	context.lineTo(bottomRight.x, centerY);
 	context.stroke();
-	context.globalAlpha = 1.0;
+	context.globalAlpha = 1;
 }

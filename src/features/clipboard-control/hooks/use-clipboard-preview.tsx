@@ -1,8 +1,8 @@
 import { useCallback } from "react";
-import { drawClipboardPreview } from "@/entities/canvas";
+import { drawClipboardPreview, selectPixelDimensions } from "@/entities/canvas";
 import { clearClipboard, clearSelectedPoints } from "@/entities/editor";
-import { useAppDispatch, useAppSelector } from "@/shared/lib";
 import { type Point } from "@/shared/lib/types";
+import { useAppSelector, useAppDispatch } from "@/shared/store";
 
 interface ClipboardPreview {
 	draw: ((context: CanvasRenderingContext2D, point: Point) => void) | null;
@@ -11,10 +11,17 @@ interface ClipboardPreview {
 
 export function useClipboardPreview(): ClipboardPreview {
 	const { clipboard } = useAppSelector((state) => state.editor);
-	const { pixelSize, numberOfColumns, numberOfRows } = useAppSelector(
+	const { numberOfColumns, numberOfRows } = useAppSelector(
 		(state) => state.canvas
 	);
+	const { width: pixelWidth, height: pixelHeight } = useAppSelector(
+		selectPixelDimensions
+	);
 	const dispatch = useAppDispatch();
+	const clear = useCallback(() => {
+		dispatch(clearSelectedPoints());
+		dispatch(clearClipboard());
+	}, [dispatch]);
 	const draw = useCallback(
 		(context: CanvasRenderingContext2D, point: Point) => {
 			if (!clipboard.points || !clipboard.origin) {
@@ -30,20 +37,17 @@ export function useClipboardPreview(): ClipboardPreview {
 				context,
 				clipboard.points,
 				offset,
-				pixelSize,
+				pixelWidth,
+				pixelHeight,
 				numberOfColumns,
 				numberOfRows
 			);
 		},
-		[clipboard, pixelSize, numberOfColumns, numberOfRows]
+		[clipboard, pixelWidth, pixelHeight, numberOfColumns, numberOfRows]
 	);
 
 	if (!clipboard.points) {
 		return { draw: null, clear: null };
-	}
-	function clear() {
-		dispatch(clearSelectedPoints());
-		dispatch(clearClipboard());
 	}
 
 	return { draw, clear };

@@ -1,7 +1,8 @@
 import { Download } from "lucide-react";
 import { useEffect } from "react";
 import { ToolButton } from "@/entities/editor";
-import { useAppDispatch, useAppSelector, useModal } from "@/shared/lib";
+import { useModal } from "@/shared/lib";
+import { useAppSelector, useAppDispatch } from "@/shared/store";
 import { StatusModal } from "@/shared/ui";
 import { saveImageToCloud } from "../../model";
 
@@ -18,11 +19,7 @@ export function SaveImageButton() {
 		await dispatch(saveImageToCloud());
 	}
 	useEffect(() => {
-		if (status === "failed") {
-			openStatusModal({ error, status });
-		} else if (status === "succeeded") {
-			openStatusModal({ error, status });
-		}
+		openStatusModal({ error, status });
 	}, [error, openStatusModal, status]);
 	return (
 		<div className="flex justify-center col-span-2">

@@ -1,4 +1,4 @@
-import { useAppSelector } from "@/shared/lib";
+import { useAppSelector } from "@/shared/store";
 import type { ToolHandlers } from "../lib";
 import { useEllipseTool } from "./use-ellipse-tool";
 import { useRectTool } from "./use-rect-tool";

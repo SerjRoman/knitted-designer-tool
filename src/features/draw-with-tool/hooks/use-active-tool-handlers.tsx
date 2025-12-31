@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useAppSelector } from "@/shared/lib";
+import { useAppSelector } from "@/shared/store";
 import type { ToolHandlers } from "../lib";
 import {
 	useColorPickerTool,

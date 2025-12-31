@@ -1,14 +1,17 @@
 import { useCallback } from "react";
-import { drawPreviewPoints } from "@/entities/canvas";
+import { drawPreviewPoints, selectPixelDimensions } from "@/entities/canvas";
 import { clearLineStartPoint, setLineStartPoint } from "@/entities/editor";
-import { getLinePoints, useAppDispatch, useAppSelector } from "@/shared/lib";
+import { getLinePoints } from "@/shared/lib";
+import { useAppDispatch, useAppSelector } from "@/shared/store";
 import type { PreviewToolHandler, ToolHandler, ToolHandlers } from "../lib";
 import { drawLine } from "../model";
 
 export function useLineTool(): ToolHandlers {
 	const dispatch = useAppDispatch();
 	const { toolState } = useAppSelector((state) => state.editor);
-	const pixelSize = useAppSelector((state) => state.canvas.pixelSize);
+	const { width: pixelWidth, height: pixelHeigth } = useAppSelector(
+		selectPixelDimensions
+	);
 	const onMouseDown: ToolHandler = useCallback(
 		({ point }) => {
 			if (toolState.tool === "line" && !toolState.startPoint) {
@@ -29,10 +32,10 @@ export function useLineTool(): ToolHandlers {
 		(context, { point }) => {
 			if (toolState.tool === "line" && toolState.startPoint) {
 				const points = getLinePoints(toolState.startPoint, point);
-				drawPreviewPoints(context, points, pixelSize);
+				drawPreviewPoints(context, points, pixelWidth, pixelHeigth);
 			}
 		},
-		[toolState, pixelSize]
+		[toolState, pixelWidth, pixelHeigth]
 	);
 	const onMouseLeave = useCallback(() => {
 		if (toolState.tool === "line" && toolState.startPoint) {

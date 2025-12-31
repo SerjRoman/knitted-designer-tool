@@ -1,6 +1,11 @@
-import { undoAction } from "@/entities/history";
-import { createAppAsyncThunk, type AppStateSchema } from "@/shared/lib";
+import {
+	selctUndoActions,
+	selectCurrentActionId,
+	undoAction,
+} from "@/entities/history";
+import { createAppAsyncThunk } from "@/shared/lib";
 import { undoAddColorAction } from "./restore-add-color-action";
+import { undoChangePixelDimensions } from "./restore-change-pixel-dimensions";
 import { undoDrawAction } from "./restore-draw-action";
 import { undoEditColorAction } from "./restore-edit-color-action";
 import { undoChangeGridSizesAction } from "./restore-grid-sizes";
@@ -8,9 +13,9 @@ import { undoChangeGridSizesAction } from "./restore-grid-sizes";
 export const applyUndo = createAppAsyncThunk(
 	"editor/apply-undo-action",
 	async (_, { getState, dispatch }) => {
-		const {
-			history: { undoActions, currentActionId },
-		} = getState() as AppStateSchema;
+		const state = getState();
+		const undoActions = selctUndoActions(state);
+		const currentActionId = selectCurrentActionId(state);
 		if (undoActions.length === 0) return;
 		const currentAction = undoActions.find(
 			(action) => action.id === currentActionId
@@ -20,18 +25,19 @@ export const applyUndo = createAppAsyncThunk(
 		}
 		switch (currentAction.type) {
 			case "DRAW":
-				await dispatch(undoDrawAction(currentAction.payload));
+				dispatch(undoDrawAction(currentAction.payload));
 				break;
 			case "ADD_COLOR":
-				await dispatch(undoAddColorAction(currentAction.payload));
+				dispatch(undoAddColorAction(currentAction.payload));
 				break;
 			case "EDIT_COLOR":
-				await dispatch(undoEditColorAction(currentAction.payload));
+				dispatch(undoEditColorAction(currentAction.payload));
 				break;
-			case "CHANGE_GRID_SIZES":
-				await dispatch(
-					undoChangeGridSizesAction(currentAction.payload)
-				);
+			case "CHANGE_GRID_DIMENSIONS":
+				dispatch(undoChangeGridSizesAction(currentAction.payload));
+				break;
+			case "CHANGE_PIXEL_DIMENSIONS":
+				dispatch(undoChangePixelDimensions(currentAction.payload));
 				break;
 		}
 

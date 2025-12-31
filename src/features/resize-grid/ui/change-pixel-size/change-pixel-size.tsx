@@ -1,5 +1,5 @@
 import { setPixelSize } from "@/entities/canvas";
-import { useAppDispatch, useAppSelector } from "@/shared/lib";
+import { useAppDispatch, useAppSelector } from "@/shared/store";
 
 export function ChangePixelSize() {
 	const dispatch = useAppDispatch();
@@ -7,9 +7,9 @@ export function ChangePixelSize() {
 
 	return (
 		<div className="flex flex-col gap-2">
-			<label className="text-sm font-medium text-gray-700">
+			<p className="text-sm font-medium text-gray-700">
 				Select pixel size:
-			</label>
+			</p>
 			<select
 				value={pixelSize}
 				onChange={(event) => {

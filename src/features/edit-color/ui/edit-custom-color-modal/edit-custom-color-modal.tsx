@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { HEXToRGB, RGBAToHEX, useAppDispatch } from "@/shared/lib";
+import { HEXToRGB, RGBAToHEX } from "@/shared/lib";
+import { useAppDispatch } from "@/shared/store";
 import { Modal } from "@/shared/ui";
 import { changeColorToCustom } from "../../model";
 import type { EditCustomColorModalProps } from "./edit-custom-color-modal.types";
@@ -8,7 +9,7 @@ export function EditCustomColorModal({
 	isOpen,
 	onClose,
 	selectedColor,
-}: EditCustomColorModalProps) {
+}: Readonly<EditCustomColorModalProps>) {
 	const [customColor, setCustomColor] = useState(selectedColor);
 	const dispatch = useAppDispatch();
 	if (!isOpen) return;
@@ -27,7 +28,7 @@ export function EditCustomColorModal({
 
 	return (
 		<Modal isOpen={isOpen} onClose={onClose}>
-			<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+			<div className="fixed inset-0 flex items-center justify-center">
 				<div className="bg-white p-4 rounded shadow-lg w-72">
 					<h3 className="font-medium text-gray-900 mb-3">
 						Edit color

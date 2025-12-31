@@ -1,9 +1,9 @@
 export { drawVerticalRulerLayer } from "./draw-vertical-ruler-layer";
 export { drawPixelLayer } from "./draw-pixel-layer";
 export { drawGridLayer } from "./draw-grid-layer";
-export { buildOffsets } from "./build-offsets";
 export { drawHorizontalRulerLayer } from "./draw-horizontal-ruler-layer";
 export { drawCrosshair } from "./draw-crosshair";
 export { drawPreviewPoints } from "./draw-preview-points";
 export { drawClipboardPreview } from "./draw-clipboard-preview";
 export { getMajorTickMultiplier } from "./get-major-tick-multiplier";
+export { calculateTension } from "./calculate-tensions";

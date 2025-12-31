@@ -1,18 +1,25 @@
 import { useCallback, useEffect, useState, type MouseEvent } from "react";
 import { useClipboardPreview } from "@/features/clipboard-control";
 import { useActiveToolHandlers } from "@/features/draw-with-tool";
-import { CANVAS_HEIGHT, CANVAS_WIDTH, drawCrosshair } from "@/entities/canvas";
+import {
+	CANVAS_HEIGHT,
+	CANVAS_WIDTH,
+	drawCrosshair,
+	selectPixelDimensions,
+} from "@/entities/canvas";
 import { TOOLS } from "@/entities/editor";
-import { useAppSelector, usePointFromEvent } from "@/shared/lib";
+import { usePointFromEvent } from "@/shared/lib";
+import { useAppSelector } from "@/shared/store";
 import { Canvas } from "@/shared/ui";
 
 export function UILayer() {
 	const [isDrawing, setIsDrawing] = useState(false);
 	const { point, lastPoint, updatePointFromEvent } = usePointFromEvent();
 	const drawClipboard = useClipboardPreview();
-	const { pixelSize, numberOfColumns, numberOfRows } = useAppSelector(
+	const { numberOfColumns, numberOfRows } = useAppSelector(
 		(state) => state.canvas
 	);
+	const pixelDimensions = useAppSelector(selectPixelDimensions);
 	const activeToolHandlers = useActiveToolHandlers();
 
 	const { scale, offsets, isPanning } = useAppSelector(
@@ -40,15 +47,17 @@ export function UILayer() {
 
 			if (isPanning || !lastPoint) return;
 			drawClipboard.draw?.(context, lastPoint);
+			if (!point) return;
 			activeToolHandlers.onDrawPreview?.(context, {
-				point: lastPoint,
+				point: point,
 			});
 
-			if (!isDrawing && point)
+			if (!isDrawing)
 				drawCrosshair(
 					context,
-					point,
-					pixelSize,
+					lastPoint,
+					pixelDimensions.width,
+					pixelDimensions.height,
 					numberOfColumns,
 					numberOfRows
 				);
@@ -59,10 +68,10 @@ export function UILayer() {
 			isPanning,
 			lastPoint,
 			drawClipboard,
-			isDrawing,
-			pixelSize,
 			activeToolHandlers,
+			isDrawing,
 			point,
+			pixelDimensions,
 			numberOfColumns,
 			numberOfRows,
 		]

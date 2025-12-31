@@ -1,7 +1,8 @@
 import { Upload } from "lucide-react";
 import { useEffect } from "react";
 import { ToolButton } from "@/entities/editor";
-import { useAppSelector, useModal } from "@/shared/lib";
+import { useModal } from "@/shared/lib";
+import { useAppSelector } from "@/shared/store";
 import { StatusModal } from "@/shared/ui";
 import { UploadFromCloudModal } from "../upload-from-cloud-modal";
 import { UploadFromUserModal } from "../upload-from-user-modal";

@@ -1,17 +1,13 @@
 import { useCallback, useRef } from "react";
-import { drawPreviewPoints } from "@/entities/canvas";
+import { drawPreviewPoints, selectPixelDimensions } from "@/entities/canvas";
 import {
 	removeSelectedPoint,
 	addSelectedPoint,
 	clearSelectedPoints,
 	setSelectStartPoint,
 } from "@/entities/editor";
-import {
-	getRectPoints,
-	isPointInPoints,
-	useAppDispatch,
-	useAppSelector,
-} from "@/shared/lib";
+import { getRectPoints, isPointInPoints } from "@/shared/lib";
+import { useAppDispatch, useAppSelector } from "@/shared/store";
 import type { PreviewToolHandler, ToolHandler, ToolHandlers } from "../lib";
 import { drawSelect } from "../model";
 
@@ -20,7 +16,9 @@ export function useSelectTool(): ToolHandlers {
 	const { selectedPoints, toolState } = useAppSelector(
 		(state) => state.editor
 	);
-	const pixelSize = useAppSelector((state) => state.canvas.pixelSize);
+	const { width: pixelWidth, height: pixelHeigth } = useAppSelector(
+		selectPixelDimensions
+	);
 
 	const doAddNewPointRef = useRef<boolean>(true);
 	const onMouseDown: ToolHandler = useCallback(
@@ -72,13 +70,18 @@ export function useSelectTool(): ToolHandlers {
 				return;
 			}
 			if (selectedPoints) {
-				drawPreviewPoints(context, selectedPoints, pixelSize);
+				drawPreviewPoints(
+					context,
+					selectedPoints,
+					pixelWidth,
+					pixelHeigth
+				);
 			} else if (!selectedPoints && toolState.startPoint) {
 				const points = getRectPoints(toolState.startPoint, point);
-				drawPreviewPoints(context, points, pixelSize);
+				drawPreviewPoints(context, points, pixelWidth, pixelHeigth);
 			}
 		},
-		[pixelSize, selectedPoints, toolState]
+		[pixelHeigth, pixelWidth, selectedPoints, toolState]
 	);
 	const onMouseLeave: ToolHandler = useCallback(
 		({ point }) => {

@@ -1,6 +1,6 @@
 import { FlipVertical, FlipHorizontal } from "lucide-react";
 import { ToolButton } from "@/entities/editor";
-import { useAppDispatch, useAppSelector } from "@/shared/lib";
+import { useAppDispatch, useAppSelector } from "@/shared/store";
 import { flipSelection } from "../../model/thunks";
 
 export function SelectTransformTool() {

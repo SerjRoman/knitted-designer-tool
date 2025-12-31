@@ -1,6 +1,6 @@
 import { Redo, Undo } from "lucide-react";
 import { ToolButton } from "@/entities/editor";
-import { useAppDispatch, useAppSelector } from "@/shared/lib";
+import { useAppDispatch, useAppSelector } from "@/shared/store";
 import { useHistoryShortcuts } from "../../hooks";
 import { applyRedo, applyUndo } from "../../model";
 

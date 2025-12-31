@@ -1,18 +1,24 @@
-import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import {
+	createSelector,
+	createSlice,
+	type PayloadAction,
+} from "@reduxjs/toolkit";
 import {
 	BACKGROUND_COLOR,
 	COLORS,
 	createEmptyGrid,
 	createRow,
-	createSizesFrom,
 	type Grid,
 	type Point,
 	type PointWithColor,
 } from "@/shared/lib";
+import { calculateTension } from "../../lib";
 import {
 	INITIAL_COLUMNS,
 	INITIAL_PIXEL_SIZE,
 	INITIAL_ROWS,
+	INITIAL_TENSION_ROWS,
+	INITIAL_TENSION_STITCHES,
 } from "../constants";
 
 interface CanvasSlice {
@@ -21,10 +27,15 @@ interface CanvasSlice {
 	pixelSize: number;
 	numberOfColumns: number;
 	numberOfRows: number;
-	rowHeights: number[];
-	columnWidths: number[];
+	pixelWidth: number;
+	pixelHeight: number;
 	colors: string[];
 }
+export const INITIAL_TENSION = calculateTension(
+	INITIAL_TENSION_STITCHES,
+	INITIAL_TENSION_ROWS,
+	10
+);
 
 const initialState: CanvasSlice = {
 	grid: createEmptyGrid(INITIAL_COLUMNS, INITIAL_ROWS, BACKGROUND_COLOR),
@@ -32,14 +43,33 @@ const initialState: CanvasSlice = {
 	pixelSize: INITIAL_PIXEL_SIZE,
 	numberOfColumns: INITIAL_COLUMNS,
 	numberOfRows: INITIAL_ROWS,
-	rowHeights: createSizesFrom(INITIAL_ROWS, INITIAL_PIXEL_SIZE),
-	columnWidths: createSizesFrom(INITIAL_COLUMNS, INITIAL_PIXEL_SIZE),
+	pixelWidth: INITIAL_TENSION.width,
+	pixelHeight: INITIAL_TENSION.height,
 	colors: Object.values(COLORS),
 };
 
 export const canvasSlice = createSlice({
 	initialState,
 	name: "canvas",
+	selectors: {
+		selectPixelDimensions: createSelector(
+			[
+				(state: CanvasSlice) => state.pixelSize,
+				(state: CanvasSlice) => state.pixelWidth,
+				(state: CanvasSlice) => state.pixelHeight,
+			],
+			(size, w, h) => ({
+				width: size * w,
+				height: size * h,
+			})
+		),
+		selectNumberOfColumns: (state) => state.numberOfColumns,
+		selectNumberOfRows: (state) => state.numberOfRows,
+		selectGrid: (state) => state.grid,
+		selectPixelWidth: (state) => state.pixelWidth,
+		selectPixelHeight: (state) => state.pixelHeight,
+		selectPixelSize: (state) => state.pixelSize,
+	},
 	reducers: {
 		setBackgroundColor(state, { payload }: PayloadAction<string>) {
 			state.backgroundColor = payload;
@@ -53,7 +83,7 @@ export const canvasSlice = createSlice({
 				},
 			}: PayloadAction<{ point: Point; color: string }>
 		) {
-			if (state.grid[y] && state.grid[y][x] !== undefined) {
+			if (state.grid[y]?.[x]) {
 				state.grid[y][x] = color;
 			}
 		},
@@ -68,7 +98,7 @@ export const canvasSlice = createSlice({
 		) {
 			payload.points.forEach((point) => {
 				const { x, y } = point;
-				if (state.grid[y] && state.grid[y][x] !== undefined) {
+				if (state.grid[y]?.[x]) {
 					state.grid[y][x] = payload.color;
 				}
 			});
@@ -83,25 +113,26 @@ export const canvasSlice = createSlice({
 		) {
 			payload.points.forEach((point) => {
 				const { x, y } = point;
-				if (state.grid[y] && state.grid[y][x] !== undefined) {
+				if (state.grid[y]?.[x]) {
 					state.grid[y][x] = point.color;
 				}
 			});
 		},
 		setPixelSize(state, { payload }: PayloadAction<number>) {
 			state.pixelSize = payload;
-			state.rowHeights = createSizesFrom(state.numberOfRows, payload);
-			state.columnWidths = createSizesFrom(
-				state.numberOfColumns,
-				payload
-			);
+		},
+		setPixelDimensions(
+			state,
+			{ payload }: PayloadAction<{ width: number; heigth: number }>
+		) {
+			state.pixelWidth = payload.width;
+			state.pixelHeight = payload.heigth;
 		},
 		addRow(state) {
 			state.numberOfRows++;
 			state.grid.push(
 				createRow(state.backgroundColor, state.numberOfColumns)
 			);
-			state.rowHeights.push(state.pixelSize);
 		},
 		addColumn(state) {
 			state.numberOfColumns++;
@@ -109,19 +140,16 @@ export const canvasSlice = createSlice({
 				...row,
 				state.backgroundColor,
 			]);
-			state.columnWidths.push(state.pixelSize);
 		},
 		removeRow(state) {
 			state.numberOfRows--;
 			state.grid.pop();
-			state.rowHeights.pop();
 		},
 		removeColumn(state) {
 			state.numberOfColumns--;
-			state.grid.map((row) => {
+			state.grid.forEach((row) => {
 				return row.pop();
 			});
-			state.columnWidths.pop();
 		},
 		updateGridSizes(
 			state,
@@ -132,11 +160,6 @@ export const canvasSlice = createSlice({
 			const { numberOfRows, numberOfColumns } = payload;
 			state.numberOfColumns = numberOfColumns;
 			state.numberOfRows = numberOfRows;
-			state.columnWidths = createSizesFrom(
-				numberOfColumns,
-				state.pixelSize
-			);
-			state.rowHeights = createSizesFrom(numberOfRows, state.pixelSize);
 			const newGrid = createEmptyGrid(
 				numberOfColumns,
 				numberOfRows,
@@ -244,4 +267,14 @@ export const {
 	setGrid,
 	setColors,
 	removeColor,
+	setPixelDimensions,
 } = canvasSlice.actions;
+export const {
+	selectPixelDimensions,
+	selectNumberOfColumns,
+	selectNumberOfRows,
+	selectGrid,
+	selectPixelHeight,
+	selectPixelSize,
+	selectPixelWidth,
+} = canvasSlice.selectors;

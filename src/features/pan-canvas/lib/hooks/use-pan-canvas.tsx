@@ -1,6 +1,6 @@
 import { useEffect, type RefObject } from "react";
 import { endPanning, startPanning, setOffset } from "@/entities/viewport";
-import { useAppDispatch, useAppSelector } from "@/shared/lib";
+import { useAppDispatch, useAppSelector } from "@/shared/store";
 
 export function usePanCanvas(ref: RefObject<HTMLDivElement | null>) {
 	const dispatch = useAppDispatch();

@@ -2,7 +2,8 @@ import { GRID_COLOR } from "@/shared/lib";
 
 export function drawGridLayer(
 	context: CanvasRenderingContext2D,
-	pixelSize: number,
+	pixelWidth: number,
+	pixelHeight: number,
 	columns: number,
 	rows: number,
 	scale: number
@@ -13,15 +14,15 @@ export function drawGridLayer(
 	context.beginPath();
 
 	for (let row = 0; row <= rows; row++) {
-		const coordY = row * pixelSize;
+		const coordY = row * pixelHeight;
 		context.moveTo(0, coordY);
-		context.lineTo(columns * pixelSize, coordY);
+		context.lineTo(columns * pixelWidth, coordY);
 	}
 
 	for (let column = 0; column <= columns; column++) {
-		const coordX = column * pixelSize;
+		const coordX = column * pixelWidth;
 		context.moveTo(coordX, 0);
-		context.lineTo(coordX, rows * pixelSize);
+		context.lineTo(coordX, rows * pixelHeight);
 	}
 
 	context.stroke();

@@ -3,18 +3,15 @@ import {
 	CANVAS_HEIGHT,
 	CANVAS_WIDTH,
 	drawPixelLayer,
-	selectOffsets,
+	selectPixelDimensions,
 } from "@/entities/canvas";
-import { useAppSelector } from "@/shared/lib";
+import { useAppSelector } from "@/shared/store";
 import { Canvas } from "@/shared/ui";
 
 export function CanvasLayer() {
-	const { grid, columnWidths, rowHeights } = useAppSelector(
-		(state) => state.canvas
-	);
-	const { columnOffsets, rowOffsets } = useAppSelector(selectOffsets);
+	const { grid } = useAppSelector((state) => state.canvas);
 	const { scale, offsets } = useAppSelector((state) => state.viewport);
-
+	const pixelDimensions = useAppSelector(selectPixelDimensions);
 	const handleDraw = useCallback(
 		(context: CanvasRenderingContext2D) => {
 			context.imageSmoothingEnabled = false;
@@ -31,21 +28,11 @@ export function CanvasLayer() {
 			drawPixelLayer(
 				context,
 				grid,
-				columnOffsets,
-				rowOffsets,
-				columnWidths,
-				rowHeights
+				pixelDimensions.width,
+				pixelDimensions.height
 			);
 		},
-		[
-			columnOffsets,
-			columnWidths,
-			grid,
-			rowHeights,
-			rowOffsets,
-			scale,
-			offsets,
-		]
+		[grid, scale, offsets, pixelDimensions]
 	);
 
 	return (

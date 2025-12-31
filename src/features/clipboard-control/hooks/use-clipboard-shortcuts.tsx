@@ -4,7 +4,7 @@ import {
 	clearSelectedPoints,
 	selectTool,
 } from "@/entities/editor";
-import { useAppDispatch, useAppSelector } from "@/shared/lib";
+import { useAppDispatch, useAppSelector } from "@/shared/store";
 import { copySelection, cutSelection } from "../model";
 
 export function useClipboardShortucts() {

@@ -17,6 +17,11 @@ const initialState: ActionsHistoryState = {
 export const historySlice = createSlice({
 	name: "history",
 	initialState: initialState,
+	selectors: {
+		selctUndoActions: (state) => state.undoActions,
+		selctRedoActions: (state) => state.redoActions,
+		selectCurrentActionId: (state) => state.currentActionId,
+	},
 	reducers: {
 		undoAction(state) {
 			const lastAction = state.undoActions.pop();
@@ -50,3 +55,5 @@ export const historySlice = createSlice({
 });
 export const { undoAction, redoAction, addActionToHistory } =
 	historySlice.actions;
+export const { selctUndoActions, selctRedoActions, selectCurrentActionId } =
+	historySlice.selectors;

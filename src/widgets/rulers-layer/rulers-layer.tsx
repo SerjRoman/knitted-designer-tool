@@ -4,14 +4,16 @@ import {
 	CANVAS_WIDTH,
 	drawHorizontalRulerLayer,
 	drawVerticalRulerLayer,
+	selectPixelDimensions,
 } from "@/entities/canvas";
-import { useAppSelector } from "@/shared/lib";
+import { useAppSelector } from "@/shared/store";
 import { Canvas } from "@/shared/ui";
 
 export function RulersLayer() {
-	const { numberOfRows, numberOfColumns, pixelSize } = useAppSelector(
+	const { numberOfRows, numberOfColumns } = useAppSelector(
 		(state) => state.canvas
 	);
+	const pixelDimensions = useAppSelector(selectPixelDimensions);
 	const { scale, offsets } = useAppSelector((state) => state.viewport);
 
 	const handleDrawRuler = useCallback(
@@ -27,19 +29,19 @@ export function RulersLayer() {
 			drawVerticalRulerLayer(
 				context,
 				numberOfRows,
-				pixelSize,
+				pixelDimensions.height,
 				scale,
 				offsets
 			);
 			drawHorizontalRulerLayer(
 				context,
 				numberOfColumns,
-				pixelSize,
+				pixelDimensions.width,
 				scale,
 				offsets
 			);
 		},
-		[numberOfColumns, numberOfRows, offsets, pixelSize, scale]
+		[numberOfColumns, numberOfRows, offsets, pixelDimensions, scale]
 	);
 	return (
 		<Canvas

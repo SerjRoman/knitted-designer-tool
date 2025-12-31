@@ -1,7 +1,8 @@
 import { useMemo } from "react";
 import { createPortal } from "react-dom";
 import { Rnd } from "react-rnd";
-import { transformGridToApiFormat, useAppSelector } from "@/shared/lib";
+import { transformGridToApiFormat } from "@/shared/lib";
+import { useAppSelector } from "@/shared/store";
 import { Loader } from "@/shared/ui";
 import { useGetPreviewImage } from "../../api";
 
