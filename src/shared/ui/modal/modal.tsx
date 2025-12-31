@@ -1,7 +1,6 @@
 import { useRef } from "react";
 import { createPortal } from "react-dom";
 import { useClickOutside } from "@/shared/lib";
-import styles from "./modal.module.css";
 import type { IModalProps } from "./modal.types";
 
 export function Modal(props: IModalProps) {
@@ -20,7 +19,12 @@ export function Modal(props: IModalProps) {
 	});
 	if (!isOpen) return null;
 	return createPortal(
-		<div className={styles.overlay} data-modal-open="true">
+		<div
+			className={
+				"fixed inset-0 z-[500] bg-black/30 flex items-center justify-center"
+			}
+			data-modal-open="true"
+		>
 			<div className={className} ref={contentRef}>
 				{children}
 			</div>

@@ -1,17 +1,20 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
-import { clearStrokedPoints } from "@/entities/editor";
+import { selectBackgroundColor } from "@/entities/canvas";
+import {
+	clearStrokedPoints,
+	selectCurrentColor,
+	selectToolState,
+} from "@/entities/editor";
 import { addActionToHistory } from "@/entities/history";
-import type { AppStateSchema, PointWithColor } from "@/shared/lib";
+import type { PointWithColor } from "@/shared/lib";
+import { createAppAsyncThunk } from "@/shared/store";
 
-export const completeBrushStroke = createAsyncThunk(
+export const completeBrushStroke = createAppAsyncThunk(
 	"editor/complete-brush-stroke",
 	(_, { dispatch, getState }) => {
-		const {
-			editor: { currentColor, toolState },
-		} = getState() as AppStateSchema;
-		const {
-			canvas: { backgroundColor },
-		} = getState() as AppStateSchema;
+		const state = getState();
+		const toolState = selectToolState(state);
+		const currentColor = selectCurrentColor(state);
+		const backgroundColor = selectBackgroundColor(state);
 		if (toolState.tool !== "brush" && toolState.tool !== "eraser") return;
 		const { strokedPoints } = toolState;
 		if (!strokedPoints || strokedPoints.length <= 0) return;

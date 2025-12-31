@@ -1,26 +1,13 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
 import { changeColorInGrid } from "@/entities/canvas";
-import { setCurrentColor } from "@/entities/editor";
+import { selectCurrentColor, setCurrentColor } from "@/entities/editor";
 import { addActionToHistory } from "@/entities/history";
-import type { AppStateSchema, PointWithColor } from "@/shared/lib";
+import { createAppAsyncThunk } from "@/shared/store";
 
-export const changeColorToCustom = createAsyncThunk(
+export const changeColorToCustom = createAppAsyncThunk(
 	"editor/change-color-to-custom",
 	(newColor: string, { getState, dispatch }) => {
-		const {
-			editor: { currentColor },
-			canvas: { grid },
-		} = getState() as AppStateSchema;
-		const pointsBefore: PointWithColor[] = [];
-		const pointsAfter: PointWithColor[] = [];
-		for (let y = 0; y < grid.length; y++) {
-			for (let x = 0; x < grid[y].length; x++) {
-				const color = grid[y][x];
-				if (color !== currentColor) continue;
-				pointsBefore.push({ x, y, color: currentColor });
-				pointsAfter.push({ x, y, color: newColor });
-			}
-		}
+		const state = getState();
+		const currentColor = selectCurrentColor(state);
 		dispatch(changeColorInGrid({ colorToChange: currentColor, newColor }));
 
 		dispatch(

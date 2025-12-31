@@ -22,6 +22,12 @@ const initialState: EditorState = {
 export const editorSlice = createSlice({
 	initialState,
 	name: "editor",
+	selectors: {
+		selectCurrentColor: (state) => state.currentColor,
+		selectToolState: (state) => state.toolState,
+		selectClipboard: (state) => state.clipboard,
+		selectSelectedPoints: (state) => state.selectedPoints,
+	},
 	reducers: {
 		selectTool(state, { payload }: PayloadAction<EditorTools>) {
 			state.toolState = toolInitialStates[payload];
@@ -72,3 +78,9 @@ export const {
 	clearStrokedPoints,
 	setShape,
 } = editorSlice.actions;
+export const {
+	selectClipboard,
+	selectCurrentColor,
+	selectSelectedPoints,
+	selectToolState,
+} = editorSlice.selectors;

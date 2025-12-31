@@ -69,6 +69,7 @@ export const canvasSlice = createSlice({
 		selectPixelWidth: (state) => state.pixelWidth,
 		selectPixelHeight: (state) => state.pixelHeight,
 		selectPixelSize: (state) => state.pixelSize,
+		selectBackgroundColor: (state) => state.backgroundColor,
 	},
 	reducers: {
 		setBackgroundColor(state, { payload }: PayloadAction<string>) {
@@ -277,4 +278,5 @@ export const {
 	selectPixelHeight,
 	selectPixelSize,
 	selectPixelWidth,
+	selectBackgroundColor,
 } = canvasSlice.selectors;

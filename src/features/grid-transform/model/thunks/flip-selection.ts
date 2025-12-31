@@ -1,18 +1,21 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
-import type { AppStateSchema } from "@/app/ambient";
-import { applyFlip } from "@/entities/canvas";
-import { setSelectedPoints } from "@/entities/editor";
+import { applyFlip, selectBackgroundColor, selectGrid } from "@/entities/canvas";
+import { selectSelectedPoints, setSelectedPoints } from "@/entities/editor";
 import { addActionToHistory } from "@/entities/history";
-import { getBoundingBox, type PointWithColor } from "@/shared/lib";
+import {
+	createAppAsyncThunk,
+	getBoundingBox,
+	type PointWithColor,
+} from "@/shared/lib";
 
 type FlipDirection = "horizontal" | "vertical";
 
-export const flipSelection = createAsyncThunk(
+export const flipSelection = createAppAsyncThunk(
 	"canvas/flip-selection",
 	async (direction: FlipDirection, { getState, dispatch }) => {
-		const state = getState() as AppStateSchema;
-		const { selectedPoints } = state.editor;
-		const { grid, backgroundColor } = state.canvas;
+		const state = getState();
+		const selectedPoints = selectSelectedPoints(state)
+        const grid = selectGrid(state)
+        const backgroundColor = selectBackgroundColor(state)
 
 		if (!selectedPoints || selectedPoints.length === 0) {
 			return;

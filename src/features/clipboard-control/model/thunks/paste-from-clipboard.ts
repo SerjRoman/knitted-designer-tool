@@ -1,15 +1,19 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
-import { setPixelsWithColor } from "@/entities/canvas";
+import { selectGrid, setPixelsWithColor } from "@/entities/canvas";
+import { selectClipboard, selectToolState } from "@/entities/editor";
 import { addActionToHistory } from "@/entities/history";
-import type { AppStateSchema, Point, PointWithColor } from "@/shared/lib";
+import {
+	createAppAsyncThunk,
+	type Point,
+	type PointWithColor,
+} from "@/shared/lib";
 
-export const pasteFromClipboard = createAsyncThunk(
+export const pasteFromClipboard = createAppAsyncThunk(
 	"editor/paster-from-clipboard",
 	(offsetPoint: Point, { getState, dispatch }) => {
-		const {
-			editor: { clipboard, toolState },
-			canvas: { grid },
-		} = getState() as AppStateSchema;
+		const state = getState();
+		const clipboard = selectClipboard(state);
+		const toolState = selectToolState(state);
+		const grid = selectGrid(state);
 		if (
 			!clipboard.origin ||
 			!clipboard.points ||

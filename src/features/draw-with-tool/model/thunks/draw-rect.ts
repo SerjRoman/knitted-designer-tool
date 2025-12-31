@@ -1,23 +1,24 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
-import { setPixels } from "@/entities/canvas";
-import { clearShapeState } from "@/entities/editor";
+import { selectGrid, setPixels } from "@/entities/canvas";
+import {
+	clearShapeState,
+	selectCurrentColor,
+	selectToolState,
+} from "@/entities/editor";
 import { addActionToHistory } from "@/entities/history";
 import {
+	createAppAsyncThunk,
 	getRectPoints,
-	type AppStateSchema,
 	type Point,
 	type PointWithColor,
 } from "@/shared/lib";
 
-export const drawRect = createAsyncThunk(
+export const drawRect = createAppAsyncThunk(
 	"canvas/draw-rect",
 	(endPoint: Point, { getState, dispatch }) => {
-		const {
-			editor: { currentColor, toolState },
-		} = getState() as AppStateSchema;
-		const {
-			canvas: { grid },
-		} = getState() as AppStateSchema;
+		const state = getState();
+		const toolState = selectToolState(state);
+		const grid = selectGrid(state);
+		const currentColor = selectCurrentColor(state);
 		if (
 			toolState.tool !== "shape" ||
 			toolState.shape !== "rect" ||

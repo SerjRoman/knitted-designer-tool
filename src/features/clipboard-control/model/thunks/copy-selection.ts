@@ -1,24 +1,22 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
+import { selectGrid } from "@/entities/canvas";
 import {
 	clearSelectedPoints,
+	selectSelectedPoints,
 	setClipboardOrigin,
 	setClipboardPoints,
 } from "@/entities/editor";
 import {
+	createAppAsyncThunk,
 	getBoundingBox,
-	type AppStateSchema,
 	type PointWithColor,
 } from "@/shared/lib";
 
-export const copySelection = createAsyncThunk(
+export const copySelection = createAppAsyncThunk(
 	"editor/copy-selection",
 	async (_, { getState, dispatch }) => {
-		const {
-			editor: { selectedPoints },
-		} = getState() as AppStateSchema;
-		const {
-			canvas: { grid },
-		} = getState() as AppStateSchema;
+		const state = getState();
+		const grid = selectGrid(state);
+		const selectedPoints = selectSelectedPoints(state);
 		if (!selectedPoints || selectedPoints.length === 0) return;
 		const pointsWithColor: PointWithColor[] = selectedPoints.map(
 			(point) => {

@@ -1,19 +1,18 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
-import { setPixelsWithColor } from "@/entities/canvas";
+import { selectGrid, setPixelsWithColor } from "@/entities/canvas";
+import { selectCurrentColor } from "@/entities/editor";
 import { addActionToHistory } from "@/entities/history";
 import {
+	createAppAsyncThunk,
 	getAdjacentPoints,
-	type AppStateSchema,
 	type Point,
 	type PointWithColor,
 } from "@/shared/lib";
-export const fillArea = createAsyncThunk(
+export const fillArea = createAppAsyncThunk(
 	"editor/fill-area",
 	(point: Point, { getState, dispatch }) => {
-		const {
-			canvas: { grid },
-			editor: { currentColor },
-		} = getState() as AppStateSchema;
+		const state = getState();
+		const grid = selectGrid(state);
+		const currentColor = selectCurrentColor(state);
 		const colorToFill = grid[point.y][point.x];
 
 		const pointsToFill = getAdjacentPoints(point, grid);

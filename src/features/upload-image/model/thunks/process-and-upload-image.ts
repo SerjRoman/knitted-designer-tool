@@ -1,5 +1,4 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
-import { setColors } from "@/entities/canvas";
+import { selectGrid, setColors } from "@/entities/canvas";
 import {
 	setClipboardPoints,
 	setClipboardOrigin,
@@ -7,11 +6,11 @@ import {
 } from "@/entities/editor";
 import {
 	approximateColors,
+	createAppAsyncThunk,
 	getBoundingBox,
 	getImageDataFromImage,
 	getPopularColorsFromRGBArray,
 	MAX_COLORS,
-	type AppStateSchema,
 	type RGBColor,
 } from "@/shared/lib";
 import {
@@ -26,7 +25,7 @@ interface ProcessImagePayload {
 	height: number;
 }
 
-export const processAndUploadImage = createAsyncThunk<
+export const processAndUploadImage = createAppAsyncThunk<
 	void,
 	ProcessImagePayload
 >(
@@ -36,9 +35,8 @@ export const processAndUploadImage = createAsyncThunk<
 			new Error("Failed to read file as string.");
 		}
 		const reader = new FileReader();
-		const {
-			canvas: { grid },
-		} = getState() as AppStateSchema;
+		const state = getState();
+		const grid = selectGrid(state);
 		reader.onload = (e: ProgressEvent<FileReader>) => {
 			const img = new Image();
 			img.onload = () => {

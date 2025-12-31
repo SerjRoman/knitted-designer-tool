@@ -1,22 +1,26 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
-import { clearSelectStartPoint, setSelectedPoints } from "@/entities/editor";
-import { type AppStateSchema, type Point, getRectPoints } from "@/shared/lib";
+import {
+	clearSelectStartPoint,
+	selectSelectedPoints,
+	selectToolState,
+	setSelectedPoints,
+} from "@/entities/editor";
+import { type Point, createAppAsyncThunk, getRectPoints } from "@/shared/lib";
 
-export const drawSelect = createAsyncThunk(
-    "canvas/draw-select",
-    (endPoint: Point, { getState, dispatch }) => {
-        const {
-            editor: { toolState, selectedPoints },
-        } = getState() as AppStateSchema;
+export const drawSelect = createAppAsyncThunk(
+	"canvas/draw-select",
+	(endPoint: Point, { getState, dispatch }) => {
+		const state = getState();
+		const toolState = selectToolState(state);
+		const selectedPoints = selectSelectedPoints(state);
 
-        if (toolState.tool !== "select") return;
+		if (toolState.tool !== "select") return;
 
-        if (!toolState.startPoint || selectedPoints) return;
-        const rectSelectedPoints = getRectPoints(
-            toolState.startPoint,
-            endPoint
-        );
-        dispatch(setSelectedPoints(rectSelectedPoints));
-        dispatch(clearSelectStartPoint());
-    }
+		if (!toolState.startPoint || selectedPoints) return;
+		const rectSelectedPoints = getRectPoints(
+			toolState.startPoint,
+			endPoint
+		);
+		dispatch(setSelectedPoints(rectSelectedPoints));
+		dispatch(clearSelectStartPoint());
+	}
 );
