@@ -5,7 +5,8 @@ import {
 } from "@/entities/canvas";
 import { selectSelectedPoints } from "@/entities/editor";
 import { addActionToHistory } from "@/entities/history";
-import { createAppAsyncThunk, type PointWithColor } from "@/shared/lib";
+import { type PointWithColor } from "@/shared/lib";
+import { createAppAsyncThunk } from "@/shared/store";
 import { copySelection } from "./copy-selection";
 
 export const cutSelection = createAppAsyncThunk(

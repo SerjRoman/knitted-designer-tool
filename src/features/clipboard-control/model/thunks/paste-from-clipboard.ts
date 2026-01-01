@@ -1,11 +1,8 @@
 import { selectGrid, setPixelsWithColor } from "@/entities/canvas";
 import { selectClipboard, selectToolState } from "@/entities/editor";
 import { addActionToHistory } from "@/entities/history";
-import {
-	createAppAsyncThunk,
-	type Point,
-	type PointWithColor,
-} from "@/shared/lib";
+import { type Point, type PointWithColor } from "@/shared/lib";
+import { createAppAsyncThunk } from "@/shared/store";
 
 export const pasteFromClipboard = createAppAsyncThunk(
 	"editor/paster-from-clipboard",

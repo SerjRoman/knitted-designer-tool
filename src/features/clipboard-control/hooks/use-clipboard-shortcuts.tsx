@@ -51,7 +51,7 @@ export function useClipboardShortucts() {
 			}
 		};
 
-		window.addEventListener("keydown", handleKeyDown);
-		return () => window.removeEventListener("keydown", handleKeyDown);
+		globalThis.addEventListener("keydown", handleKeyDown);
+		return () => globalThis.removeEventListener("keydown", handleKeyDown);
 	}, [dispatch, clipboard, selectedPoints, tool]);
 }

@@ -5,12 +5,8 @@ import {
 	selectToolState,
 } from "@/entities/editor";
 import { addActionToHistory } from "@/entities/history";
-import {
-	createAppAsyncThunk,
-	getLinePoints,
-	type Point,
-	type PointWithColor,
-} from "@/shared/lib";
+import { getLinePoints, type Point, type PointWithColor } from "@/shared/lib";
+import { createAppAsyncThunk } from "@/shared/store";
 
 export const drawLine = createAppAsyncThunk(
 	"canvas/draw-preview-line",

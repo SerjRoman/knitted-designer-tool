@@ -1,11 +1,12 @@
-import { applyFlip, selectBackgroundColor, selectGrid } from "@/entities/canvas";
+import {
+	applyFlip,
+	selectBackgroundColor,
+	selectGrid,
+} from "@/entities/canvas";
 import { selectSelectedPoints, setSelectedPoints } from "@/entities/editor";
 import { addActionToHistory } from "@/entities/history";
-import {
-	createAppAsyncThunk,
-	getBoundingBox,
-	type PointWithColor,
-} from "@/shared/lib";
+import { getBoundingBox, type PointWithColor } from "@/shared/lib";
+import { createAppAsyncThunk } from "@/shared/store";
 
 type FlipDirection = "horizontal" | "vertical";
 
@@ -13,9 +14,9 @@ export const flipSelection = createAppAsyncThunk(
 	"canvas/flip-selection",
 	async (direction: FlipDirection, { getState, dispatch }) => {
 		const state = getState();
-		const selectedPoints = selectSelectedPoints(state)
-        const grid = selectGrid(state)
-        const backgroundColor = selectBackgroundColor(state)
+		const selectedPoints = selectSelectedPoints(state);
+		const grid = selectGrid(state);
+		const backgroundColor = selectBackgroundColor(state);
 
 		if (!selectedPoints || selectedPoints.length === 0) {
 			return;

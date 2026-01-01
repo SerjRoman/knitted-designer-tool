@@ -1,7 +1,11 @@
 import { useCallback } from "react";
 import { drawPreviewPoints, selectPixelDimensions } from "@/entities/canvas";
 import { clearShapeState, setShapeStartPoint } from "@/entities/editor";
-import { getEllipsePoints } from "@/shared/lib";
+import {
+	areTwoPointsEqual,
+	getEllipsePoints,
+	useMemoizedCalculation,
+} from "@/shared/lib";
 import { useAppDispatch, useAppSelector } from "@/shared/store";
 import type {
 	PreviewToolHandler,
@@ -19,6 +23,12 @@ export function useEllipseTool(): ToolHandlers {
 	);
 	const isEllipse =
 		toolState.tool === "shape" && toolState.shape === "ellipse";
+	const getEllipsePointsToDraw = useMemoizedCalculation(
+		getEllipsePoints,
+		(prevArgs, nextArgs) =>
+			areTwoPointsEqual(prevArgs[0], nextArgs[0]) &&
+			areTwoPointsEqual(prevArgs[1], nextArgs[1])
+	);
 	const onMouseDown: ToolHandler = useCallback(
 		({ point }) => {
 			if (isEllipse && !toolState.startPoint) {
@@ -36,13 +46,16 @@ export function useEllipseTool(): ToolHandlers {
 		[dispatch, isEllipse]
 	);
 	const onDrawPreview: PreviewToolHandler = useCallback(
-		(context, { point }) => {
-			if (isEllipse && toolState.startPoint) {
-				const points = getEllipsePoints(toolState.startPoint, point);
+		(context, { currentPoint }) => {
+			if (isEllipse && toolState.startPoint && currentPoint) {
+				const points = getEllipsePointsToDraw(
+					toolState.startPoint,
+					currentPoint
+				);
 				drawPreviewPoints(context, points, pixelWidth, pixelHeigth);
 			}
 		},
-		[isEllipse, toolState, pixelWidth, pixelHeigth]
+		[isEllipse, toolState, pixelWidth, pixelHeigth, getEllipsePointsToDraw]
 	);
 	const onMouseLeave: ToolHandlerWithoutPoint = useCallback(() => {
 		if (isEllipse && toolState.startPoint) {

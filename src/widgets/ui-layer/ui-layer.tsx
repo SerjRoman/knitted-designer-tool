@@ -46,16 +46,16 @@ export function UILayer() {
 			context.scale(scale, scale);
 
 			if (isPanning || !lastPoint) return;
-			drawClipboard.draw?.(context, lastPoint);
-			if (!point) return;
+			// drawClipboard.draw?.(context, lastPoint);
 			activeToolHandlers.onDrawPreview?.(context, {
-				point: point,
+				currentPoint: point,
+				lastValidPoint: lastPoint,
 			});
 
-			if (!isDrawing)
+			if (!isDrawing && point)
 				drawCrosshair(
 					context,
-					lastPoint,
+					point,
 					pixelDimensions.width,
 					pixelDimensions.height,
 					numberOfColumns,

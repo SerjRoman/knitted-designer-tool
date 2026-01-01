@@ -1,7 +1,5 @@
-export { createAppAsyncThunk } from "../../store/store";
 export { getAdjacentPoints } from "./get-adjacent-points";
 export { createEmptyGrid } from "./create-empty-grid";
-export { createSizesFrom } from "./create-sizes";
 export { createRow } from "./create-row";
 export { getLinePoints } from "./get-line-pixels";
 export { getRectPoints } from "./get-rect-pixels";
@@ -15,3 +13,4 @@ export { HEXToRGB } from "./hex-to-rgb";
 export { approximateColors } from "./approximate-colors";
 export { transformGridToApiFormat } from "./transform-grid-to-api-format";
 export { getEllipsePoints } from "./get-ellipse-points";
+export { areTwoPointsEqual } from "./are-two-points-equal";

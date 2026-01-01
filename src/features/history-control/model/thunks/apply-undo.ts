@@ -3,7 +3,7 @@ import {
 	selectCurrentActionId,
 	undoAction,
 } from "@/entities/history";
-import { createAppAsyncThunk } from "@/shared/lib";
+import { createAppAsyncThunk } from "@/shared/store";
 import { undoAddColorAction } from "./restore-add-color-action";
 import { undoChangePixelDimensions } from "./restore-change-pixel-dimensions";
 import { undoDrawAction } from "./restore-draw-action";

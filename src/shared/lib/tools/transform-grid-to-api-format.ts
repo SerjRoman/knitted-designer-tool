@@ -15,13 +15,12 @@ export function transformGridToApiFormat(
 	const rows: RowInApiImageBody[] = [];
 	for (let y = 0; y < grid.length; y++) {
 		const row: RowInApiImageBody = { index: y, pixels: [] };
-		for (let x = 0; x < grid[y].length; x++) {
+		for (const element of grid[y]) {
 			const lastPixel = row.pixels.at(-1);
-			const currentColor = grid[y][x];
+			const currentColor = element;
 			const colorIndex = colorsMap.get(currentColor)!;
-			if (lastPixel && lastPixel.color === colorIndex) {
+			if (lastPixel?.color === colorIndex) {
 				lastPixel.count++;
-				continue;
 			} else {
 				row.pixels.push({ color: colorIndex, count: 1 });
 			}

@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
-import { store } from "@app/store";
+import type { store } from "@/app/ambient";
 
 export type AppStateSchema = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

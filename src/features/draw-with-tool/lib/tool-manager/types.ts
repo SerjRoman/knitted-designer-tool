@@ -5,6 +5,10 @@ export interface ToolHandlerParams {
 	event: MouseEvent<HTMLCanvasElement>;
 	point: Point;
 }
+export interface PreviewToolHandlerParams {
+	currentPoint: Point | null;
+	lastValidPoint: Point;
+}
 
 export interface ToolHandlers {
 	onMouseDown?: ToolHandler;
@@ -19,5 +23,5 @@ export type ToolHandlerWithoutPoint = (
 ) => void;
 export type PreviewToolHandler = (
 	context: CanvasRenderingContext2D,
-	params: Omit<ToolHandlerParams, "event">
+	params: PreviewToolHandlerParams
 ) => void;

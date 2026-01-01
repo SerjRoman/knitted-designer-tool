@@ -5,12 +5,8 @@ import {
 	selectToolState,
 } from "@/entities/editor";
 import { addActionToHistory } from "@/entities/history";
-import {
-	createAppAsyncThunk,
-	getRectPoints,
-	type Point,
-	type PointWithColor,
-} from "@/shared/lib";
+import { getRectPoints, type Point, type PointWithColor } from "@/shared/lib";
+import { createAppAsyncThunk } from "@/shared/store";
 
 export const drawRect = createAppAsyncThunk(
 	"canvas/draw-rect",

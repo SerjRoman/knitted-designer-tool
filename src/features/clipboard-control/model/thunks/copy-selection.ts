@@ -5,11 +5,8 @@ import {
 	setClipboardOrigin,
 	setClipboardPoints,
 } from "@/entities/editor";
-import {
-	createAppAsyncThunk,
-	getBoundingBox,
-	type PointWithColor,
-} from "@/shared/lib";
+import { getBoundingBox, type PointWithColor } from "@/shared/lib";
+import { createAppAsyncThunk } from "@/shared/store";
 
 export const copySelection = createAppAsyncThunk(
 	"editor/copy-selection",

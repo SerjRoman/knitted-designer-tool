@@ -6,7 +6,12 @@ import {
 	clearSelectedPoints,
 	setSelectStartPoint,
 } from "@/entities/editor";
-import { getRectPoints, isPointInPoints } from "@/shared/lib";
+import {
+	areTwoPointsEqual,
+	getRectPoints,
+	isPointInPoints,
+	useMemoizedCalculation,
+} from "@/shared/lib";
 import { useAppDispatch, useAppSelector } from "@/shared/store";
 import type { PreviewToolHandler, ToolHandler, ToolHandlers } from "../lib";
 import { drawSelect } from "../model";
@@ -18,6 +23,12 @@ export function useSelectTool(): ToolHandlers {
 	);
 	const { width: pixelWidth, height: pixelHeigth } = useAppSelector(
 		selectPixelDimensions
+	);
+	const getRectPointsToDraw = useMemoizedCalculation(
+		getRectPoints,
+		(prevArgs, nextArgs) =>
+			areTwoPointsEqual(prevArgs[0], nextArgs[0]) &&
+			areTwoPointsEqual(prevArgs[1], nextArgs[1])
 	);
 
 	const doAddNewPointRef = useRef<boolean>(true);
@@ -65,7 +76,7 @@ export function useSelectTool(): ToolHandlers {
 	);
 
 	const onDrawPreview: PreviewToolHandler = useCallback(
-		(context, { point }) => {
+		(context, { currentPoint }) => {
 			if (toolState.tool !== "select") {
 				return;
 			}
@@ -76,12 +87,25 @@ export function useSelectTool(): ToolHandlers {
 					pixelWidth,
 					pixelHeigth
 				);
-			} else if (!selectedPoints && toolState.startPoint) {
-				const points = getRectPoints(toolState.startPoint, point);
+			} else if (
+				!selectedPoints &&
+				toolState.startPoint &&
+				currentPoint
+			) {
+				const points = getRectPointsToDraw(
+					toolState.startPoint,
+					currentPoint
+				);
 				drawPreviewPoints(context, points, pixelWidth, pixelHeigth);
 			}
 		},
-		[pixelHeigth, pixelWidth, selectedPoints, toolState]
+		[
+			pixelHeigth,
+			pixelWidth,
+			selectedPoints,
+			toolState,
+			getRectPointsToDraw,
+		]
 	);
 	const onMouseLeave: ToolHandler = useCallback(
 		({ point }) => {

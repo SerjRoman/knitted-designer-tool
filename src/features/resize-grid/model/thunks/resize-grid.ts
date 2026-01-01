@@ -4,7 +4,8 @@ import {
 	updateGridSizes,
 } from "@/entities/canvas";
 import { addActionToHistory } from "@/entities/history";
-import { createAppAsyncThunk, type PointWithColor } from "@/shared/lib";
+import { type PointWithColor } from "@/shared/lib";
+import { createAppAsyncThunk } from "@/shared/store";
 
 export const resizeGrid = createAppAsyncThunk<
 	Promise<void>,

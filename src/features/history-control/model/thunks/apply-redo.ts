@@ -1,5 +1,5 @@
 import { redoAction, selctRedoActions } from "@/entities/history";
-import { createAppAsyncThunk } from "@/shared/lib";
+import { createAppAsyncThunk } from "@/shared/store";
 import { redoAddColorAction } from "./restore-add-color-action";
 import { redoChangePixelDimensions } from "./restore-change-pixel-dimensions";
 import { redoDrawAction } from "./restore-draw-action";

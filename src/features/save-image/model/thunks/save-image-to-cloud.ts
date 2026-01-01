@@ -1,6 +1,7 @@
 import { AxiosError } from "axios";
 import { ApiClient } from "@/shared/api";
-import { createAppAsyncThunk, transformGridToApiFormat } from "@/shared/lib";
+import { transformGridToApiFormat } from "@/shared/lib";
+import { createAppAsyncThunk } from "@/shared/store";
 
 export const saveImageToCloud = createAppAsyncThunk(
 	"editor/save-image-to-cloud",

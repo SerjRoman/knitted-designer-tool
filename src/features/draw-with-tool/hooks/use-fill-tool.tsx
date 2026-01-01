@@ -1,6 +1,10 @@
 import { useCallback } from "react";
 import { drawPreviewPoints, selectPixelDimensions } from "@/entities/canvas";
-import { getAdjacentPoints } from "@/shared/lib";
+import {
+	areTwoPointsEqual,
+	getAdjacentPoints,
+	useMemoizedCalculation,
+} from "@/shared/lib";
 import { useAppDispatch, useAppSelector } from "@/shared/store";
 import type { PreviewToolHandler, ToolHandler, ToolHandlers } from "../lib";
 import { fillArea } from "../model";
@@ -9,6 +13,10 @@ export function useFillTool(): ToolHandlers {
 	const dispatch = useAppDispatch();
 	const { grid } = useAppSelector((state) => state.canvas);
 	const { width, height } = useAppSelector(selectPixelDimensions);
+	const getAdjacentPointsToDraw = useMemoizedCalculation(
+		getAdjacentPoints,
+		(prevArgs, nextArgs) => areTwoPointsEqual(prevArgs[0], nextArgs[0])
+	);
 	// const { currentColor } = useAppSelector((state) => state.editor);
 	const onMouseUp: ToolHandler = useCallback(
 		({ point }) => {
@@ -17,14 +25,15 @@ export function useFillTool(): ToolHandlers {
 		[dispatch]
 	);
 	const onDrawPreview: PreviewToolHandler = useCallback(
-		(context, { point }) => {
-			const pointsToFill = getAdjacentPoints(point, grid);
+		(context, { currentPoint }) => {
+			if (!currentPoint) return;
+			const pointsToFill = getAdjacentPointsToDraw(currentPoint, grid);
 			// const color = currentColor
 			// 	.replace(")", ", 0.5)")
 			// 	.replace("rgb", "rgba");
 			drawPreviewPoints(context, pointsToFill, width, height);
 		},
-		[grid, height, width]
+		[getAdjacentPointsToDraw, grid, height, width]
 	);
 
 	return {

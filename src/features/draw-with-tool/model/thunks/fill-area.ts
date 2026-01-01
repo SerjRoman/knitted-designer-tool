@@ -2,11 +2,11 @@ import { selectGrid, setPixelsWithColor } from "@/entities/canvas";
 import { selectCurrentColor } from "@/entities/editor";
 import { addActionToHistory } from "@/entities/history";
 import {
-	createAppAsyncThunk,
 	getAdjacentPoints,
 	type Point,
 	type PointWithColor,
 } from "@/shared/lib";
+import { createAppAsyncThunk } from "@/shared/store";
 export const fillArea = createAppAsyncThunk(
 	"editor/fill-area",
 	(point: Point, { getState, dispatch }) => {

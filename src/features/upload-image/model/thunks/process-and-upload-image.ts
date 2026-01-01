@@ -6,13 +6,13 @@ import {
 } from "@/entities/editor";
 import {
 	approximateColors,
-	createAppAsyncThunk,
 	getBoundingBox,
 	getImageDataFromImage,
 	getPopularColorsFromRGBArray,
 	MAX_COLORS,
 	type RGBColor,
 } from "@/shared/lib";
+import { createAppAsyncThunk } from "@/shared/store";
 import {
 	convertImageDataToRGBArray,
 	createPointsFromImage,

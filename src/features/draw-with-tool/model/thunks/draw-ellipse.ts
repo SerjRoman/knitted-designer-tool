@@ -2,11 +2,11 @@ import { setPixels } from "@/entities/canvas";
 import { clearShapeState } from "@/entities/editor";
 import { addActionToHistory } from "@/entities/history";
 import {
-	createAppAsyncThunk,
 	getEllipsePoints,
 	type Point,
 	type PointWithColor,
 } from "@/shared/lib";
+import { createAppAsyncThunk } from "@/shared/store";
 
 export const drawEllipse = createAppAsyncThunk(
 	"canvas/draw-ellipse",

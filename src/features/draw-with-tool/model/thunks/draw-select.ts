@@ -4,7 +4,8 @@ import {
 	selectToolState,
 	setSelectedPoints,
 } from "@/entities/editor";
-import { type Point, createAppAsyncThunk, getRectPoints } from "@/shared/lib";
+import { type Point, getRectPoints } from "@/shared/lib";
+import { createAppAsyncThunk } from "@/shared/store";
 
 export const drawSelect = createAppAsyncThunk(
 	"canvas/draw-select",

@@ -1,7 +1,8 @@
 import { addColor, changeColorInGrid, removeColor } from "@/entities/canvas";
 import { setCurrentColor } from "@/entities/editor";
 import type { AddColorActionPayload } from "@/entities/history";
-import { BACKGROUND_COLOR, createAppAsyncThunk } from "@/shared/lib";
+import { BACKGROUND_COLOR } from "@/shared/lib";
+import { createAppAsyncThunk } from "@/shared/store";
 
 export const undoAddColorAction = createAppAsyncThunk(
 	"history/undoAddColorAction",
@@ -33,7 +34,7 @@ export const undoAddColorAction = createAppAsyncThunk(
 		dispatch(removeColor(colorToRemove));
 		dispatch(
 			setCurrentColor(
-				firstColorInPalette ? firstColorInPalette : BACKGROUND_COLOR
+				firstColorInPalette || BACKGROUND_COLOR
 			)
 		);
 	}
