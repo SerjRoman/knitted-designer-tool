@@ -35,6 +35,6 @@ export const saveImageToCloud = createAppAsyncThunk(
 			return rejectWithValue({
 				message: "Unhandled server error. Please try again later!",
 			});
-		}
+		}		
 	}
 );
