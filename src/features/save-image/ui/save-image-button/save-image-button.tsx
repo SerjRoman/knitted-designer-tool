@@ -1,5 +1,5 @@
 import { Download } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ToolButton } from "@/entities/editor";
 import { useModal } from "@/shared/lib";
 import { useAppSelector, useAppDispatch } from "@/shared/store";
@@ -15,6 +15,13 @@ export function SaveImageButton() {
 		status: typeof status;
 	}>();
 	const dispatch = useAppDispatch();
+
+	 // ✅ define state (fixes TS2304)
+	const [currentProductId, setCurrentProductId] = useState<number | null>(() => {
+		const v = localStorage.getItem("kfy_productId");
+		return v ? Number(v) : null;
+	});
+
 	async function handleClick() {
 		console.log("FULL URL:", window.location.href);
 		console.log("SEARCH:", window.location.search);
@@ -30,31 +37,46 @@ export function SaveImageButton() {
 			token = "demo_token";
 			console.warn("No token provided in URL, using demo token");
 		}
-		const tags = ["knitting", "motif"];
-		const tagsCsv = Array.isArray(tags) ? tags.join(",") : tags;
+		let productId: number;
 
-	if (!currentProductId) {	
+		if (!currentProductId) {	
+			
+			productId = await createMotifOnPresta({token});
+			console.log("Motif created on PrestaShop with productId:", productId);
+
+			setCurrentProductId(productId);        // state
+			localStorage.setItem("kfy_productId", String(productId)); // optional persistence
 		
-		const productId = await createMotifOnPresta({token, title: "My Motif", description: "Created with KnittedForYou", tags: tagsCsv});
-		console.log("Motif created on PrestaShop with productId:", productId);
-
-setCurrentProductId(productId);        // state
-localStorage.setItem("kfy_productId", String(productId)); // optional persistence
-	
-				dispatch(setFilename(productId.toString()));
+					//dispatch(setFilename(productId.toString()));
 		} else {
-			dispatch(setFilename(currentProductId.toString()));
+				//dispatch(setFilename(currentProductId.toString()));
+			productId = currentProductId;
 		}
-	
+		dispatch(setFilename(productId.toString()));
 		await dispatch(saveImageToCloud());
 
 		if (productId)	{
 			await attachImageOnPresta({
-				token, productId: productId as any
+				token, imgId: productId as any
 			});
 		}
 	}
 	useEffect(() => {
+
+		const params = new URLSearchParams(window.location.search);
+		const choice = params.get("choice"); // or productId param you use
+
+		if (!choice) {
+			// New motif session: force REQUEST_SAVE (modal)
+			localStorage.removeItem("kfy_productId");
+			setCurrentProductId(null);
+		} else {
+			// Edit existing
+			const pid = Number(choice);
+			setCurrentProductId(Number.isFinite(pid) ? pid : null);
+			localStorage.setItem("kfy_productId", String(pid));
+		}
+
 		openStatusModal({ error, status });
 	}, [error, openStatusModal, status]);
 	return (
@@ -96,15 +118,12 @@ localStorage.setItem("kfy_productId", String(productId)); // optional persistenc
 	);
 }
 
-function createMotifOnPresta({ token, title, description, tags }: {
+function createMotifOnPresta({ token }: {
   token: string;
-  title: string;
-  description: string;
-  tags: string | string[];
-}) {
-  return new Promise((resolve, reject) => {
-	console.log("Creating motif on PrestaShop with token:", token, title, description, tags	);
-    const ORIGIN_PRESTA = "http://dev.knittedforyou.com"; // your shop origin
+}): Promise<number> {
+  return new Promise<number>((resolve, reject) => {
+	console.log("Creating motif on PrestaShop with token:"	);
+    const ORIGIN_PRESTA = "https://motif.knittedforyou.com"; // your shop origin
 
     function onMessage(event: MessageEvent) {
       // parent -> iframe reply will come from presta origin
@@ -114,8 +133,9 @@ function createMotifOnPresta({ token, title, description, tags }: {
 
       window.removeEventListener("message", onMessage);
 
-      if (event.data.ok && event.data.data.productId) {
-        resolve(event.data.data.productId);
+	  const pid = event.data?.data?.data?.productId ?? event.data?.data?.productId;
+      if (event.data.ok && (typeof pid === "number" || typeof pid === "string")) {
+        resolve(Number(pid));
       } else {
         reject(event.data.data);
       }
@@ -125,15 +145,15 @@ function createMotifOnPresta({ token, title, description, tags }: {
 
     window.parent.postMessage(
       {
-        type: "CREATE_MOTIF",
-        payload: { token, title, description, tags }
+        type: "REQUEST_SAVE",
+        payload: { token },
       },
       ORIGIN_PRESTA
     );
   });
 }
 
-function attachImageOnPresta(payload: { token: string; productId: number;}): Promise<void> {
+function attachImageOnPresta(payload: { token: string; imgId: number;}): Promise<void> {
   const expectedParentOrigin = document.referrer ? new URL(document.referrer).origin : "";
   const parentOriginForSend = expectedParentOrigin || "*";
 
