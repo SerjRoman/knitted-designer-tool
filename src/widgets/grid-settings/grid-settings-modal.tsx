@@ -1,4 +1,3 @@
-import { Button } from "@mui/material";
 import { useState } from "react";
 import { ChangeGridSizes, resizeGrid } from "@/features/resize-grid";
 import { resizeTension, ResizeTensionSlider } from "@/features/resize-tension";
@@ -10,6 +9,7 @@ import {
 } from "@/entities/canvas";
 import { useAppDispatch, useAppSelector } from "@/shared/store";
 import { Modal } from "@/shared/ui";
+import { Button } from "@/shared/ui/button";
 
 export function GridSettingsModal({
 	onClose,
@@ -34,7 +34,7 @@ export function GridSettingsModal({
 
 	const newPixelDimensions = calculateTension(
 		formState.stitches || INITIAL_TENSION_STITCHES,
-		formState.rowsTension || INITIAL_TENSION_ROWS
+		formState.rowsTension || INITIAL_TENSION_ROWS,
 	);
 
 	const handleSubmit = () => {
@@ -47,14 +47,14 @@ export function GridSettingsModal({
 			resizeGrid({
 				newNumberOfColumns: formState.columns,
 				newNumberOfRows: formState.rows,
-			})
+			}),
 		);
 
 		dispatch(
 			resizeTension({
 				newPixelWidth: newPixelDimensions.width,
 				newPixelHeight: newPixelDimensions.height,
-			})
+			}),
 		);
 
 		onClose();
@@ -68,12 +68,14 @@ export function GridSettingsModal({
 		<Modal
 			onClose={onClose}
 			isOpen={isOpen}
-			className="fixed inset-0 flex items-center justify-center z-[100]"
+			className="flex items-center justify-center z-[100]"
 		>
-			<div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-sm flex flex-col gap-6 max-h-[90vh] overflow-y-auto">
-				<h2 className="text-xl font-bold text-gray-800">
-					Grid Settings
-				</h2>
+			<div className="bg-white p-6 rounded-lg shadow-xl flex flex-col gap-6 max-h-[90vh] overflow-y-auto w-96">
+				<div className="py-1 border-b border-gray-100 flex items-center gap-3">
+					<h2 className="text-lg font-bold text-gray-800">
+						Grid Settings
+					</h2>
+				</div>
 
 				<ChangeGridSizes
 					columns={formState.columns}
@@ -99,13 +101,7 @@ export function GridSettingsModal({
 					>
 						Cancel
 					</Button>
-					<Button
-						variant="contained"
-						color="primary"
-						onClick={handleSubmit}
-					>
-						Apply Changes
-					</Button>
+					<Button onClick={handleSubmit}>Apply Changes</Button>
 				</div>
 			</div>
 		</Modal>

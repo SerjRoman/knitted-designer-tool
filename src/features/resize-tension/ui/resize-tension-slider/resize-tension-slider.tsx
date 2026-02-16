@@ -1,6 +1,7 @@
-import { Input, Slider, Typography } from "@mui/material";
+import { TextField, Slider, Typography } from "@mui/material";
 import { type ChangeEvent } from "react";
 import { INITIAL_TENSION_CM } from "@/entities/canvas";
+import { clamp } from "@/shared/lib";
 
 interface ResizeTensionSliderProps {
 	stitches: number;
@@ -19,16 +20,22 @@ export function ResizeTensionSlider({
 	previewWidth,
 	previewHeight,
 }: Readonly<ResizeTensionSliderProps>) {
-	const handleStitchesSlider = (_: Event, val: number | number[]) =>
-		onStitchesChange(val as number);
-	const handleRowsSlider = (_: Event, val: number | number[]) =>
-		onRowsChange(val as number);
-
-	const handleStitchesInput = (e: ChangeEvent<HTMLInputElement>) => {
-		onStitchesChange(Number(e.target.value));
+	const handleStitchesSlider = (_: Event, val: number | number[]) => {
+		const value = clamp(Number(val), 3, 100);
+		onStitchesChange(value);
 	};
-	const handleRowsInput = (e: ChangeEvent<HTMLInputElement>) => {
-		onRowsChange(Number(e.target.value));
+	const handleRowsSlider = (_: Event, val: number | number[]) => {
+		const value = clamp(Number(val), 3, 100);
+		onRowsChange(value);
+	};
+
+	const handleStitchesTextField = (e: ChangeEvent<HTMLInputElement>) => {
+		const value = clamp(Number(e.target.value), 3, 100);
+		onStitchesChange(value);
+	};
+	const handleRowsTextField = (e: ChangeEvent<HTMLInputElement>) => {
+		const value = clamp(Number(e.target.value), 3, 100);
+		onRowsChange(value);
 	};
 
 	return (
@@ -41,14 +48,15 @@ export function ResizeTensionSlider({
 					value={stitches}
 					onChange={handleStitchesSlider}
 					aria-labelledby="stitch-slider"
-					min={1}
+					min={3}
 					max={100}
 				/>
-				<Input
+				<TextField
+					label="Stitches"
 					value={stitches}
 					size="small"
-					onChange={handleStitchesInput}
-					inputProps={{ type: "number", min: 1 }}
+					onChange={handleStitchesTextField}
+					type="number"
 				/>
 			</div>
 
@@ -59,14 +67,16 @@ export function ResizeTensionSlider({
 				<Slider
 					value={rows}
 					onChange={handleRowsSlider}
-					min={1}
+					aria-labelledby="rows-slider"
+					min={3}
 					max={100}
 				/>
-				<Input
+				<TextField
+					label="Rows"
 					value={rows}
 					size="small"
-					onChange={handleRowsInput}
-					inputProps={{ type: "number", min: 1 }}
+					onChange={handleRowsTextField}
+					type="number"
 				/>
 			</div>
 

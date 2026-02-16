@@ -3,6 +3,7 @@ import {
 	clearClipboard,
 	selectClipboard,
 	selectToolState,
+	setTool,
 } from "@/entities/editor";
 import { addActionToHistory } from "@/entities/history";
 import { type Point, type PointWithColor } from "@/shared/lib";
@@ -47,6 +48,7 @@ export const pasteFromClipboard = createAppAsyncThunk(
 		dispatch(setPixelsWithColor({ points: pointsAfter }));
 		if (!toolState.repeat) {
 			dispatch(clearClipboard());
+			dispatch(setTool("brush"));
 		}
 		dispatch(
 			addActionToHistory({

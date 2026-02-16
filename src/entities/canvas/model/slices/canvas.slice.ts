@@ -14,6 +14,8 @@ import {
 } from "@/shared/lib";
 import { calculateTension } from "../../lib";
 import {
+	CANVAS_HEIGHT,
+	CANVAS_WIDTH,
 	INITIAL_COLUMNS,
 	INITIAL_PIXEL_SIZE,
 	INITIAL_ROWS,
@@ -23,6 +25,7 @@ import {
 
 interface CanvasSlice {
 	grid: Grid;
+	canvasDimensions: { width: number; height: number };
 	backgroundColor: string;
 	pixelSize: number;
 	numberOfColumns: number;
@@ -34,7 +37,7 @@ interface CanvasSlice {
 export const INITIAL_TENSION = calculateTension(
 	INITIAL_TENSION_STITCHES,
 	INITIAL_TENSION_ROWS,
-	10
+	10,
 );
 
 const initialState: CanvasSlice = {
@@ -46,6 +49,7 @@ const initialState: CanvasSlice = {
 	pixelWidth: INITIAL_TENSION.width,
 	pixelHeight: INITIAL_TENSION.height,
 	colors: Object.values(COLORS),
+	canvasDimensions: { height: CANVAS_HEIGHT, width: CANVAS_WIDTH },
 };
 
 export const canvasSlice = createSlice({
@@ -61,7 +65,7 @@ export const canvasSlice = createSlice({
 			(size, w, h) => ({
 				width: size * w,
 				height: size * h,
-			})
+			}),
 		),
 		selectNumberOfColumns: (state) => state.numberOfColumns,
 		selectNumberOfRows: (state) => state.numberOfRows,
@@ -70,10 +74,17 @@ export const canvasSlice = createSlice({
 		selectPixelHeight: (state) => state.pixelHeight,
 		selectPixelSize: (state) => state.pixelSize,
 		selectBackgroundColor: (state) => state.backgroundColor,
+		selectCanvasDimensions: (state) => state.canvasDimensions,
 	},
 	reducers: {
 		setBackgroundColor(state, { payload }: PayloadAction<string>) {
 			state.backgroundColor = payload;
+		},
+		setCanvasDimensions(
+			state,
+			{ payload }: PayloadAction<{ width: number; height: number }>,
+		) {
+			state.canvasDimensions = payload;
 		},
 		setPixel(
 			state,
@@ -82,7 +93,7 @@ export const canvasSlice = createSlice({
 					point: { x, y },
 					color,
 				},
-			}: PayloadAction<{ point: Point; color: string }>
+			}: PayloadAction<{ point: Point; color: string }>,
 		) {
 			if (state.grid[y]?.[x]) {
 				state.grid[y][x] = color;
@@ -95,7 +106,7 @@ export const canvasSlice = createSlice({
 			}: PayloadAction<{
 				points: Point[];
 				color: string;
-			}>
+			}>,
 		) {
 			payload.points.forEach((point) => {
 				const { x, y } = point;
@@ -110,7 +121,7 @@ export const canvasSlice = createSlice({
 				payload,
 			}: PayloadAction<{
 				points: PointWithColor[];
-			}>
+			}>,
 		) {
 			payload.points.forEach((point) => {
 				const { x, y } = point;
@@ -124,7 +135,7 @@ export const canvasSlice = createSlice({
 		},
 		setPixelDimensions(
 			state,
-			{ payload }: PayloadAction<{ width: number; heigth: number }>
+			{ payload }: PayloadAction<{ width: number; heigth: number }>,
 		) {
 			state.pixelWidth = payload.width;
 			state.pixelHeight = payload.heigth;
@@ -132,7 +143,7 @@ export const canvasSlice = createSlice({
 		addRow(state) {
 			state.numberOfRows++;
 			state.grid.push(
-				createRow(state.backgroundColor, state.numberOfColumns)
+				createRow(state.backgroundColor, state.numberOfColumns),
 			);
 		},
 		addColumn(state) {
@@ -156,7 +167,7 @@ export const canvasSlice = createSlice({
 			state,
 			{
 				payload,
-			}: PayloadAction<{ numberOfRows: number; numberOfColumns: number }>
+			}: PayloadAction<{ numberOfRows: number; numberOfColumns: number }>,
 		) {
 			const { numberOfRows, numberOfColumns } = payload;
 			state.numberOfColumns = numberOfColumns;
@@ -164,7 +175,7 @@ export const canvasSlice = createSlice({
 			const newGrid = createEmptyGrid(
 				numberOfColumns,
 				numberOfRows,
-				state.backgroundColor
+				state.backgroundColor,
 			).map((row, indexY) => {
 				if (indexY > state.grid.length) return row;
 				return row.map((cell, indexX) => {
@@ -187,12 +198,10 @@ export const canvasSlice = createSlice({
 			state,
 			{
 				payload,
-			}: PayloadAction<{ colorToChange: string; newColor: string }>
+			}: PayloadAction<{ colorToChange: string; newColor: string }>,
 		) {
 			const { colorToChange, newColor } = payload;
-			const colorInArrayIndex = state.colors.findIndex(
-				(color) => color === colorToChange
-			);
+			const colorInArrayIndex = state.colors.indexOf(colorToChange);
 			if (colorInArrayIndex === -1) return;
 			if (!state.colors.includes(newColor)) {
 				state.colors.splice(colorInArrayIndex, 1, newColor);
@@ -213,7 +222,7 @@ export const canvasSlice = createSlice({
 			}: PayloadAction<{
 				pixelsToClear: Point[];
 				pixelsToApply: PointWithColor[];
-			}>
+			}>,
 		) {
 			const { pixelsToClear, pixelsToApply } = payload;
 
@@ -269,6 +278,7 @@ export const {
 	setColors,
 	removeColor,
 	setPixelDimensions,
+	setCanvasDimensions,
 } = canvasSlice.actions;
 export const {
 	selectPixelDimensions,
@@ -279,4 +289,5 @@ export const {
 	selectPixelSize,
 	selectPixelWidth,
 	selectBackgroundColor,
+	selectCanvasDimensions,
 } = canvasSlice.selectors;

@@ -4,7 +4,6 @@ import {
 	RULER_SIZE,
 	RULER_LINE_COLOR,
 } from "@/shared/lib";
-import { CANVAS_WIDTH } from "../../model";
 import { getMajorTickMultiplier } from "./get-major-tick-multiplier";
 
 export function drawHorizontalRulerLayer(
@@ -12,8 +11,9 @@ export function drawHorizontalRulerLayer(
 	numberOfColumns: number,
 	pixelWidth: number,
 	scale: number,
-	offsets: { x: number; y: number }
+	offsets: { x: number; y: number },
 ) {
+	const maxWidth = context.canvas.width;
 	context.fillStyle = BACKGROUND_COLOR;
 
 	context.font = `16px sans-serif`;
@@ -28,8 +28,9 @@ export function drawHorizontalRulerLayer(
 
 	for (let i = 0; i <= numberOfColumns; i += step) {
 		const screenX = offsets.x + i * tickSpacing;
-		if (screenX >= CANVAS_WIDTH || offsets.y < 0) continue;
-		const isMajorTick = i % (step * majorTickMultiplier) === 0;
+		if (screenX >= maxWidth || offsets.y < 0) continue;
+		const isMajorTick =
+			i % (step * majorTickMultiplier) === 0 || i === numberOfColumns;
 		const tickHeight = isMajorTick ? RULER_SIZE / 2 : RULER_SIZE / 4;
 
 		context.beginPath();

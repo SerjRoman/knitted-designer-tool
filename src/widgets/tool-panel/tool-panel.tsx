@@ -6,10 +6,17 @@ import { HistoryControl } from "@/features/history-control";
 import { SaveImageButton } from "@/features/save-image";
 import { UploadFromUserModal } from "@/features/upload-image";
 import { ToolButton } from "@/entities/editor";
+import { closeAllModals } from "@/entities/ui";
 import { useModal } from "@/shared/lib";
+import { useAppDispatch } from "@/shared/store";
 
 export function ToolPanel() {
 	const [{ open, isOpen, close }, ModalWrapper] = useModal();
+	const dispatch = useAppDispatch();
+	function openModal() {
+		dispatch(closeAllModals());
+		open();
+	}
 	return (
 		<div className="space-y-4">
 			<SelectDrawingTool />
@@ -27,8 +34,8 @@ export function ToolPanel() {
 					<ToolButton
 						icon={Upload}
 						iconProps={{ size: 24 }}
-						label={isOpen ? "Close upload" : "Upload"}
-						onClick={isOpen ? close : open}
+						label={"Upload"}
+						onClick={isOpen ? close : openModal}
 					/>
 					<SaveImageButton />
 				</div>

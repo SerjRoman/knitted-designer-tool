@@ -4,7 +4,6 @@ import {
 	RULER_SIZE,
 	RULER_LINE_COLOR,
 } from "@/shared/lib";
-import { CANVAS_HEIGHT } from "../../model";
 import { getMajorTickMultiplier } from "./get-major-tick-multiplier";
 
 export function drawVerticalRulerLayer(
@@ -12,8 +11,9 @@ export function drawVerticalRulerLayer(
 	numberOfRows: number,
 	pixelHeight: number,
 	scale: number,
-	offsets: { x: number; y: number }
+	offsets: { x: number; y: number },
 ) {
+	const maxHeight = context.canvas.height;
 	context.fillStyle = BACKGROUND_COLOR;
 
 	context.font = "16px sans-serif";
@@ -27,9 +27,10 @@ export function drawVerticalRulerLayer(
 	const majorTickMultiplier = getMajorTickMultiplier(tickSpacing);
 	for (let i = 0; i <= numberOfRows; i += step) {
 		const screenY = offsets.y + i * tickSpacing;
-		if (screenY >= CANVAS_HEIGHT || offsets.x < 0) continue;
+		if (screenY >= maxHeight || offsets.x < 0) continue;
 
-		const isMajorTick = i % (step * majorTickMultiplier) === 0;
+		const isMajorTick =
+			i % (step * majorTickMultiplier) === 0 || i === numberOfRows;
 		const tickHeight = isMajorTick ? RULER_SIZE / 2 : RULER_SIZE / 4;
 
 		context.beginPath();

@@ -6,7 +6,6 @@ import {
 	useDrawingTool,
 	useFillTool,
 	useLineTool,
-	usePasteTool,
 	useSelectTool,
 	useShapeTool,
 } from "./";
@@ -17,7 +16,7 @@ export function useActiveToolHandlers() {
 	const drawingHandlers = useDrawingTool();
 	const colorPickerHandlers = useColorPickerTool();
 	const lineHandlers = useLineTool();
-	const pasteHandlers = usePasteTool();
+	// const pasteHandlers = usePasteTool();
 	const fillHandlers = useFillTool();
 	const selectHandlers = useSelectTool();
 	const shapeHandlers = useShapeTool();
@@ -28,7 +27,7 @@ export function useActiveToolHandlers() {
 			eraser: drawingHandlers,
 			colorPicker: colorPickerHandlers,
 			line: lineHandlers,
-			paste: pasteHandlers,
+			// paste: pasteHandlers,
 			fill: fillHandlers,
 			select: selectHandlers,
 			shape: shapeHandlers,
@@ -39,7 +38,6 @@ export function useActiveToolHandlers() {
 		drawingHandlers,
 		colorPickerHandlers,
 		lineHandlers,
-		pasteHandlers,
 		fillHandlers,
 		selectHandlers,
 		shapeHandlers,

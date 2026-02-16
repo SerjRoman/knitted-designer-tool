@@ -1,6 +1,7 @@
-import { AlertTriangle, CheckCircle } from "lucide-react";
+import { AlertTriangle, CheckCircle, Info } from "lucide-react";
 import type { ReactNode } from "react";
 import { Modal } from "../modal";
+import { Button } from "../../button";
 
 type ModalVariant = "success" | "error" | "info";
 
@@ -23,6 +24,11 @@ const variantConfig = {
 		icon: AlertTriangle,
 		iconBgColor: "bg-red-100",
 		iconTextColor: "text-red-600",
+	},
+	info: {
+		icon: Info,
+		iconBgColor: "bg-blue-100",
+		iconTextColor: "text-blue-600",
 	},
 };
 
@@ -67,13 +73,7 @@ export function StatusModal({
 					</div>
 
 					<div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
-						<button
-							type="button"
-							className="w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm"
-							onClick={onClose}
-						>
-							OK
-						</button>
+						<Button onClick={onClose}>Ok</Button>
 					</div>
 				</div>
 			</div>

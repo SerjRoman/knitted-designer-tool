@@ -6,13 +6,22 @@ import {
 	PaintBucket,
 	Square,
 	Circle,
+	LetterText,
 } from "lucide-react";
-import { ToolButton, setTool, setShape } from "@/entities/editor";
+import {
+	ToolButton,
+	setTool,
+	setShape,
+	selectToolState,
+} from "@/entities/editor";
+import { useModal } from "@/shared/lib";
 import { useAppDispatch, useAppSelector } from "@/shared/store";
+import { InsertTextModal } from "./insert-text-modal";
 
 export function SelectDrawingTool() {
 	const dispatch = useAppDispatch();
-	const { toolState } = useAppSelector((state) => state.editor);
+	const toolState = useAppSelector(selectToolState);
+	const [{ open }, TextModalProvider] = useModal();
 	return (
 		<div>
 			<h3 className="text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wide">
@@ -77,7 +86,12 @@ export function SelectDrawingTool() {
 						dispatch(setTool("fill"));
 					}}
 				/>
+				<ToolButton icon={LetterText} label="Text" onClick={() => {
+                    dispatch(setTool('insertText'))
+                    open()
+                }} />
 			</div>
+			<TextModalProvider ModalComponent={InsertTextModal} />
 		</div>
 	);
 }

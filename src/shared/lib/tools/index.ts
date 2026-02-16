@@ -14,3 +14,7 @@ export { approximateColors } from "./approximate-colors";
 export { transformGridToApiFormat } from "./transform-grid-to-api-format";
 export { getEllipsePoints } from "./get-ellipse-points";
 export { areTwoPointsEqual } from "./are-two-points-equal";
+export { clamp } from "./clamp";
+export { getPointsFromText } from "./get-points-from-text";
+// ? To be done
+// export { calculateStarPoints } from "./calculate-star-points";

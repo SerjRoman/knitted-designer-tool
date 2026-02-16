@@ -1,8 +1,7 @@
 import { useCallback } from "react";
 import {
-	CANVAS_HEIGHT,
-	CANVAS_WIDTH,
 	drawPixelLayer,
+	selectCanvasDimensions,
 	selectPixelDimensions,
 } from "@/entities/canvas";
 import { useAppSelector } from "@/shared/store";
@@ -12,6 +11,7 @@ export function CanvasLayer() {
 	const { grid } = useAppSelector((state) => state.canvas);
 	const { scale, offsets } = useAppSelector((state) => state.viewport);
 	const pixelDimensions = useAppSelector(selectPixelDimensions);
+	const canvasDimensions = useAppSelector(selectCanvasDimensions);
 	const handleDraw = useCallback(
 		(context: CanvasRenderingContext2D) => {
 			context.imageSmoothingEnabled = false;
@@ -19,8 +19,8 @@ export function CanvasLayer() {
 			context.clearRect(
 				0,
 				0,
-				context.canvas.width,
-				context.canvas.height,
+				canvasDimensions.width,
+				canvasDimensions.height,
 			);
 			context.translate(offsets.x, offsets.y);
 			context.scale(scale, scale);
@@ -32,7 +32,7 @@ export function CanvasLayer() {
 				pixelDimensions.height,
 			);
 		},
-		[grid, scale, offsets, pixelDimensions],
+		[grid, scale, offsets, pixelDimensions, canvasDimensions],
 	);
 
 	return (
@@ -43,8 +43,8 @@ export function CanvasLayer() {
 				zIndex: 2,
 				pointerEvents: "none",
 			}}
-			width={CANVAS_WIDTH}
-			height={CANVAS_HEIGHT}
+			width={canvasDimensions.width}
+			height={canvasDimensions.height}
 		/>
 	);
 }

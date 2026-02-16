@@ -1,5 +1,6 @@
-import { Input, Typography } from "@mui/material";
+import { TextField } from "@mui/material";
 import { type ChangeEvent } from "react";
+import { clamp } from "@/shared/lib";
 
 interface ChangeGridSizesProps {
 	columns: number;
@@ -15,37 +16,33 @@ export function ChangeGridSizes({
 	onRowsChange,
 }: Readonly<ChangeGridSizesProps>) {
 	const handleColChange = (e: ChangeEvent<HTMLInputElement>) => {
-		const val = e.target.value === "" ? 0 : Number(e.target.value);
+		const val = clamp(Number(e.target.value), 1, 100);
 		onColumnsChange(val);
 	};
 
 	const handleRowChange = (e: ChangeEvent<HTMLInputElement>) => {
-		const val = e.target.value === "" ? 0 : Number(e.target.value);
+		const val = clamp(Number(e.target.value), 1, 100);
 		onRowsChange(val);
 	};
 
 	return (
 		<div className="space-y-4">
 			<div>
-				<Typography className="text-sm font-medium text-gray-700 mb-1">
-					Number of columns
-				</Typography>
-				<Input
-					fullWidth
+				<TextField
+					type="number"
+					label="Number of columns"
+					size="small"
 					value={columns}
 					onChange={handleColChange}
-					inputProps={{ type: "number", min: 1, step: 1 }}
 				/>
 			</div>
 			<div>
-				<Typography className="text-sm font-medium text-gray-700 mb-1">
-					Number of rows
-				</Typography>
-				<Input
-					fullWidth
+				<TextField
+					type="number"
+					label="Number of rows"
+					size="small"
 					value={rows}
 					onChange={handleRowChange}
-					inputProps={{ type: "number", min: 1, step: 1 }}
 				/>
 			</div>
 		</div>

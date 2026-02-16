@@ -6,3 +6,4 @@ export { drawSelect } from "./draw-select";
 export { completeBrushStroke } from "./complete-brush-stroke";
 export { fillArea } from "./fill-area";
 export { drawEllipse } from "./draw-ellipse";
+export { drawText } from "./draw-text";

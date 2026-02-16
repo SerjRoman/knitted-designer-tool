@@ -1,29 +1,34 @@
 import { useCallback, useEffect, useState, type MouseEvent } from "react";
-import { useClipboardPreview } from "@/features/clipboard-control";
+import {
+	pasteFromClipboard,
+	useClipboardPreview,
+} from "@/features/clipboard-control";
 import { useActiveToolHandlers } from "@/features/draw-with-tool";
 import {
-	CANVAS_HEIGHT,
-	CANVAS_WIDTH,
 	drawCrosshair,
+	selectCanvasDimensions,
 	selectPixelDimensions,
 } from "@/entities/canvas";
 import { TOOLS } from "@/entities/editor";
 import { usePointFromEvent } from "@/shared/lib";
-import { useAppSelector } from "@/shared/store";
+import { useAppDispatch, useAppSelector } from "@/shared/store";
 import { Canvas } from "@/shared/ui";
 
 export function UILayer() {
 	const [isDrawing, setIsDrawing] = useState(false);
+	const dispatch = useAppDispatch();
 	const { point, lastPoint, updatePointFromEvent } = usePointFromEvent();
 	const drawClipboard = useClipboardPreview();
 	const { numberOfColumns, numberOfRows } = useAppSelector(
-		(state) => state.canvas
+		(state) => state.canvas,
 	);
+	const canvasDimensions = useAppSelector(selectCanvasDimensions);
+
 	const pixelDimensions = useAppSelector(selectPixelDimensions);
 	const activeToolHandlers = useActiveToolHandlers();
 
 	const { scale, offsets, isPanning } = useAppSelector(
-		(state) => state.viewport
+		(state) => state.viewport,
 	);
 	const { toolState } = useAppSelector((state) => state.editor);
 
@@ -36,17 +41,21 @@ export function UILayer() {
 
 	const handleDraw = useCallback(
 		(context: CanvasRenderingContext2D) => {
-			const canvas = context.canvas;
 			context.imageSmoothingEnabled = false;
 			context.resetTransform();
 
-			context.clearRect(0, 0, canvas.width, canvas.height);
+			context.clearRect(
+				0,
+				0,
+				canvasDimensions.width,
+				canvasDimensions.height,
+			);
 
 			context.translate(offsets.x, offsets.y);
 			context.scale(scale, scale);
 
 			if (isPanning || !lastPoint) return;
-			// drawClipboard.draw?.(context, lastPoint);
+			drawClipboard.draw?.(context, lastPoint);
 			activeToolHandlers.onDrawPreview?.(context, {
 				currentPoint: point,
 				lastValidPoint: lastPoint,
@@ -59,7 +68,7 @@ export function UILayer() {
 					pixelDimensions.width,
 					pixelDimensions.height,
 					numberOfColumns,
-					numberOfRows
+					numberOfRows,
 				);
 		},
 		[
@@ -67,20 +76,24 @@ export function UILayer() {
 			scale,
 			isPanning,
 			lastPoint,
-			drawClipboard,
 			activeToolHandlers,
 			isDrawing,
 			point,
 			pixelDimensions,
 			numberOfColumns,
 			numberOfRows,
-		]
+			drawClipboard,
+			canvasDimensions,
+		],
 	);
 
 	function handleMouseDown(event: MouseEvent<HTMLCanvasElement>) {
 		if (isPanning || !point) return;
 		setIsDrawing(true);
 		activeToolHandlers.onMouseDown?.({ event, point });
+		if (toolState.tool === "paste") {
+			dispatch(pasteFromClipboard(point));
+		}
 	}
 
 	function handleMouseUp(event: MouseEvent<HTMLCanvasElement>) {
@@ -113,8 +126,8 @@ export function UILayer() {
 				position: "absolute",
 				zIndex: 100,
 			}}
-			width={CANVAS_WIDTH}
-			height={CANVAS_HEIGHT}
+			width={canvasDimensions.width}
+			height={canvasDimensions.height}
 			onMouseDown={handleMouseDown}
 			onMouseUp={handleMouseUp}
 			onMouseMove={handleMouseMove}

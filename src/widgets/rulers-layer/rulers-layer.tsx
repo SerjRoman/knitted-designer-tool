@@ -1,9 +1,8 @@
 import { useCallback } from "react";
 import {
-	CANVAS_HEIGHT,
-	CANVAS_WIDTH,
 	drawHorizontalRulerLayer,
 	drawVerticalRulerLayer,
+	selectCanvasDimensions,
 	selectPixelDimensions,
 } from "@/entities/canvas";
 import { useAppSelector } from "@/shared/store";
@@ -11,10 +10,11 @@ import { Canvas } from "@/shared/ui";
 
 export function RulersLayer() {
 	const { numberOfRows, numberOfColumns } = useAppSelector(
-		(state) => state.canvas
+		(state) => state.canvas,
 	);
 	const pixelDimensions = useAppSelector(selectPixelDimensions);
 	const { scale, offsets } = useAppSelector((state) => state.viewport);
+	const canvasDimensions = useAppSelector(selectCanvasDimensions);
 
 	const handleDrawRuler = useCallback(
 		(context: CanvasRenderingContext2D) => {
@@ -23,25 +23,32 @@ export function RulersLayer() {
 			context.clearRect(
 				0,
 				0,
-				context.canvas.width,
-				context.canvas.height
+				canvasDimensions.width,
+				canvasDimensions.height,
 			);
 			drawVerticalRulerLayer(
 				context,
 				numberOfRows,
 				pixelDimensions.height,
 				scale,
-				offsets
+				offsets,
 			);
 			drawHorizontalRulerLayer(
 				context,
 				numberOfColumns,
 				pixelDimensions.width,
 				scale,
-				offsets
+				offsets,
 			);
 		},
-		[numberOfColumns, numberOfRows, offsets, pixelDimensions, scale]
+		[
+			numberOfColumns,
+			numberOfRows,
+			offsets,
+			pixelDimensions,
+			scale,
+			canvasDimensions,
+		],
 	);
 	return (
 		<Canvas
@@ -50,8 +57,8 @@ export function RulersLayer() {
 				position: "absolute",
 				zIndex: 0,
 			}}
-			width={CANVAS_WIDTH}
-			height={CANVAS_HEIGHT}
+			width={canvasDimensions.width}
+			height={canvasDimensions.height}
 		/>
 	);
 }

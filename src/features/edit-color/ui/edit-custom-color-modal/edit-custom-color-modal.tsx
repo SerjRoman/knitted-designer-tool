@@ -2,6 +2,7 @@ import { useState } from "react";
 import { HEXToRGB, RGBAToHEX } from "@/shared/lib";
 import { useAppDispatch } from "@/shared/store";
 import { Modal } from "@/shared/ui";
+import { Button } from "@/shared/ui/button";
 import { changeColorToCustom } from "../../model";
 import type { EditCustomColorModalProps } from "./edit-custom-color-modal.types";
 
@@ -27,43 +28,44 @@ export function EditCustomColorModal({
 	const hexColor = RGBAToHEX(selectedColor);
 
 	return (
-		<Modal isOpen={isOpen} onClose={onClose}>
-			<div className="fixed inset-0 flex items-center justify-center">
-				<div className="bg-white p-4 rounded shadow-lg w-72">
-					<h3 className="font-medium text-gray-900 mb-3">
+		<Modal
+			isOpen={isOpen}
+			onClose={onClose}
+			className="flex items-center justify-center"
+		>
+			<div className="flex flex-col bg-white p-4 rounded shadow-lg w-72 gap-2">
+				<div className="py-1 border-b border-gray-100 flex items-center gap-3">
+					<h2 className="text-lg font-bold text-gray-800">
 						Edit color
-					</h3>
-					<div
-						className="w-full h-12 rounded border border-gray-300 mb-3"
-						style={{ backgroundColor: customColor }}
-					/>
+					</h2>
+				</div>
+				<div
+					className="w-full h-12 rounded border border-gray-300 mb-3"
+					style={{ backgroundColor: customColor }}
+				/>
 
-					<div className="flex items-center gap-2 mb-4">
-						<span className="text-sm text-gray-700">Pick:</span>
-						<input
-							type="color"
-							value={hexColor}
-							onChange={(e) => {
-								const newHexColor = e.target.value;
-								setCustomColor(HEXToRGB(newHexColor));
-							}}
-							className="w-8 h-8 cursor-pointer"
-						/>
-					</div>
-					<div className="flex gap-2 justify-end">
-						<button
-							onClick={handleCancel}
-							className="px-3 py-1 text-gray-700 border border-gray-300 rounded text-sm hover:bg-gray-50"
-						>
-							Cancel
-						</button>
-						<button
-							onClick={handleSaveColor}
-							className="px-3 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600"
-						>
-							OK
-						</button>
-					</div>
+				<div className="flex items-center gap-2 mb-4">
+					<span className="text-sm text-gray-700">Pick:</span>
+					<input
+						type="color"
+						value={hexColor}
+						onChange={(e) => {
+							const newHexColor = e.target.value;
+							setCustomColor(HEXToRGB(newHexColor));
+						}}
+						className="w-8 h-8 cursor-pointer"
+					/>
+				</div>
+
+				<div className="flex justify-end gap-3 pt-2">
+					<Button
+						variant="outlined"
+						color="inherit"
+						onClick={handleCancel}
+					>
+						Cancel
+					</Button>
+					<Button onClick={handleSaveColor}>Apply</Button>
 				</div>
 			</div>
 		</Modal>

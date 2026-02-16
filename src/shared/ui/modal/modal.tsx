@@ -29,6 +29,6 @@ export function Modal(props: IModalProps) {
 				{children}
 			</div>
 		</div>,
-		document.body
+		document.body,
 	);
 }

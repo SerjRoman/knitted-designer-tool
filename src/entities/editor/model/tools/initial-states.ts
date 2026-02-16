@@ -11,6 +11,7 @@ import type {
 	CutState,
 	FillState,
 	ShapeState,
+	InsertTextState,
 } from "../types";
 
 const brushInitialState: BrushState = {
@@ -36,6 +37,10 @@ const selectInitialState: SelectState = {
 	startPoint: null,
 };
 const fillInitialState: FillState = { tool: "fill" };
+const insertTextInitialState: InsertTextState = {
+	tool: "insertText",
+	text: null,
+};
 
 export const toolInitialStates: Record<EditorTools, EditorToolState> = {
 	brush: brushInitialState,
@@ -48,4 +53,5 @@ export const toolInitialStates: Record<EditorTools, EditorToolState> = {
 	cut: cutInitialState,
 	paste: pasteInitialState,
 	fill: fillInitialState,
+	insertText: insertTextInitialState,
 };

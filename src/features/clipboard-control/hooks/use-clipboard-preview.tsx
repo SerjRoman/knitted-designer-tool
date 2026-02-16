@@ -12,10 +12,10 @@ interface ClipboardPreview {
 export function useClipboardPreview(): ClipboardPreview {
 	const { clipboard } = useAppSelector((state) => state.editor);
 	const { numberOfColumns, numberOfRows } = useAppSelector(
-		(state) => state.canvas
+		(state) => state.canvas,
 	);
 	const { width: pixelWidth, height: pixelHeight } = useAppSelector(
-		selectPixelDimensions
+		selectPixelDimensions,
 	);
 	const dispatch = useAppDispatch();
 	const clear = useCallback(() => {
@@ -27,7 +27,6 @@ export function useClipboardPreview(): ClipboardPreview {
 			if (!clipboard.points || !clipboard.origin) {
 				return;
 			}
-
 			const offset = {
 				x: point.x - clipboard.origin.x,
 				y: point.y - clipboard.origin.y,
@@ -40,10 +39,10 @@ export function useClipboardPreview(): ClipboardPreview {
 				pixelWidth,
 				pixelHeight,
 				numberOfColumns,
-				numberOfRows
+				numberOfRows,
 			);
 		},
-		[clipboard, pixelWidth, pixelHeight, numberOfColumns, numberOfRows]
+		[clipboard, pixelWidth, pixelHeight, numberOfColumns, numberOfRows],
 	);
 
 	if (!clipboard.points) {

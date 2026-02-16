@@ -1,6 +1,10 @@
 import { useCallback } from "react";
 import { drawPreviewPoints, selectPixelDimensions } from "@/entities/canvas";
-import { clearShapeState, setShapeStartPoint } from "@/entities/editor";
+import {
+	clearShapeState,
+	selectToolState,
+	setShapeStartPoint,
+} from "@/entities/editor";
 import {
 	areTwoPointsEqual,
 	getRectPoints,
@@ -17,16 +21,16 @@ import { drawRect } from "../model";
 
 export function useRectTool(): ToolHandlers {
 	const dispatch = useAppDispatch();
-	const { toolState } = useAppSelector((state) => state.editor);
+	const toolState = useAppSelector(selectToolState);
 	const { width: pixelWidth, height: pixelHeigth } = useAppSelector(
-		selectPixelDimensions
+		selectPixelDimensions,
 	);
 	const isRect = toolState.tool === "shape" && toolState.shape === "rect";
 	const getRectPointsToDraw = useMemoizedCalculation(
 		getRectPoints,
 		(prevArgs, nextArgs) =>
 			areTwoPointsEqual(prevArgs[0], nextArgs[0]) &&
-			areTwoPointsEqual(prevArgs[1], nextArgs[1])
+			areTwoPointsEqual(prevArgs[1], nextArgs[1]),
 	);
 
 	const onMouseDown: ToolHandler = useCallback(
@@ -35,7 +39,7 @@ export function useRectTool(): ToolHandlers {
 				dispatch(setShapeStartPoint(point));
 			}
 		},
-		[dispatch, isRect, toolState]
+		[dispatch, isRect, toolState],
 	);
 	const onMouseUp: ToolHandler = useCallback(
 		({ point }) => {
@@ -43,19 +47,19 @@ export function useRectTool(): ToolHandlers {
 				dispatch(drawRect(point));
 			}
 		},
-		[dispatch, isRect]
+		[dispatch, isRect],
 	);
 	const onDrawPreview: PreviewToolHandler = useCallback(
 		(context, { currentPoint }) => {
 			if (isRect && toolState.startPoint && currentPoint) {
 				const points = getRectPointsToDraw(
 					toolState.startPoint,
-					currentPoint
+					currentPoint,
 				);
 				drawPreviewPoints(context, points, pixelWidth, pixelHeigth);
 			}
 		},
-		[isRect, pixelHeigth, pixelWidth, toolState, getRectPointsToDraw]
+		[isRect, pixelHeigth, pixelWidth, toolState, getRectPointsToDraw],
 	);
 	const onMouseLeave: ToolHandlerWithoutPoint = useCallback(() => {
 		if (isRect && toolState.startPoint) {
