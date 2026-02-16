@@ -24,7 +24,7 @@ const eraserInitialState: EraserState = {
 const colorPickerInitialState: ColorPickerState = { tool: "colorPicker" };
 const copyInitialState: CopyState = { tool: "copy" };
 const cutInitialState: CutState = { tool: "cut" };
-const pasteInitialState: PasteState = { tool: "paste" };
+const pasteInitialState: PasteState = { tool: "paste", repeat: true };
 const lineInitialState: LineState = { tool: "line", startPoint: null };
 const shapeInitialState: ShapeState = {
 	tool: "shape",

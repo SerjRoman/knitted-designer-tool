@@ -20,7 +20,7 @@ export function CanvasLayer() {
 				0,
 				0,
 				context.canvas.width,
-				context.canvas.height
+				context.canvas.height,
 			);
 			context.translate(offsets.x, offsets.y);
 			context.scale(scale, scale);
@@ -29,10 +29,10 @@ export function CanvasLayer() {
 				context,
 				grid,
 				pixelDimensions.width,
-				pixelDimensions.height
+				pixelDimensions.height,
 			);
 		},
-		[grid, scale, offsets, pixelDimensions]
+		[grid, scale, offsets, pixelDimensions],
 	);
 
 	return (

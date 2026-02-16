@@ -10,7 +10,7 @@ export const uploadImageFromCloud = createAsyncThunk(
 	async (filename: string, { dispatch, rejectWithValue }) => {
 		try {
 			const response = await ApiClient.Get<ApiImageBody>(
-				`https://assets.knittedforyou.com/motif/${filename}.json`
+				`https://assets.knittedforyou.com/motif/${filename}.json`,
 			);
 			const { width, height, colors, rows } = response.data;
 			const RGBColors = colors.map(HEXToRGB);
@@ -18,7 +18,7 @@ export const uploadImageFromCloud = createAsyncThunk(
 				updateGridSizes({
 					numberOfColumns: width,
 					numberOfRows: height,
-				})
+				}),
 			);
 			const grid: Grid = Array.from<[]>({ length: height }).fill([]);
 			for (const row of rows) {
@@ -37,14 +37,14 @@ export const uploadImageFromCloud = createAsyncThunk(
 				updateGridSizes({
 					numberOfColumns: width,
 					numberOfRows: height,
-				})
+				}),
 			);
 		} catch (error) {
 			console.error(error);
 			if (error instanceof AxiosError) {
 				if (error.status === 500) {
 					return rejectWithValue(
-						"Server error. Please try again later!"
+						"Server error. Please try again later!",
 					);
 				}
 				if (error.status === 404) {
@@ -58,5 +58,5 @@ export const uploadImageFromCloud = createAsyncThunk(
 				message: "Unhandled error. Please try again!",
 			});
 		}
-	}
+	},
 );

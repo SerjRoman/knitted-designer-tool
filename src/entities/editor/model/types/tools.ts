@@ -43,6 +43,7 @@ export interface CopyState {
 }
 export interface PasteState {
 	tool: "paste";
+	repeat: boolean;
 }
 export interface FillState {
 	tool: "fill";

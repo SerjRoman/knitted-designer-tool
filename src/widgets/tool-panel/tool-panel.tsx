@@ -1,11 +1,10 @@
-import { Eye } from "lucide-react";
+import { Upload } from "lucide-react";
 import { ClipboardControl } from "@/features/clipboard-control";
 import { SelectDrawingTool } from "@/features/draw-with-tool";
 import { SelectTransformTool } from "@/features/grid-transform";
 import { HistoryControl } from "@/features/history-control";
-import { PreviewImageModal } from "@/features/preview-image";
 import { SaveImageButton } from "@/features/save-image";
-import { UploadImageButton } from "@/features/upload-image";
+import { UploadFromUserModal } from "@/features/upload-image";
 import { ToolButton } from "@/entities/editor";
 import { useModal } from "@/shared/lib";
 
@@ -26,18 +25,16 @@ export function ToolPanel() {
 				</h3>
 				<div className="grid grid-cols-2 gap-2">
 					<ToolButton
-						icon={Eye}
+						icon={Upload}
 						iconProps={{ size: 24 }}
-						label={isOpen ? "Close preview" : "Preview"}
+						label={isOpen ? "Close upload" : "Upload"}
 						onClick={isOpen ? close : open}
-						isSelected={false}
 					/>
-
-					<UploadImageButton />
 					<SaveImageButton />
 				</div>
 			</div>
-			<ModalWrapper ModalComponent={PreviewImageModal} />
+
+			<ModalWrapper ModalComponent={UploadFromUserModal} />
 		</div>
 	);
 }

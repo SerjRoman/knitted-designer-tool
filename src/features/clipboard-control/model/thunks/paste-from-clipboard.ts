@@ -1,5 +1,9 @@
 import { selectGrid, setPixelsWithColor } from "@/entities/canvas";
-import { selectClipboard, selectToolState } from "@/entities/editor";
+import {
+	clearClipboard,
+	selectClipboard,
+	selectToolState,
+} from "@/entities/editor";
 import { addActionToHistory } from "@/entities/history";
 import { type Point, type PointWithColor } from "@/shared/lib";
 import { createAppAsyncThunk } from "@/shared/store";
@@ -41,7 +45,9 @@ export const pasteFromClipboard = createAppAsyncThunk(
 			pointsBefore.push(pointBefore);
 		});
 		dispatch(setPixelsWithColor({ points: pointsAfter }));
-
+		if (!toolState.repeat) {
+			dispatch(clearClipboard());
+		}
 		dispatch(
 			addActionToHistory({
 				type: "DRAW",
@@ -49,7 +55,7 @@ export const pasteFromClipboard = createAppAsyncThunk(
 					pointsAfter,
 					pointsBefore,
 				},
-			})
+			}),
 		);
-	}
+	},
 );

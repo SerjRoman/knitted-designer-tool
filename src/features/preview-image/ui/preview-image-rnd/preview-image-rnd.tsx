@@ -1,39 +1,38 @@
 import { useMemo } from "react";
 import { createPortal } from "react-dom";
 import { Rnd } from "react-rnd";
+import { selectActiveModal, toggleModal } from "@/entities/ui";
 import { transformGridToApiFormat } from "@/shared/lib";
-import { useAppSelector } from "@/shared/store";
+import { useAppDispatch, useAppSelector } from "@/shared/store";
 import { Loader } from "@/shared/ui";
 import { useGetPreviewImage } from "../../api";
 
-export function PreviewImageModal({
-	isOpen,
-	onClose,
-}: {
-	isOpen: boolean;
-	onClose: () => void;
-}) {
+export function PreviewImageRnd() {
 	const { grid, numberOfColumns, numberOfRows, colors } = useAppSelector(
-		(state) => state.canvas
+		(state) => state.canvas,
 	);
+	const dispatch = useAppDispatch();
+	const activeModal = useAppSelector(selectActiveModal);
 	const horizontalCenter = window.innerWidth / 2;
 	const verticalCenter = window.innerHeight / 2;
-
+	function onClose() {
+		dispatch(toggleModal("preview"));
+	}
 	const body = useMemo(
 		() =>
 			transformGridToApiFormat(
 				grid,
 				colors,
 				numberOfColumns,
-				numberOfRows
+				numberOfRows,
 			),
-		[colors, grid, numberOfColumns, numberOfRows]
+		[colors, grid, numberOfColumns, numberOfRows],
 	);
 	const { isLoading, error, refetch } = useGetPreviewImage({ body });
 
 	const doShowContent = true;
 
-	if (!isOpen || !onClose) return null;
+	if (activeModal !== "preview") return null;
 
 	return createPortal(
 		<Rnd
@@ -94,6 +93,6 @@ export function PreviewImageModal({
 				)}
 			</div>
 		</Rnd>,
-		document.body
+		document.body,
 	);
 }

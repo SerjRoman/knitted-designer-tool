@@ -17,7 +17,6 @@ export function useFillTool(): ToolHandlers {
 		getAdjacentPoints,
 		(prevArgs, nextArgs) => areTwoPointsEqual(prevArgs[0], nextArgs[0])
 	);
-	// const { currentColor } = useAppSelector((state) => state.editor);
 	const onMouseUp: ToolHandler = useCallback(
 		({ point }) => {
 			dispatch(fillArea(point));
@@ -28,9 +27,6 @@ export function useFillTool(): ToolHandlers {
 		(context, { currentPoint }) => {
 			if (!currentPoint) return;
 			const pointsToFill = getAdjacentPointsToDraw(currentPoint, grid);
-			// const color = currentColor
-			// 	.replace(")", ", 0.5)")
-			// 	.replace("rgb", "rgba");
 			drawPreviewPoints(context, pointsToFill, width, height);
 		},
 		[getAdjacentPointsToDraw, grid, height, width]

@@ -15,7 +15,7 @@ export const saveImageToCloud = createAppAsyncThunk(
 			grid,
 			colors,
 			numberOfColumns,
-			numberOfRows
+			numberOfRows,
 		);
 		try {
 			await ApiClient.Post(
@@ -23,7 +23,7 @@ export const saveImageToCloud = createAppAsyncThunk(
 				JSON.stringify({
 					filename: filename + ".json",
 					content: dataToSend,
-				})
+				}),
 			);
 		} catch (error) {
 			console.error(error);
@@ -35,6 +35,6 @@ export const saveImageToCloud = createAppAsyncThunk(
 			return rejectWithValue({
 				message: "Unhandled server error. Please try again later!",
 			});
-		}		
-	}
+		}
+	},
 );

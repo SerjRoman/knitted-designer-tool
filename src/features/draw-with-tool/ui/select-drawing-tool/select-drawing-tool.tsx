@@ -7,7 +7,7 @@ import {
 	Square,
 	Circle,
 } from "lucide-react";
-import { ToolButton, selectTool, setShape } from "@/entities/editor";
+import { ToolButton, setTool, setShape } from "@/entities/editor";
 import { useAppDispatch, useAppSelector } from "@/shared/store";
 
 export function SelectDrawingTool() {
@@ -23,20 +23,20 @@ export function SelectDrawingTool() {
 					toolName="brush"
 					icon={Brush}
 					label="Brush"
-					onClick={() => dispatch(selectTool("brush"))}
+					onClick={() => dispatch(setTool("brush"))}
 				/>
 				<ToolButton
 					toolName="line"
 					icon={Minus}
 					label="Line"
-					onClick={() => dispatch(selectTool("line"))}
+					onClick={() => dispatch(setTool("line"))}
 				/>
 				<ToolButton
 					toolName="shape"
 					icon={Square}
 					label="Rectangle"
 					onClick={() => {
-						dispatch(selectTool("shape"));
+						dispatch(setTool("shape"));
 						dispatch(setShape("rect"));
 					}}
 					isSelected={
@@ -48,7 +48,7 @@ export function SelectDrawingTool() {
 					icon={Circle}
 					label="Ellipse"
 					onClick={() => {
-						dispatch(selectTool("shape"));
+						dispatch(setTool("shape"));
 						dispatch(setShape("ellipse"));
 					}}
 					isSelected={
@@ -60,13 +60,13 @@ export function SelectDrawingTool() {
 					toolName="eraser"
 					icon={Eraser}
 					label="Eraser"
-					onClick={() => dispatch(selectTool("eraser"))}
+					onClick={() => dispatch(setTool("eraser"))}
 				/>
 				<ToolButton
 					toolName="colorPicker"
 					icon={Pipette}
 					label="Picker"
-					onClick={() => dispatch(selectTool("colorPicker"))}
+					onClick={() => dispatch(setTool("colorPicker"))}
 				/>
 
 				<ToolButton
@@ -74,7 +74,7 @@ export function SelectDrawingTool() {
 					icon={PaintBucket}
 					label="Fill Area"
 					onClick={() => {
-						dispatch(selectTool("fill"));
+						dispatch(setTool("fill"));
 					}}
 				/>
 			</div>

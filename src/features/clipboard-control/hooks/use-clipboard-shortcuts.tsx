@@ -2,7 +2,8 @@ import { useEffect } from "react";
 import {
 	clearClipboard,
 	clearSelectedPoints,
-	selectTool,
+	setPasteRepeat,
+	setTool,
 } from "@/entities/editor";
 import { useAppDispatch, useAppSelector } from "@/shared/store";
 import { copySelection, cutSelection } from "../model";
@@ -23,27 +24,30 @@ export function useClipboardShortucts() {
 						if (selectedPoints && selectedPoints.length > 0) {
 							e.preventDefault();
 							dispatch(copySelection());
-							dispatch(selectTool("paste"));
+							dispatch(setTool("paste"));
+							dispatch(setPasteRepeat(true));
 						}
 						break;
 					case "x":
 						if (selectedPoints && selectedPoints.length > 0) {
 							e.preventDefault();
 							dispatch(cutSelection());
-							dispatch(selectTool("paste"));
+							dispatch(setTool("paste"));
+							dispatch(setPasteRepeat(true));
 						}
 						break;
 					case "v":
 						if (clipboard) {
 							e.preventDefault();
-							dispatch(selectTool("paste"));
+							dispatch(setTool("paste"));
+							dispatch(setPasteRepeat(true));
 						}
 						break;
 				}
 			}
 			if (e.key === "Escape") {
 				if (tool === "paste") {
-					dispatch(selectTool("select"));
+					dispatch(setTool("select"));
 					dispatch(clearClipboard());
 				} else if (tool === "select") {
 					dispatch(clearSelectedPoints());

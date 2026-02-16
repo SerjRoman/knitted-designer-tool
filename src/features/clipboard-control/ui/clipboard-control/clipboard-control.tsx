@@ -7,7 +7,8 @@ import {
 import {
 	clearClipboard,
 	clearSelectedPoints,
-	selectTool,
+	setTool,
+	setPasteRepeat,
 	ToolButton,
 } from "@/entities/editor";
 import { useAppDispatch, useAppSelector } from "@/shared/store";
@@ -43,7 +44,7 @@ export function ClipboardControl() {
 						icon={MousePointer}
 						label="Select"
 						onClick={() => {
-							dispatch(selectTool("select"));
+							dispatch(setTool("select"));
 							dispatch(clearClipboard());
 						}}
 					/>
@@ -53,9 +54,9 @@ export function ClipboardControl() {
 					icon={Copy}
 					label="Copy"
 					onClick={async () => {
-						dispatch(selectTool("copy"));
+						dispatch(setTool("copy"));
 						await dispatch(copySelection());
-						dispatch(selectTool("paste"));
+						dispatch(setTool("paste"));
 					}}
 					disabled={!selectedPoints || selectedPoints.length === 0}
 				/>
@@ -64,9 +65,10 @@ export function ClipboardControl() {
 					icon={Scissors}
 					label="Cut"
 					onClick={async () => {
-						dispatch(selectTool("cut"));
+						dispatch(setTool("cut"));
 						await dispatch(cutSelection());
-						dispatch(selectTool("paste"));
+						dispatch(setTool("paste"));
+						dispatch(setPasteRepeat(false));
 					}}
 					disabled={!selectedPoints || selectedPoints.length === 0}
 				/>
@@ -74,7 +76,7 @@ export function ClipboardControl() {
 					toolName="paste"
 					icon={Clipboard}
 					label="Paste"
-					onClick={() => dispatch(selectTool("paste"))}
+					onClick={() => dispatch(setTool("paste"))}
 					disabled={!clipboard.points}
 				/>
 			</div>

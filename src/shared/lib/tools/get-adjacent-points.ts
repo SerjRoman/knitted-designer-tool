@@ -1,3 +1,4 @@
+import type { Grid, Point } from "../types";
 function isPointOutOfGrid(point: Point, grid: Grid): boolean {
 	return (
 		point.y < 0 ||
@@ -6,8 +7,6 @@ function isPointOutOfGrid(point: Point, grid: Grid): boolean {
 		point.x >= grid[point.y].length
 	);
 }
-
-import type { Grid, Point } from "../types";
 
 export function getAdjacentPoints(startingPoint: Point, grid: Grid): Point[] {
 	if (isPointOutOfGrid(startingPoint, grid)) {

@@ -2,7 +2,7 @@ import { AlertTriangle, CheckCircle } from "lucide-react";
 import type { ReactNode } from "react";
 import { Modal } from "../modal";
 
-type ModalVariant = "success" | "error";
+type ModalVariant = "success" | "error" | "info";
 
 interface StatusModalProps {
 	variant: ModalVariant;

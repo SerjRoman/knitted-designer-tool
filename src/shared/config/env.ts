@@ -1,3 +1,5 @@
-import { cleanEnv } from "envalid";
+import { cleanEnv, str } from "envalid";
 
-export const env = cleanEnv(import.meta.env, {});
+export const ENV = cleanEnv(import.meta.env, {
+	VITE_ORIGIN_PRESTA: str(),
+});

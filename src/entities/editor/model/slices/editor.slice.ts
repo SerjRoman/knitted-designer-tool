@@ -6,6 +6,7 @@ import {
 	shapeReducers,
 	selectReducers,
 	toolInitialStates,
+	pasteReducers,
 } from "../tools";
 import type { EditorState, EditorTools } from "../types";
 
@@ -29,7 +30,7 @@ export const editorSlice = createSlice({
 		selectSelectedPoints: (state) => state.selectedPoints,
 	},
 	reducers: {
-		selectTool(state, { payload }: PayloadAction<EditorTools>) {
+		setTool(state, { payload }: PayloadAction<EditorTools>) {
 			state.toolState = toolInitialStates[payload];
 		},
 		setCurrentColor(state, { payload }: PayloadAction<string>) {
@@ -37,7 +38,7 @@ export const editorSlice = createSlice({
 		},
 		setClipboardPoints(
 			state,
-			{ payload }: PayloadAction<PointWithColor[]>
+			{ payload }: PayloadAction<PointWithColor[]>,
 		) {
 			state.clipboard.points = payload;
 		},
@@ -55,11 +56,12 @@ export const editorSlice = createSlice({
 		...shapeReducers,
 		...selectReducers,
 		...drawingReducers,
+		...pasteReducers,
 	},
 });
 
 export const {
-	selectTool,
+	setTool,
 	setCurrentColor,
 	setLineStartPoint,
 	setShapeStartPoint,
@@ -77,6 +79,7 @@ export const {
 	addStrokedPoint,
 	clearStrokedPoints,
 	setShape,
+	setPasteRepeat,
 } = editorSlice.actions;
 export const {
 	selectClipboard,
