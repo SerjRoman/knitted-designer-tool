@@ -9,12 +9,19 @@ import {
 } from "@/entities/canvas";
 import { useAppDispatch, useAppSelector } from "@/shared/store";
 import { Modal } from "@/shared/ui";
-import { Button } from "@/shared/ui/button";
+type GridSettingsModalProps = {
+	onClose: () => void;
+	isOpen: boolean;
+
+	// Ny: skickas in via useModal.open({ onTensionChange: ... })
+	onTensionChange?: (stitches: number, rows: number) => void;
+};
 
 export function GridSettingsModal({
 	onClose,
 	isOpen,
-}: Readonly<{ onClose: () => void; isOpen: boolean }>) {
+	onTensionChange,
+}: Readonly<GridSettingsModalProps>) {
 	const dispatch = useAppDispatch();
 
 	const {
@@ -28,14 +35,20 @@ export function GridSettingsModal({
 	const [formState, setFormState] = useState({
 		columns: numberOfColumns,
 		rows: numberOfRows,
-		stitches: Math.round(INITIAL_TENSION_CM / pixelWidth),
-		rowsTension: Math.round(INITIAL_TENSION_CM / pixelHeight),
+
+		// Behåller din logik, men lägger in fallback så det aldrig blir 0/NaN
+		stitches: Math.max(1, Math.round(INITIAL_TENSION_CM / pixelWidth)),
+		rowsTension: Math.max(1, Math.round(INITIAL_TENSION_CM / pixelHeight)),
 	});
 
 	const newPixelDimensions = calculateTension(
 		formState.stitches || INITIAL_TENSION_STITCHES,
 		formState.rowsTension || INITIAL_TENSION_ROWS,
 	);
+
+	const updateState = (key: keyof typeof formState, value: number) => {
+		setFormState((prev) => ({ ...prev, [key]: value }));
+	};
 
 	const handleSubmit = () => {
 		if (formState.columns <= 0 || formState.rows <= 0) {
@@ -57,11 +70,10 @@ export function GridSettingsModal({
 			}),
 		);
 
-		onClose();
-	};
+		// Ny: uppdatera värden i knappen/parenten när man klickar Apply
+		onTensionChange?.(formState.stitches, formState.rowsTension);
 
-	const updateState = (key: keyof typeof formState, value: number) => {
-		setFormState((prev) => ({ ...prev, [key]: value }));
+		onClose();
 	};
 
 	return (
@@ -87,21 +99,35 @@ export function GridSettingsModal({
 				<ResizeTensionSlider
 					stitches={formState.stitches}
 					rows={formState.rowsTension}
-					onStitchesChange={(val) => updateState("stitches", val)}
-					onRowsChange={(val) => updateState("rowsTension", val)}
+					onStitchesChange={(val) => {
+						updateState("stitches", val);
+
+						// Vill du uppdatera LIVE när man drar:
+						// onTensionChange?.(val, formState.rowsTension);
+					}}
+					onRowsChange={(val) => {
+						updateState("rowsTension", val);
+
+						// Vill du uppdatera LIVE när man drar:
+						// onTensionChange?.(formState.stitches, val);
+					}}
 					previewWidth={newPixelDimensions.width * pixelSize}
 					previewHeight={newPixelDimensions.height * pixelSize}
 				/>
 
 				<div className="flex justify-end gap-3 pt-2">
-					<Button
-						variant="outlined"
-						color="inherit"
+					<button
+						className="items-center px-4 py-2 border border-2 text-gray-700 rounded hover:bg-gray-400 transition"
 						onClick={onClose}
 					>
 						Cancel
-					</Button>
-					<Button onClick={handleSubmit}>Apply Changes</Button>
+					</button>
+					<button
+						className="items-center px-4 py-2 bg-[#0D5C4A] text-white rounded hover:bg-[#145245] transition"
+						onClick={handleSubmit}
+					>
+						Apply Changes
+					</button>
 				</div>
 			</div>
 		</Modal>
