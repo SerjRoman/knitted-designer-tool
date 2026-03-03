@@ -1,5 +1,4 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { AxiosError } from "axios";
 import { updateGridSizes, setColors, setGrid } from "@/entities/canvas";
 import { setCurrentColor } from "@/entities/editor";
 import { ApiClient } from "@/shared/api";
@@ -12,7 +11,21 @@ export const uploadImageFromCloud = createAsyncThunk(
 			const response = await ApiClient.Get<ApiImageBody>(
 				`https://assets.knittedforyou.com/motif/${filename}.json`,
 			);
-			const { width, height, colors, rows } = response.data;
+			if (!response.ok) {
+				console.error("Failed to fetch motif:", response.statusText);
+				if (response.status === 500) {
+					return rejectWithValue(
+						"Server error. Please try again later!",
+					);
+				}
+				if (response.status === 404) {
+					return rejectWithValue({
+						message:
+							"Motif not found. Please check that the motif exists!",
+					});
+				}
+			}
+			const { width, height, colors, rows } = await response.data;
 			const RGBColors = colors.map(HEXToRGB);
 			dispatch(
 				updateGridSizes({
@@ -41,21 +54,8 @@ export const uploadImageFromCloud = createAsyncThunk(
 			);
 		} catch (error) {
 			console.error(error);
-			if (error instanceof AxiosError) {
-				if (error.status === 500) {
-					return rejectWithValue(
-						"Server error. Please try again later!",
-					);
-				}
-				if (error.status === 404) {
-					return rejectWithValue({
-						message:
-							"Motif not found. Please check that the motif exists!",
-					});
-				}
-			}
 			return rejectWithValue({
-				message: "Unhandled error. Please try again!",
+				message: "Network error. Please try again!",
 			});
 		}
 	},

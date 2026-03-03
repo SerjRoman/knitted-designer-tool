@@ -1,27 +1,36 @@
-import { AxiosHeaders, type AxiosResponse } from "axios";
-import axios from "axios";
-
 export class ApiClient {
-	private static setupBaseHeaders(h?: AxiosHeaders) {
-		const headers = new AxiosHeaders(h);
-		headers.setContentType("application/json");
+	private static setupBaseHeaders(h?: HeadersInit): Headers {
+		const headers = new Headers(h);
+		headers.set("Content-Type", "application/json");
 		return headers;
 	}
-	static Get<T>(
+	static async Get<T>(
 		url: string,
-		headers?: AxiosHeaders
-	): Promise<AxiosResponse<T>> {
+		headers?: HeadersInit,
+	): Promise<Response & { data: Promise<T> }> {
 		const finalHeaders = ApiClient.setupBaseHeaders(headers);
-		return axios.get(url, {
-			headers: finalHeaders,
+		return fetch(url, { headers: finalHeaders }).then((res) => {
+			if (!res.ok) {
+				throw new Error(`HTTP error! status: ${res.status}`);
+			}
+			return { ...res, data: res.json() as Promise<T> };
 		});
 	}
-	static Post<T>(
+	static async Post<T>(
 		url: string,
 		body: unknown,
-		headers?: AxiosHeaders
-	): Promise<AxiosResponse<T>> {
+		headers?: HeadersInit,
+	): Promise<Response & { data: Promise<T> }> {
 		const finalHeaders = ApiClient.setupBaseHeaders(headers);
-		return axios.post(url, body, { headers: finalHeaders });
+		return fetch(url, {
+			method: "POST",
+			body: JSON.stringify(body),
+			headers: finalHeaders,
+		}).then((res) => {
+			if (!res.ok) {
+				throw new Error(`HTTP error! status: ${res.status}`);
+			}
+			return { ...res, data: res.json() as Promise<T> };
+		});
 	}
 }

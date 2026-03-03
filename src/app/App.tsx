@@ -60,7 +60,7 @@ export function App() {
 	}, []);
 
 	return (
-		<div className="h-screen w-screen flex bg-white overflow-hidden">
+		<div className="flex bg-white overflow-hidden">
 			<div
 				ref={viewportRef}
 				className="flex-1 min-w-0 relative overflow-hidden"

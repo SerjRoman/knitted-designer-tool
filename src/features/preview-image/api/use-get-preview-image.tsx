@@ -1,4 +1,3 @@
-import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import { ApiClient } from "@/shared/api";
 import type { ApiImageBody } from "@/shared/lib";
@@ -25,13 +24,14 @@ export function useGetPreviewImage({
 		try {
 			setIsLoading(true);
 			const response = await ApiClient.Post<{ url: string }>("", body);
+			const data = await response.data;
 			if (response.status === 200) {
-				setData(response.data.url);
+				setData(data.url);
 			} else {
 				setError("Unhandled error.");
 			}
 		} catch (error) {
-			if (error instanceof AxiosError) {
+			if (error instanceof Error && "status" in error) {
 				switch (error.status) {
 					case 404:
 						setError("Not found");

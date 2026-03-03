@@ -17,7 +17,7 @@ export default function SelectColor() {
 	const maxColorsExceeded = MAX_COLORS <= colors.length;
 	return (
 		<div className="grid grid-cols-7 gap-3 ">
-			<div className="col-span-2 grid grid-rows-2 gap-3">
+			<div className="col-span-2 grid grid-rows-2 grid-cols-1 gap-3">
 				<button
 					onClick={() =>
 						openEditColorModal({ selectedColor: currentColor })
@@ -35,7 +35,7 @@ export default function SelectColor() {
 					<PlusIcon size={20} /> Add
 				</button>
 			</div>
-			<div className="col-span-5 grid grid-cols-4 gap-1">
+			<div className="col-span-5 grid grid-cols-4 row-auto gap-1">
 				{colors.map((color, index) => (
 					<button
 						key={index}

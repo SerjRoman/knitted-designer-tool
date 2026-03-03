@@ -158,7 +158,6 @@ function attachImageOnPresta(payload: {
 		}
 
 		window.addEventListener("message", onMessage);
-
 		window.parent.postMessage(
 			{ type: "ATTACH_IMAGE", payload },
 			parentOriginForSend,

@@ -1,7 +1,9 @@
 import path from "path";
 import react from "@vitejs/plugin-react-swc";
+import { visualizer } from "rollup-plugin-visualizer";
 import { defineConfig } from "vite";
 import svgr from "vite-plugin-svgr";
+import tailwindcss from "@tailwindcss/vite";
 
 const root = path.resolve(__dirname, "src");
 
@@ -18,10 +20,26 @@ export default defineConfig({
 			"@assets": `${root}/assets`,
 		},
 	},
-	plugins: [react(), svgr({ include: `${root}/assets/svg/*.svg` })],
+	plugins: [
+		react(),
+		svgr({ include: `${root}/assets/svg/*.svg` }),
+		visualizer({ open: true }),
+		tailwindcss(),
+	],
 	server: {
-    	host: '0.0.0.0',                   // allow external connections
-    	port: 5173,                        
-    	allowedHosts: ['editor.knittedforyou.com'], 
-  	}
+		host: "0.0.0.0", // allow external connections
+		port: 5173,
+		allowedHosts: ["editor.knittedforyou.com"],
+	},
+	build: {
+		outDir: "./dist",
+		emptyOutDir: true,
+		rollupOptions: {
+			output: {
+				entryFileNames: `main.js`,
+				chunkFileNames: `chunk-[name].js`,
+				assetFileNames: `style.css`,
+			},
+		},
+	},
 });

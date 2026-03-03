@@ -1,10 +1,10 @@
-import type { RGBColor } from "react-color";
 import { SIMILARITY_THRESHOLD } from "../constants";
+import type { RGBColor } from "../types";
 import { calculateColorDistance } from "./calculate-color-distance";
 
 export function approximateColors(
 	initialColors: RGBColor[],
-	colorsToApproximate: RGBColor[]
+	colorsToApproximate: RGBColor[],
 ) {
 	const approximatedColors: RGBColor[] = [...initialColors];
 	for (const colorToApproximate of colorsToApproximate) {
@@ -15,7 +15,7 @@ export function approximateColors(
 		for (const initialColor of initialColors) {
 			const distance = calculateColorDistance(
 				initialColor,
-				colorToApproximate
+				colorToApproximate,
 			);
 			if (distance < minDistance) {
 				minDistance = distance;
