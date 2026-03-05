@@ -23,7 +23,6 @@
 		"noFallthroughCasesInSwitch": true,
 		"noUncheckedSideEffectImports": true,
 		"isolatedModules": true,
-		"baseUrl": "./",
 		"paths": {
 			"@/*": ["./src/*"],
 			"@shared/*": ["./src/shared/*"],

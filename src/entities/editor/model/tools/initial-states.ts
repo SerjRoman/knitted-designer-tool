@@ -10,6 +10,7 @@ import type {
 	CopyState,
 	PasteState,
 	CutState,
+    FillState,
 } from "../types";
 
 const brushInitialState: BrushState = {
@@ -30,6 +31,7 @@ const selectInitialState: SelectState = {
 	tool: "select",
 	startPoint: null,
 };
+const fillInitialState: FillState = { tool: "fill" };
 
 export const toolInitialStates: Record<EditorTools, EditorToolState> = {
 	brush: brushInitialState,
@@ -41,4 +43,5 @@ export const toolInitialStates: Record<EditorTools, EditorToolState> = {
 	copy: copyInitialState,
 	cut: cutInitialState,
 	paste: pasteInitialState,
+	fill: fillInitialState,
 };

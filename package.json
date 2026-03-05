@@ -16,6 +16,10 @@
     "envalid": "^8.1.0",
     "eslint-plugin-import": "^2.32.0",
 
+
+
+    "nanoid": "^5.1.6",
+
     "lucide-react": "^0.544.0",
 
     "nanoid": "^5.1.6",

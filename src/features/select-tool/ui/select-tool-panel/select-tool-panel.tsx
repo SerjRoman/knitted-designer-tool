@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { copySelection, cutSelection } from "@/features/clipboard";
+import { copySelection, cutSelection } from "@/features/clipboard-control";
 import { clearClipboard, selectTool } from "@/entities/editor";
 import { useAppDispatch, useAppSelector } from "@/shared/lib";
 import {
