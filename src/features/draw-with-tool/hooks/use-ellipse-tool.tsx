@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { drawPreviewPoints, selectPixelDimensions } from "@/entities/canvas";
+import { drawPreviewPoints, selectPixelDimensions } from "@/entities/canva";
 import { clearShapeState, setShapeStartPoint } from "@/entities/editor";
 import {
 	areTwoPointsEqual,
@@ -19,7 +19,7 @@ export function useEllipseTool(): ToolHandlers {
 	const dispatch = useAppDispatch();
 	const { toolState } = useAppSelector((state) => state.editor);
 	const { width: pixelWidth, height: pixelHeigth } = useAppSelector(
-		selectPixelDimensions
+		selectPixelDimensions,
 	);
 	const isEllipse =
 		toolState.tool === "shape" && toolState.shape === "ellipse";
@@ -27,7 +27,7 @@ export function useEllipseTool(): ToolHandlers {
 		getEllipsePoints,
 		(prevArgs, nextArgs) =>
 			areTwoPointsEqual(prevArgs[0], nextArgs[0]) &&
-			areTwoPointsEqual(prevArgs[1], nextArgs[1])
+			areTwoPointsEqual(prevArgs[1], nextArgs[1]),
 	);
 	const onMouseDown: ToolHandler = useCallback(
 		({ point }) => {
@@ -35,7 +35,7 @@ export function useEllipseTool(): ToolHandlers {
 				dispatch(setShapeStartPoint(point));
 			}
 		},
-		[dispatch, isEllipse, toolState]
+		[dispatch, isEllipse, toolState],
 	);
 	const onMouseUp: ToolHandler = useCallback(
 		({ point }) => {
@@ -43,19 +43,19 @@ export function useEllipseTool(): ToolHandlers {
 				dispatch(drawEllipse(point));
 			}
 		},
-		[dispatch, isEllipse]
+		[dispatch, isEllipse],
 	);
 	const onDrawPreview: PreviewToolHandler = useCallback(
 		(context, { currentPoint }) => {
 			if (isEllipse && toolState.startPoint && currentPoint) {
 				const points = getEllipsePointsToDraw(
 					toolState.startPoint,
-					currentPoint
+					currentPoint,
 				);
 				drawPreviewPoints(context, points, pixelWidth, pixelHeigth);
 			}
 		},
-		[isEllipse, toolState, pixelWidth, pixelHeigth, getEllipsePointsToDraw]
+		[isEllipse, toolState, pixelWidth, pixelHeigth, getEllipsePointsToDraw],
 	);
 	const onMouseLeave: ToolHandlerWithoutPoint = useCallback(() => {
 		if (isEllipse && toolState.startPoint) {

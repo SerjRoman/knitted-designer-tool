@@ -4,7 +4,7 @@ import type { EditorTools } from "../../model";
 export interface ToolButtonProps {
 	icon: LucideIcon;
 	label: string;
-	onClick: () => void;
+	onClick?: () => void;
 	isSelected?: boolean;
 	disabled?: boolean;
 	iconProps?: LucideProps;

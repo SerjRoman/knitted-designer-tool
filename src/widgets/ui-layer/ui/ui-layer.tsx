@@ -8,7 +8,7 @@ import {
 	drawCrosshair,
 	selectCanvasDimensions,
 	selectPixelDimensions,
-} from "@/entities/canvas";
+} from "@/entities/canva";
 import { TOOLS } from "@/entities/editor";
 import { usePointFromEvent } from "@/shared/lib";
 import { useAppDispatch, useAppSelector } from "@/shared/store";
@@ -17,14 +17,16 @@ import { Canvas } from "@/shared/ui";
 export function UILayer() {
 	const [isDrawing, setIsDrawing] = useState(false);
 	const dispatch = useAppDispatch();
-	const { point, lastPoint, updatePointFromEvent } = usePointFromEvent();
+	const pixelDimensions = useAppSelector(selectPixelDimensions);
+	const { point, lastPoint, updatePointFromEvent } = usePointFromEvent({
+		pixelDimensions,
+	});
 	const drawClipboard = useClipboardPreview();
 	const { numberOfColumns, numberOfRows } = useAppSelector(
 		(state) => state.canvas,
 	);
 	const canvasDimensions = useAppSelector(selectCanvasDimensions);
 
-	const pixelDimensions = useAppSelector(selectPixelDimensions);
 	const activeToolHandlers = useActiveToolHandlers();
 
 	const { scale, offsets, isPanning } = useAppSelector(

@@ -1,6 +1,6 @@
 import { Eye, UploadIcon } from "lucide-react";
 import { ToolButton } from "@/entities/editor";
-import { selectActiveModal, toggleModal } from "@/entities/ui";
+import { selectActiveModal, toggleModal } from "@/entities/modal";
 import { useAppDispatch, useAppSelector } from "@/shared/store";
 
 export function Sidebar() {

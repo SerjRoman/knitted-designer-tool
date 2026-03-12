@@ -1,6 +1,6 @@
 import { TextField } from "@mui/material";
 import { useState, type ChangeEvent } from "react";
-import { openDialog } from "@/entities/ui";
+import { openDialog } from "@/entities/modal";
 import { clamp } from "@/shared/lib";
 import { useAppDispatch, useAppSelector } from "@/shared/store";
 import { Modal } from "@/shared/ui";

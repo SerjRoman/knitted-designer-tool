@@ -1,1 +1,1 @@
-export { CanvasLayer } from "./canvas-layer";
+export { CanvasLayer } from "./ui/canvas-layer";

@@ -23,11 +23,11 @@ export default defineConfig({
 	plugins: [
 		react(),
 		svgr({ include: `${root}/assets/svg/*.svg` }),
-		visualizer({ open: true }),
+		visualizer({ open: false }),
 		tailwindcss(),
 	],
 	server: {
-		host: "0.0.0.0", // allow external connections
+		host: "0.0.0.0", 
 		port: 5173,
 		allowedHosts: ["editor.knittedforyou.com"],
 	},

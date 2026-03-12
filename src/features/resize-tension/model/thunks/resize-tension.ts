@@ -2,7 +2,7 @@ import {
     selectPixelHeight,
     selectPixelWidth,
     setPixelDimensions,
-} from "@/entities/canvas";
+} from "@/entities/canva";
 import { addActionToHistory } from "@/entities/history";
 import { createAppAsyncThunk } from "@/shared/store";
 

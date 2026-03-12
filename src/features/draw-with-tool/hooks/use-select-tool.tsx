@@ -1,5 +1,5 @@
 import { useCallback, useRef } from "react";
-import { drawPreviewPoints, selectPixelDimensions } from "@/entities/canvas";
+import { drawPreviewPoints, selectPixelDimensions } from "@/entities/canva";
 import {
 	removeSelectedPoint,
 	addSelectedPoint,
@@ -19,16 +19,16 @@ import { drawSelect } from "../model";
 export function useSelectTool(): ToolHandlers {
 	const dispatch = useAppDispatch();
 	const { selectedPoints, toolState } = useAppSelector(
-		(state) => state.editor
+		(state) => state.editor,
 	);
 	const { width: pixelWidth, height: pixelHeigth } = useAppSelector(
-		selectPixelDimensions
+		selectPixelDimensions,
 	);
 	const getRectPointsToDraw = useMemoizedCalculation(
 		getRectPoints,
 		(prevArgs, nextArgs) =>
 			areTwoPointsEqual(prevArgs[0], nextArgs[0]) &&
-			areTwoPointsEqual(prevArgs[1], nextArgs[1])
+			areTwoPointsEqual(prevArgs[1], nextArgs[1]),
 	);
 
 	const doAddNewPointRef = useRef<boolean>(true);
@@ -39,7 +39,7 @@ export function useSelectTool(): ToolHandlers {
 				if (selectedPoints) {
 					doAddNewPointRef.current = !isPointInPoints(
 						point,
-						selectedPoints
+						selectedPoints,
 					);
 				}
 
@@ -54,13 +54,13 @@ export function useSelectTool(): ToolHandlers {
 				dispatch(setSelectStartPoint(point));
 			}
 		},
-		[dispatch, selectedPoints, toolState]
+		[dispatch, selectedPoints, toolState],
 	);
 	const onMouseUp: ToolHandler = useCallback(
 		({ point }) => {
 			dispatch(drawSelect(point));
 		},
-		[dispatch]
+		[dispatch],
 	);
 	const onMouseMove: ToolHandler = useCallback(
 		({ event, point }) => {
@@ -72,7 +72,7 @@ export function useSelectTool(): ToolHandlers {
 				}
 			}
 		},
-		[dispatch]
+		[dispatch],
 	);
 
 	const onDrawPreview: PreviewToolHandler = useCallback(
@@ -85,7 +85,7 @@ export function useSelectTool(): ToolHandlers {
 					context,
 					selectedPoints,
 					pixelWidth,
-					pixelHeigth
+					pixelHeigth,
 				);
 			} else if (
 				!selectedPoints &&
@@ -94,7 +94,7 @@ export function useSelectTool(): ToolHandlers {
 			) {
 				const points = getRectPointsToDraw(
 					toolState.startPoint,
-					currentPoint
+					currentPoint,
 				);
 				drawPreviewPoints(context, points, pixelWidth, pixelHeigth);
 			}
@@ -105,7 +105,7 @@ export function useSelectTool(): ToolHandlers {
 			selectedPoints,
 			toolState,
 			getRectPointsToDraw,
-		]
+		],
 	);
 	const onMouseLeave: ToolHandler = useCallback(
 		({ point }) => {
@@ -113,7 +113,7 @@ export function useSelectTool(): ToolHandlers {
 				dispatch(drawSelect(point));
 			}
 		},
-		[dispatch, toolState]
+		[dispatch, toolState],
 	);
 	return { onMouseDown, onDrawPreview, onMouseMove, onMouseUp, onMouseLeave };
 }

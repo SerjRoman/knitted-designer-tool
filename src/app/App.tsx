@@ -10,14 +10,13 @@ import { ToolPanel } from "@/widgets/tool-panel";
 import { UILayer } from "@/widgets/ui-layer";
 import { usePanCanvas } from "@/features/pan-canvas";
 import { PreviewImageRnd } from "@/features/preview-image";
-import { setFilename } from "@/features/save-image";
 import {
 	ReferenceImageRnd,
 	uploadImageFromCloud,
 } from "@/features/upload-image";
 import { useCanvasZoom } from "@/features/zoom-canvas";
-import { selectCanvasDimensions, setCanvasDimensions } from "@/entities/canvas";
-import { GlobalStatusDialog, selectActiveModal } from "@/entities/ui";
+import { selectCanvasDimensions, setCanvasDimensions } from "@/entities/canva";
+import { GlobalStatusDialog, selectActiveModal } from "@/entities/modal";
 import { useAppSelector, useAppDispatch } from "@/shared/store";
 import { Loader } from "@/shared/ui";
 
@@ -26,25 +25,22 @@ export function App() {
 	const viewportRef = useRef<HTMLDivElement>(null);
 
 	const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
-
 	const { status } = useAppSelector((state) => state["features/uploadImage"]);
 	const activeModal = useAppSelector(selectActiveModal);
 	const canvasDimensions = useAppSelector(selectCanvasDimensions);
 	const dispatch = useAppDispatch();
+	const { product } = useAppSelector((state) => state.product);
 
 	useCanvasZoom(containerRef);
 	usePanCanvas(containerRef);
 
 	useEffect(() => {
-		const params = new URLSearchParams(globalThis.location.search);
-		const queryChoice = params.get("choice");
-		const filename = queryChoice || null;
+		const filename = product?.imageId || null;
 		if (filename) {
 			console.warn("file loaded", filename);
 			dispatch(uploadImageFromCloud(`${filename}`));
-			dispatch(setFilename(filename));
 		}
-	}, [dispatch]);
+	}, [dispatch, product?.imageId]);
 	useLayoutEffect(() => {
 		if (!viewportRef.current) return;
 

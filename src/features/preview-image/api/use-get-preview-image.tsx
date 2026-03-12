@@ -23,8 +23,10 @@ export function useGetPreviewImage({
 	async function getPreviewImage({ body }: UseGetPreviewImageParams) {
 		try {
 			setIsLoading(true);
-			const response = await ApiClient.Post<{ url: string }>("", body);
-			const data = await response.data;
+			const { response, data } = await ApiClient.Post<{ url: string }>(
+				"",
+				body,
+			);
 			if (response.status === 200) {
 				setData(data.url);
 			} else {

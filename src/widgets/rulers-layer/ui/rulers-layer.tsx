@@ -4,7 +4,7 @@ import {
 	drawVerticalRulerLayer,
 	selectCanvasDimensions,
 	selectPixelDimensions,
-} from "@/entities/canvas";
+} from "@/entities/canva";
 import { useAppSelector } from "@/shared/store";
 import { Canvas } from "@/shared/ui";
 

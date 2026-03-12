@@ -1,4 +1,4 @@
-import { changeColorInGrid } from "@/entities/canvas";
+import { changeColorInGrid } from "@/entities/canva";
 import { setCurrentColor } from "@/entities/editor";
 import type { EditColorActionPayload } from "@/entities/history";
 import { createAppAsyncThunk } from "@/shared/store";

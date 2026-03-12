@@ -1,1 +1,1 @@
-export { GridLayer } from "./grid-layer";
+export { GridLayer } from "./ui/grid-layer";

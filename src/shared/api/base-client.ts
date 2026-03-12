@@ -7,30 +7,30 @@ export class ApiClient {
 	static async Get<T>(
 		url: string,
 		headers?: HeadersInit,
-	): Promise<Response & { data: Promise<T> }> {
+	): Promise<{ response: Response; data: T }> {
 		const finalHeaders = ApiClient.setupBaseHeaders(headers);
-		return fetch(url, { headers: finalHeaders }).then((res) => {
-			if (!res.ok) {
-				throw new Error(`HTTP error! status: ${res.status}`);
-			}
-			return { ...res, data: res.json() as Promise<T> };
-		});
+		const res = await fetch(url, { headers: finalHeaders });
+		if (!res.ok) {
+			throw new Error(`HTTP error! status: ${res.status}`);
+		}
+		const data = (await res.json()) as T;
+		return { response: res, data };
 	}
 	static async Post<T>(
 		url: string,
 		body: unknown,
 		headers?: HeadersInit,
-	): Promise<Response & { data: Promise<T> }> {
+	): Promise<{ response: Response; data: T }> {
 		const finalHeaders = ApiClient.setupBaseHeaders(headers);
-		return fetch(url, {
+		const res = await fetch(url, {
 			method: "POST",
 			body: JSON.stringify(body),
 			headers: finalHeaders,
-		}).then((res) => {
-			if (!res.ok) {
-				throw new Error(`HTTP error! status: ${res.status}`);
-			}
-			return { ...res, data: res.json() as Promise<T> };
 		});
+		if (!res.ok) {
+			throw new Error(`HTTP error! status: ${res.status}`);
+		}
+		const data = (await res.json()) as T;
+		return { response: res, data };
 	}
 }

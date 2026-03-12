@@ -6,7 +6,7 @@ export function GridSettings() {
 	const [{ open }, ModalProvider] = useModal();
 
 	const { numberOfColumns, numberOfRows } = useAppSelector(
-		(state) => state.canvas
+		(state) => state.canvas,
 	);
 
 	return (

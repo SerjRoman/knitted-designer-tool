@@ -1,4 +1,4 @@
-import { setPixelSize } from "@/entities/canvas";
+import { setPixelSize } from "@/entities/canva";
 import { useAppDispatch, useAppSelector } from "@/shared/store";
 
 export function ChangePixelSize() {

@@ -1,41 +1,41 @@
-import { selectGrid, setPixels } from "@/entities/canvas";
+import { selectGrid, setPixels } from "@/entities/canva";
 import {
-	clearLineStartPoint,
-	selectCurrentColor,
-	selectToolState,
+    clearLineStartPoint,
+    selectCurrentColor,
+    selectToolState,
 } from "@/entities/editor";
 import { addActionToHistory } from "@/entities/history";
 import { getLinePoints, type Point, type PointWithColor } from "@/shared/lib";
 import { createAppAsyncThunk } from "@/shared/store";
 
 export const drawLine = createAppAsyncThunk(
-	"canvas/draw-preview-line",
-	(endPoint: Point, { getState, dispatch }) => {
-		const state = getState();
-		const toolState = selectToolState(state);
-		const currentColor = selectCurrentColor(state);
-		const grid = selectGrid(state);
+    "canvas/draw-preview-line",
+    (endPoint: Point, { getState, dispatch }) => {
+        const state = getState();
+        const toolState = selectToolState(state);
+        const currentColor = selectCurrentColor(state);
+        const grid = selectGrid(state);
 
-		if (toolState.tool !== "line" || !toolState.startPoint) return;
-		const pointsToFill = getLinePoints(toolState.startPoint, endPoint);
-		const pointsBefore: PointWithColor[] = [];
-		const pointsAfter: PointWithColor[] = [];
-		pointsToFill.forEach((point) => {
-			const oldColor = grid[point.y][point.x];
-			pointsBefore.push({ ...point, color: oldColor });
-			pointsAfter.push({ ...point, color: currentColor });
-		});
-		dispatch(setPixels({ points: pointsToFill, color: currentColor }));
-		dispatch(clearLineStartPoint());
+        if (toolState.tool !== "line" || !toolState.startPoint) return;
+        const pointsToFill = getLinePoints(toolState.startPoint, endPoint);
+        const pointsBefore: PointWithColor[] = [];
+        const pointsAfter: PointWithColor[] = [];
+        pointsToFill.forEach((point) => {
+            const oldColor = grid[point.y][point.x];
+            pointsBefore.push({ ...point, color: oldColor });
+            pointsAfter.push({ ...point, color: currentColor });
+        });
+        dispatch(setPixels({ points: pointsToFill, color: currentColor }));
+        dispatch(clearLineStartPoint());
 
-		dispatch(
-			addActionToHistory({
-				type: "DRAW",
-				payload: {
-					pointsBefore,
-					pointsAfter,
-				},
-			})
-		);
-	}
+        dispatch(
+            addActionToHistory({
+                type: "DRAW",
+                payload: {
+                    pointsBefore,
+                    pointsAfter,
+                },
+            })
+        );
+    }
 );

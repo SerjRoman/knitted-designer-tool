@@ -1,6 +1,6 @@
 import { TextField, Slider, Typography } from "@mui/material";
 import { type ChangeEvent } from "react";
-import { INITIAL_TENSION_CM } from "@/entities/canvas";
+import { INITIAL_TENSION_CM } from "@/entities/canva";
 import { clamp } from "@/shared/lib";
 
 interface ResizeTensionSliderProps {

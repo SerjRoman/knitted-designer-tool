@@ -1,22 +1,20 @@
 import { useCallback } from "react";
 import {
-	drawGridLayer,
+	drawPixelLayer,
 	selectCanvasDimensions,
 	selectPixelDimensions,
-} from "@/entities/canvas";
+} from "@/entities/canva";
 import { useAppSelector } from "@/shared/store";
 import { Canvas } from "@/shared/ui";
 
-export function GridLayer() {
-	const { numberOfColumns, numberOfRows } = useAppSelector(
-		(state) => state.canvas,
-	);
-	const canvasDimensions = useAppSelector(selectCanvasDimensions);
-
-	const pixelDimensions = useAppSelector(selectPixelDimensions);
+export function CanvasLayer() {
+	const { grid } = useAppSelector((state) => state.canvas);
 	const { scale, offsets } = useAppSelector((state) => state.viewport);
-	const handleDrawGrid = useCallback(
+	const pixelDimensions = useAppSelector(selectPixelDimensions);
+	const canvasDimensions = useAppSelector(selectCanvasDimensions);
+	const handleDraw = useCallback(
 		(context: CanvasRenderingContext2D) => {
+			context.imageSmoothingEnabled = false;
 			context.resetTransform();
 			context.clearRect(
 				0,
@@ -26,31 +24,23 @@ export function GridLayer() {
 			);
 			context.translate(offsets.x, offsets.y);
 			context.scale(scale, scale);
-			drawGridLayer(
+
+			drawPixelLayer(
 				context,
+				grid,
 				pixelDimensions.width,
 				pixelDimensions.height,
-				numberOfColumns,
-				numberOfRows,
-				scale,
 			);
 		},
-		[
-			offsets,
-			scale,
-			pixelDimensions,
-			numberOfColumns,
-			numberOfRows,
-			canvasDimensions,
-		],
+		[grid, scale, offsets, pixelDimensions, canvasDimensions],
 	);
 
 	return (
 		<Canvas
-			draw={handleDrawGrid}
+			draw={handleDraw}
 			style={{
 				position: "absolute",
-				zIndex: 3,
+				zIndex: 2,
 				pointerEvents: "none",
 			}}
 			width={canvasDimensions.width}

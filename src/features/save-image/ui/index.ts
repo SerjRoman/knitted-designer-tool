@@ -1,1 +1,1 @@
-export { SaveImageButton } from "./save-image-button";
+export { SaveImageModal } from "./save-image-modal";

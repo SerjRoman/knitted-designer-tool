@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { drawPreviewPoints, selectPixelDimensions } from "@/entities/canvas";
+import { drawPreviewPoints, selectPixelDimensions } from "@/entities/canva";
 import {
 	areTwoPointsEqual,
 	getAdjacentPoints,
@@ -15,13 +15,13 @@ export function useFillTool(): ToolHandlers {
 	const { width, height } = useAppSelector(selectPixelDimensions);
 	const getAdjacentPointsToDraw = useMemoizedCalculation(
 		getAdjacentPoints,
-		(prevArgs, nextArgs) => areTwoPointsEqual(prevArgs[0], nextArgs[0])
+		(prevArgs, nextArgs) => areTwoPointsEqual(prevArgs[0], nextArgs[0]),
 	);
 	const onMouseUp: ToolHandler = useCallback(
 		({ point }) => {
 			dispatch(fillArea(point));
 		},
-		[dispatch]
+		[dispatch],
 	);
 	const onDrawPreview: PreviewToolHandler = useCallback(
 		(context, { currentPoint }) => {
@@ -29,7 +29,7 @@ export function useFillTool(): ToolHandlers {
 			const pointsToFill = getAdjacentPointsToDraw(currentPoint, grid);
 			drawPreviewPoints(context, pointsToFill, width, height);
 		},
-		[getAdjacentPointsToDraw, grid, height, width]
+		[getAdjacentPointsToDraw, grid, height, width],
 	);
 
 	return {

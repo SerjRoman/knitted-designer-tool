@@ -1,131 +1,131 @@
 import {
-	selectGrid,
-	selectNumberOfColumns,
-	setColors,
-} from "@/entities/canvas";
+    selectGrid,
+    selectNumberOfColumns,
+    setColors,
+} from "@/entities/canva";
 import {
-	setClipboardPoints,
-	setClipboardOrigin,
-	setTool,
-	setPasteRepeat,
+    setClipboardPoints,
+    setClipboardOrigin,
+    setTool,
+    setPasteRepeat,
 } from "@/entities/editor";
 import {
-	approximateColors,
-	getBoundingBox,
-	getImageDataFromImage,
-	getPopularColorsFromRGBArray,
-	MAX_COLORS,
-	type RGBColor,
+    approximateColors,
+    getBoundingBox,
+    getImageDataFromImage,
+    getPopularColorsFromRGBArray,
+    MAX_COLORS,
+    type RGBColor,
 } from "@/shared/lib";
 import { createAppAsyncThunk } from "@/shared/store";
 import {
-	convertImageDataToRGBArray,
-	createPointsFromImage,
-	quantizeRGBArrayByPalette,
+    convertImageDataToRGBArray,
+    createPointsFromImage,
+    quantizeRGBArrayByPalette,
 } from "../../lib";
 import { addReferenceImage } from "../slices/reference.slice";
 
 interface ProcessImagePayload {
-	file: File;
-	width: number;
-	height: number;
+    file: File;
+    width: number;
+    height: number;
 }
 
 export const processAndUploadImage = createAppAsyncThunk<
-	void,
-	ProcessImagePayload
+    void,
+    ProcessImagePayload
 >(
-	"features/uploadImage/process",
-	async (
-		{ file, width, height },
-		{ dispatch, getState, rejectWithValue },
-	) => {
-		await new Promise<void>((resolve, reject) => {
-			const reader = new FileReader();
-			const state = getState();
-			const grid = selectGrid(state);
-			const gridHeight = selectNumberOfColumns(state);
-			const gridWidth = selectNumberOfColumns(state);
-			const previewUrl = URL.createObjectURL(file);
+    "features/uploadImage/process",
+    async (
+        { file, width, height },
+        { dispatch, getState, rejectWithValue },
+    ) => {
+        await new Promise<void>((resolve, reject) => {
+            const reader = new FileReader();
+            const state = getState();
+            const grid = selectGrid(state);
+            const gridHeight = selectNumberOfColumns(state);
+            const gridWidth = selectNumberOfColumns(state);
+            const previewUrl = URL.createObjectURL(file);
 
-			reader.onload = () => {
-				const img = new Image();
-				img.onerror = () => reject(new Error("Failed to load image"));
-				img.onload = () => {
-					const resizedImageData = getImageDataFromImage({
-						source: img,
-						width,
-						height,
-					});
+            reader.onload = () => {
+                const img = new Image();
+                img.onerror = () => reject(new Error("Failed to load image"));
+                img.onload = () => {
+                    const resizedImageData = getImageDataFromImage({
+                        source: img,
+                        width,
+                        height,
+                    });
 
-					const RGBArray =
-						convertImageDataToRGBArray(resizedImageData);
-					const sameColors = new Set<string>();
-					const usedColors: RGBColor[] = [];
-					grid.forEach((row) => {
-						row.forEach((cell) => {
-							const [r, g, b] = cell.match(/\d+/g)!.map(Number);
-							const key = `r${r},g${g},b${b}}`;
-							const rgbColor: RGBColor = { r, g, b };
-							if (!sameColors.has(key)) {
-								usedColors.push(rgbColor);
-								sameColors.add(key);
-							}
-						});
-					});
-					const popularColors = getPopularColorsFromRGBArray(
-						RGBArray,
-						MAX_COLORS,
-					);
-					const finalColors = approximateColors(
-						usedColors,
-						popularColors,
-					);
-					const stringifiedColors = finalColors.map(
-						(color) => `rgb(${color.r}, ${color.g}, ${color.b})`,
-					);
-					const quantizedRGBArray = quantizeRGBArrayByPalette(
-						RGBArray,
-						finalColors,
-					);
-					const points = createPointsFromImage(
-						quantizedRGBArray,
-						width,
-						height,
-					);
+                    const RGBArray =
+                        convertImageDataToRGBArray(resizedImageData);
+                    const sameColors = new Set<string>();
+                    const usedColors: RGBColor[] = [];
+                    grid.forEach((row) => {
+                        row.forEach((cell) => {
+                            const [r, g, b] = cell.match(/\d+/g)!.map(Number);
+                            const key = `r${r},g${g},b${b}}`;
+                            const rgbColor: RGBColor = { r, g, b };
+                            if (!sameColors.has(key)) {
+                                usedColors.push(rgbColor);
+                                sameColors.add(key);
+                            }
+                        });
+                    });
+                    const popularColors = getPopularColorsFromRGBArray(
+                        RGBArray,
+                        MAX_COLORS,
+                    );
+                    const finalColors = approximateColors(
+                        usedColors,
+                        popularColors,
+                    );
+                    const stringifiedColors = finalColors.map(
+                        (color) => `rgb(${color.r}, ${color.g}, ${color.b})`,
+                    );
+                    const quantizedRGBArray = quantizeRGBArrayByPalette(
+                        RGBArray,
+                        finalColors,
+                    );
+                    const points = createPointsFromImage(
+                        quantizedRGBArray,
+                        width,
+                        height,
+                    );
 
-					const { maxX, maxY, minX, minY } = getBoundingBox(points);
-					const centerX = Math.floor((minX + maxX) / 2);
-					const centerY = Math.floor((minY + maxY) / 2);
-					const originPoint = { x: centerX, y: centerY };
+                    const { maxX, maxY, minX, minY } = getBoundingBox(points);
+                    const centerX = Math.floor((minX + maxX) / 2);
+                    const centerY = Math.floor((minY + maxY) / 2);
+                    const originPoint = { x: centerX, y: centerY };
 
-					dispatch(setClipboardPoints(points));
-					dispatch(setClipboardOrigin(originPoint));
-					dispatch(setTool("paste"));
-					if (gridHeight === height && gridWidth === width) {
-						dispatch(setPasteRepeat(false));
-					}
-					dispatch(setColors(stringifiedColors));
-					dispatch(
-						addReferenceImage({
-							imageUrl: previewUrl,
-							points,
-							originPoint,
-						}),
-					);
-				};
-				resolve();
-			};
-			reader.onerror = () => reject(new Error("Failed to read file"));
+                    dispatch(setClipboardPoints(points));
+                    dispatch(setClipboardOrigin(originPoint));
+                    dispatch(setTool("paste"));
+                    if (gridHeight === height && gridWidth === width) {
+                        dispatch(setPasteRepeat(false));
+                    }
+                    dispatch(setColors(stringifiedColors));
+                    dispatch(
+                        addReferenceImage({
+                            imageUrl: previewUrl,
+                            points,
+                            originPoint,
+                        }),
+                    );
+                };
+                resolve();
+            };
+            reader.onerror = () => reject(new Error("Failed to read file"));
 
-			reader.readAsDataURL(file);
-		}).catch((error) => {
-			let message = "Error processing image";
-			console.error(error);
-			if (error instanceof Error) {
-				message = error.message;
-			}
-			return rejectWithValue({ message: message });
-		});
-	},
+            reader.readAsDataURL(file);
+        }).catch((error) => {
+            let message = "Error processing image";
+            console.error(error);
+            if (error instanceof Error) {
+                message = error.message;
+            }
+            return rejectWithValue({ message: message });
+        });
+    },
 );

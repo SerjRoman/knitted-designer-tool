@@ -1,4 +1,4 @@
-import { setPixelsWithColor, updateGridSizes } from "@/entities/canvas";
+import { setPixelsWithColor, updateGridSizes } from "@/entities/canva";
 import type { ChangeGridSizesActionPayload } from "@/entities/history";
 import { createAppAsyncThunk } from "@/shared/store";
 

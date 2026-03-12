@@ -6,7 +6,7 @@ import {
 	calculateTension,
 	INITIAL_TENSION_STITCHES,
 	INITIAL_TENSION_ROWS,
-} from "@/entities/canvas";
+} from "@/entities/canva";
 import { useAppDispatch, useAppSelector } from "@/shared/store";
 import { Modal } from "@/shared/ui";
 import { Button } from "@/shared/ui/button";

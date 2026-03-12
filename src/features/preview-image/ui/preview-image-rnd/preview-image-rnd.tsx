@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { createPortal } from "react-dom";
 import { Rnd } from "react-rnd";
-import { selectActiveModal, toggleModal } from "@/entities/ui";
+import { selectActiveModal, toggleModal } from "@/entities/modal";
 import { transformGridToApiFormat } from "@/shared/lib";
 import { useAppDispatch, useAppSelector } from "@/shared/store";
 import { Loader } from "@/shared/ui";

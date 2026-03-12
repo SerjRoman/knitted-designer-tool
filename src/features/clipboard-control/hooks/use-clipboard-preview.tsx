@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { drawClipboardPreview, selectPixelDimensions } from "@/entities/canvas";
+import { drawClipboardPreview, selectPixelDimensions } from "@/entities/canva";
 import { clearClipboard, clearSelectedPoints } from "@/entities/editor";
 import { type Point } from "@/shared/lib/types";
 import { useAppSelector, useAppDispatch } from "@/shared/store";

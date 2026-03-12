@@ -1,4 +1,4 @@
-import { setPixelsWithColor } from "@/entities/canvas";
+import { setPixelsWithColor } from "@/entities/canva";
 import type { DrawActionPayload } from "@/entities/history";
 import { createAppAsyncThunk } from "@/shared/store";
 

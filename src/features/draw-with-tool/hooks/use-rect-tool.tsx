@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { drawPreviewPoints, selectPixelDimensions } from "@/entities/canvas";
+import { drawPreviewPoints, selectPixelDimensions } from "@/entities/canva";
 import {
 	clearShapeState,
 	selectToolState,

@@ -1,4 +1,4 @@
-import { selectGrid } from "@/entities/canvas";
+import { selectGrid } from "@/entities/canva";
 import { setTool, setCurrentColor } from "@/entities/editor";
 import type { Point } from "@/shared/lib";
 import { createAppAsyncThunk } from "@/shared/store";

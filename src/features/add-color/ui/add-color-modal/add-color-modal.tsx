@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { addColor } from "@/entities/canvas";
+import { addColor } from "@/entities/canva";
 import { setCurrentColor } from "@/entities/editor";
 import { addActionToHistory } from "@/entities/history";
 import { HEXToRGB, RGBAToHEX } from "@/shared/lib";

@@ -1,4 +1,4 @@
-import { setPixelDimensions } from "@/entities/canvas";
+import { setPixelDimensions } from "@/entities/canva";
 import type { ChangePixelDimensionsActionPayload } from "@/entities/history";
 import { createAppAsyncThunk } from "@/shared/store";
 

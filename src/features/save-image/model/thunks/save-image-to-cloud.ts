@@ -2,12 +2,11 @@ import { ApiClient } from "@/shared/api";
 import { transformGridToApiFormat } from "@/shared/lib";
 import { createAppAsyncThunk } from "@/shared/store";
 
-export const saveImageToCloud = createAppAsyncThunk(
+export const saveImageToCloud = createAppAsyncThunk<void, { filename: string }>(
 	"editor/save-image-to-cloud",
-	async (_, { getState, rejectWithValue }) => {
+	async ({ filename }, { getState, rejectWithValue }) => {
 		const {
 			canvas: { colors, grid, numberOfColumns, numberOfRows },
-			"features/saveImage": { filename },
 		} = getState();
 
 		const dataToSend = transformGridToApiFormat(
@@ -17,13 +16,12 @@ export const saveImageToCloud = createAppAsyncThunk(
 			numberOfRows,
 		);
 		try {
-			const response = await ApiClient.Post(
+			const { response } = await ApiClient.Post(
 				"https://assets.knittedforyou.com/save-json",
-				JSON.stringify({
-					filename: filename + ".json",
-					content: dataToSend,
-				}),
+				{ filename: filename + ".json", content: dataToSend },
 			);
+			console.log(response);
+
 			if (!response.ok) {
 				console.error("Failed to save motif:", response.statusText);
 				switch (response.status) {

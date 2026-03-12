@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { updateGridSizes, setColors, setGrid } from "@/entities/canvas";
+import { updateGridSizes, setColors, setGrid } from "@/entities/canva";
 import { setCurrentColor } from "@/entities/editor";
 import { ApiClient } from "@/shared/api";
 import { HEXToRGB, type Grid, type ApiImageBody } from "@/shared/lib";
@@ -8,7 +8,7 @@ export const uploadImageFromCloud = createAsyncThunk(
 	"features/upload-image-from-cloud",
 	async (filename: string, { dispatch, rejectWithValue }) => {
 		try {
-			const response = await ApiClient.Get<ApiImageBody>(
+			const { response, data } = await ApiClient.Get<ApiImageBody>(
 				`https://assets.knittedforyou.com/motif/${filename}.json`,
 			);
 			if (!response.ok) {
@@ -25,7 +25,7 @@ export const uploadImageFromCloud = createAsyncThunk(
 					});
 				}
 			}
-			const { width, height, colors, rows } = await response.data;
+			const { width, height, colors, rows } = data;
 			const RGBColors = colors.map(HEXToRGB);
 			dispatch(
 				updateGridSizes({

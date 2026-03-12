@@ -1,17 +1,18 @@
-import { Upload } from "lucide-react";
+import { Download, Upload } from "lucide-react";
 import { ClipboardControl } from "@/features/clipboard-control";
 import { SelectDrawingTool } from "@/features/draw-with-tool";
 import { SelectTransformTool } from "@/features/grid-transform";
 import { HistoryControl } from "@/features/history-control";
-import { SaveImageButton } from "@/features/save-image";
+import { SaveImageModal } from "@/features/save-image";
 import { UploadFromUserModal } from "@/features/upload-image";
 import { ToolButton } from "@/entities/editor";
-import { closeAllModals } from "@/entities/ui";
+import { closeAllModals } from "@/entities/modal";
 import { useModal } from "@/shared/lib";
 import { useAppDispatch } from "@/shared/store";
 
 export function ToolPanel() {
 	const [{ open, isOpen, close }, ModalWrapper] = useModal();
+	const [{ open: openSaveModal }, SaveModalWrapper] = useModal();
 	const dispatch = useAppDispatch();
 	function openModal() {
 		dispatch(closeAllModals());
@@ -37,11 +38,16 @@ export function ToolPanel() {
 						label={"Upload"}
 						onClick={isOpen ? close : openModal}
 					/>
-					<SaveImageButton />
+					<ToolButton
+						icon={Download}
+						label={"Save"}
+						onClick={() => openSaveModal()}
+					/>
 				</div>
 			</div>
 
 			<ModalWrapper ModalComponent={UploadFromUserModal} />
+			<SaveModalWrapper ModalComponent={SaveImageModal} />
 		</div>
 	);
 }
