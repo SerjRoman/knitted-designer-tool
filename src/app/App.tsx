@@ -30,7 +30,6 @@ export function App() {
 	const canvasDimensions = useAppSelector(selectCanvasDimensions);
 	const dispatch = useAppDispatch();
 	const { product } = useAppSelector((state) => state.product);
-
 	useCanvasZoom(containerRef);
 	usePanCanvas(containerRef);
 
@@ -40,7 +39,7 @@ export function App() {
 			console.warn("file loaded", filename);
 			dispatch(uploadImageFromCloud(`${filename}`));
 		}
-	}, [dispatch, product?.imageId]);
+	}, [dispatch, product]);
 	useLayoutEffect(() => {
 		if (!viewportRef.current) return;
 

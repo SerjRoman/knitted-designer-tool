@@ -17,6 +17,7 @@
 		"@reduxjs/toolkit": "^2.8.2",
 		"@tailwindcss/postcss": "^4.2.1",
 		"@tailwindcss/vite": "^4.2.1",
+		"@tanstack/react-query": "^5.90.21",
 		"clsx": "^2.1.1",
 		"envalid": "^8.1.0",
 		"lucide-react": "^0.544.0",

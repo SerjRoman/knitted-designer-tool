@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
@@ -14,18 +15,18 @@ const productId = container.dataset.productId || null;
 const productName = container.dataset.productName || null;
 const productDescription = container.dataset.productDescription || null;
 const productImageId =
-	container.dataset.productImageId == "0" ||
-	container.dataset.productImageId === ""
+	container.dataset.choiceId == "0" || container.dataset.choiceId === ""
 		? null
-		: Number(container.dataset.productImageId);
+		: Number(container.dataset.choiceId);
 
 const productTags = container.dataset.productTags
-	? container.dataset.productTags.split("")
+	? container.dataset.productTags.split(",")
 	: null;
 store.dispatch(
 	setConfig({
 		createUrl: container.dataset.createUrl || null,
 		attachUrl: container.dataset.attachUrl || null,
+		updateUrl: container.dataset.updateUrl || null,
 		token: container.dataset.token || null,
 	}),
 );
@@ -36,12 +37,17 @@ store.dispatch(
 		description: productDescription,
 		imageId: productImageId ? Number(productImageId) : null,
 		tags: productTags,
+		isPublic: container.dataset.isPublic === "1",
 	}),
 );
+const queryClient = new QueryClient();
+
 createRoot(document.getElementById(root)!).render(
 	<StrictMode>
-		<Provider store={store}>
-			<App />
-		</Provider>
+		<QueryClientProvider client={queryClient}>
+			<Provider store={store}>
+				<App />
+			</Provider>
+		</QueryClientProvider>
 	</StrictMode>,
 );
