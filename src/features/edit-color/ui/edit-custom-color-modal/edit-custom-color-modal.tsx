@@ -16,7 +16,12 @@ export function EditCustomColorModal({
 	if (!isOpen) return;
 	const handleSaveColor = () => {
 		if (!selectedColor) return;
-		dispatch(changeColorToCustom(customColor));
+		dispatch(
+			changeColorToCustom({
+				prevColor: selectedColor,
+				newColor: customColor,
+			}),
+		);
 		onClose();
 	};
 

@@ -124,7 +124,9 @@ export function SaveImageModal({
 					productId: product.id,
 					token,
 				});
-				await saveImageToCloudMutation.mutateAsync(String(product.imageId));
+				await saveImageToCloudMutation.mutateAsync(
+					String(product.imageId),
+				);
 			}
 			const productId = createData?.productId || product.id || 0;
 			dispatch(

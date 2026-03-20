@@ -1,6 +1,10 @@
 import { PlusIcon } from "lucide-react";
+import { useState } from "react";
 import { AddColorModal } from "@/features/add-color";
-import { EditCustomColorModal } from "@/features/edit-color";
+import {
+	changeColorToCustom,
+	EditCustomColorModal,
+} from "@/features/edit-color";
 import { setCurrentColor } from "@/entities/editor";
 import { MAX_COLORS, useModal } from "@/shared/lib";
 import { useAppDispatch, useAppSelector } from "@/shared/store";
@@ -15,6 +19,9 @@ export default function SelectColor() {
 	const [{ open: openAddNewColorModal }, ModalAddNewColorProvider] =
 		useModal();
 	const maxColorsExceeded = MAX_COLORS <= colors.length;
+	const [draggedIdx, setDraggedIdx] = useState<number | null>(null);
+	const [dragOverIdx, setDragOverIdx] = useState<number | null>(null);
+
 	return (
 		<div className="grid grid-cols-7 gap-3 ">
 			<div className="col-span-2 grid grid-rows-2 grid-cols-1 gap-3">
@@ -39,7 +46,49 @@ export default function SelectColor() {
 				{colors.map((color, index) => (
 					<button
 						key={index}
-						className={`w-12 h-12 rounded border ${"border-gray-300"}`}
+						draggable
+						onDragStart={(e) => {
+							setDraggedIdx(index);
+							e.dataTransfer.effectAllowed = "move";
+						}}
+						onDragOver={(e) => {
+							e.preventDefault();
+							if (draggedIdx !== index) {
+								setDragOverIdx(index);
+							}
+						}}
+						onDragLeave={() => setDragOverIdx(null)}
+						onDrop={(e) => {
+							e.preventDefault();
+							setDragOverIdx(null);
+							setDraggedIdx(null);
+							if (draggedIdx === null) return;
+							if (draggedIdx === index) return;
+							if (dragOverIdx === null) return;
+							if (
+								colors[dragOverIdx] === undefined ||
+								colors[draggedIdx] === undefined
+							)
+								return;
+							dispatch(
+								changeColorToCustom({
+									prevColor: colors[draggedIdx],
+									newColor: colors[dragOverIdx],
+								}),
+							);
+							// dispatch(removeColor(colors[draggedIdx]));
+						}}
+						onDragEnd={() => {
+							setDraggedIdx(null);
+							setDragOverIdx(null);
+						}}
+						className={`w-12 h-12 rounded border-2 transition-all duration-150 cursor-grab active:cursor-grabbing ${
+							dragOverIdx === index
+								? "border-blue-500 scale-110 z-10 shadow-md"
+								: draggedIdx === index
+									? "opacity-40 border-dashed border-gray-400"
+									: "border-gray-200 hover:border-gray-300 transform-none"
+						}`}
 						style={{ backgroundColor: color }}
 						onClick={() => dispatch(setCurrentColor(color))}
 					/>

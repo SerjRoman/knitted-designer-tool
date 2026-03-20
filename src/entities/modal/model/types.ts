@@ -1,4 +1,4 @@
-export type ModalType = "preview" | "upload" | null;
+export type ModalType = "preview" | "reference" | null;
 
 export interface DialogSchema {
 	isOpen: boolean;

@@ -1,5 +1,4 @@
-import { ChevronRight, ChevronLeft } from "lucide-react";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 import { CanvasLayer } from "@/widgets/canvas-layer";
 import { GridLayer } from "@/widgets/grid-layer";
 import { GridSettings } from "@/widgets/grid-settings";
@@ -24,7 +23,6 @@ export function App() {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const viewportRef = useRef<HTMLDivElement>(null);
 
-	const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
 	const { status } = useAppSelector((state) => state["features/uploadImage"]);
 	const activeModal = useAppSelector(selectActiveModal);
 	const canvasDimensions = useAppSelector(selectCanvasDimensions);
@@ -82,29 +80,9 @@ export function App() {
 					)}
 				</div>
 			</div>
-
-			<div className="flex h-screen shrink-0 z-20 bg-white border-l border-gray-200">
-				<div className="flex flex-col border-r border-gray-200">
-					<button
-						onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-						className="p-1.5 -ml-[1px] bg-white border-y border-r border-gray-200 rounded-r-md hover:bg-gray-100 text-gray-500 hover:text-gray-700 transition-colors"
-						title={isSidebarOpen ? "Close Sidebar" : "Open Sidebar"}
-					>
-						{isSidebarOpen ? (
-							<ChevronLeft size={20} />
-						) : (
-							<ChevronRight size={20} />
-						)}
-					</button>
-				</div>
-
-				{isSidebarOpen && (
-					<div className="w-64 h-screen overflow-y-auto bg-white border-r border-gray-200 shrink-0">
-						<Sidebar />
-					</div>
-				)}
-
-				<div className="w-96 h-screen overflow-y-auto p-6 bg-white space-y-6 shrink-0">
+			<Sidebar />
+			<div className="flex h-screen shrink-0 z-20 ">
+				<div className="w-96 h-screen border-l border-gray-200  p-6 bg-white space-y-6 shrink-0">
 					<GridSettings />
 					<div className="bg-gray-50 rounded-xl p-4 border border-gray-200 shadow-sm">
 						<h3 className="text-lg font-semibold text-gray-700 mb-3">
@@ -120,7 +98,7 @@ export function App() {
 			</div>
 
 			{/* Модалки */}
-			{activeModal === "upload" && <ReferenceImageRnd />}
+			{activeModal === "reference" && <ReferenceImageRnd />}
 			{activeModal === "preview" && <PreviewImageRnd />}
 			<GlobalStatusDialog />
 		</div>

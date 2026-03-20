@@ -23,9 +23,9 @@ export function ReferenceImageRnd() {
 	const horizontalCenter = window.innerWidth / 2;
 	const verticalCenter = window.innerHeight / 2;
 	function onClose() {
-		dispatch(toggleModal("upload"));
+		dispatch(toggleModal("reference"));
 	}
-	if (activeModal !== "upload") return null;
+	if (activeModal !== "reference") return null;
 	const referenceImage: Reference | null = chosenReference
 		? (references.find((ref) => ref.id === chosenReference) ?? null)
 		: null;
