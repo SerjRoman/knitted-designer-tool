@@ -27,7 +27,7 @@ export function SelectDrawingTool() {
 			<h3 className="text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wide">
 				Drawing Tools
 			</h3>
-			<div className="grid grid-cols-3 gap-2">
+			<div className="grid grid-cols-4 gap-2">
 				<ToolButton
 					toolName="brush"
 					icon={Brush}

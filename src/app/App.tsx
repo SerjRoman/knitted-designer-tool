@@ -85,8 +85,8 @@ export function App() {
 				<div className="w-96 h-screen border-l border-gray-200  p-6 bg-white space-y-6 shrink-0">
 					<GridSettings />
 					<div className="bg-gray-50 rounded-xl p-4 border border-gray-200 shadow-sm">
-						<h3 className="text-lg font-semibold text-gray-700 mb-3">
-							Colors
+						<h3 className="text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wide">
+							COLORS
 						</h3>
 						<SelectColor />
 					</div>
