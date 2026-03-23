@@ -16,12 +16,12 @@ export function ChangeGridSizes({
 	onRowsChange,
 }: Readonly<ChangeGridSizesProps>) {
 	const handleColChange = (e: ChangeEvent<HTMLInputElement>) => {
-		const val = clamp(Number(e.target.value), 1, 100);
+		const val = clamp(Number(e.target.value), 1, 200);
 		onColumnsChange(val);
 	};
 
 	const handleRowChange = (e: ChangeEvent<HTMLInputElement>) => {
-		const val = clamp(Number(e.target.value), 1, 100);
+		const val = clamp(Number(e.target.value), 1, 200);
 		onRowsChange(val);
 	};
 
