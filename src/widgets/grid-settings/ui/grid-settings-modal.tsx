@@ -94,13 +94,7 @@ export function GridSettingsModal({
 				/>
 
 				<div className="flex justify-end gap-3 pt-2">
-					<Button
-						variant="outlined"
-						color="inherit"
-						onClick={onClose}
-					>
-						Cancel
-					</Button>
+					<Button onClick={onClose}>Cancel</Button>
 					<Button onClick={handleSubmit}>Apply Changes</Button>
 				</div>
 			</div>

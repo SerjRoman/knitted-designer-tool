@@ -63,11 +63,7 @@ export function EditCustomColorModal({
 				</div>
 
 				<div className="flex justify-end gap-3 pt-2">
-					<Button
-						variant="outlined"
-						color="inherit"
-						onClick={handleCancel}
-					>
+					<Button variant="cancel" onClick={handleCancel}>
 						Cancel
 					</Button>
 					<Button onClick={handleSaveColor}>Apply</Button>

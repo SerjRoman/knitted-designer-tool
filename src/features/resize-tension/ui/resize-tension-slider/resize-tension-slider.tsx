@@ -1,7 +1,8 @@
-import { TextField, Slider, Typography } from "@mui/material";
 import { type ChangeEvent } from "react";
 import { INITIAL_TENSION_CM } from "@/entities/canva";
 import { clamp } from "@/shared/lib";
+import { TextInput } from "@/shared/ui/text-input";
+import { Slider } from "@shared/ui/slider";
 
 interface ResizeTensionSliderProps {
 	stitches: number;
@@ -20,62 +21,55 @@ export function ResizeTensionSlider({
 	previewWidth,
 	previewHeight,
 }: Readonly<ResizeTensionSliderProps>) {
-	const handleStitchesSlider = (_: Event, val: number | number[]) => {
-		const value = clamp(Number(val), 3, 100);
+	const handleStitchesSlider = (newValue: number) => {
+		const value = clamp(Number(newValue), 3, 100);
 		onStitchesChange(value);
 	};
-	const handleRowsSlider = (_: Event, val: number | number[]) => {
-		const value = clamp(Number(val), 3, 100);
+	const handleRowsSlider = (newValue: number) => {
+		const value = clamp(Number(newValue), 3, 100);
 		onRowsChange(value);
 	};
 
-	const handleStitchesTextField = (e: ChangeEvent<HTMLInputElement>) => {
+	const handleStitchesInput = (e: ChangeEvent<HTMLInputElement>) => {
 		const value = clamp(Number(e.target.value), 3, 100);
 		onStitchesChange(value);
 	};
-	const handleRowsTextField = (e: ChangeEvent<HTMLInputElement>) => {
+	const handleRowsInput = (e: ChangeEvent<HTMLInputElement>) => {
 		const value = clamp(Number(e.target.value), 3, 100);
 		onRowsChange(value);
 	};
 
 	return (
 		<div className="space-y-4 border-t pt-4">
-			<div>
-				<Typography id="stitch-slider">
-					Stitches in {INITIAL_TENSION_CM}cm
-				</Typography>
+			<div className="p-2 flex flex-col gap-2 bg-gray-50 rounded">
+				<span>Stitches in {INITIAL_TENSION_CM}cm</span>
 				<Slider
 					value={stitches}
 					onChange={handleStitchesSlider}
-					aria-labelledby="stitch-slider"
 					min={3}
 					max={100}
 				/>
-				<TextField
+
+				<TextInput
 					label="Stitches"
 					value={stitches}
-					size="small"
-					onChange={handleStitchesTextField}
+					onChange={handleStitchesInput}
 					type="number"
 				/>
 			</div>
 
-			<div>
-				<Typography id="rows-slider">
-					Rows in {INITIAL_TENSION_CM}cm
-				</Typography>
+			<div className="p-2 flex flex-col gap-2 bg-gray-50 rounded">
+				<span>Rows in {INITIAL_TENSION_CM}cm</span>
 				<Slider
 					value={rows}
 					onChange={handleRowsSlider}
-					aria-labelledby="rows-slider"
 					min={3}
 					max={100}
 				/>
-				<TextField
+				<TextInput
 					label="Rows"
 					value={rows}
-					size="small"
-					onChange={handleRowsTextField}
+					onChange={handleRowsInput}
 					type="number"
 				/>
 			</div>

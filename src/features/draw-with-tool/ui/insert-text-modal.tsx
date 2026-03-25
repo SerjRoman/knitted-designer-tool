@@ -1,9 +1,9 @@
-import { InputLabel, TextField } from "@mui/material";
 import { useState } from "react";
 import { selectToolState, setTool } from "@/entities/editor";
 import { useAppDispatch, useAppSelector } from "@/shared/store";
 import { Modal } from "@/shared/ui";
 import { Button } from "@/shared/ui/button";
+import { TextInput } from "@/shared/ui/text-input";
 import { drawText } from "../model";
 
 export function InsertTextModal({
@@ -47,41 +47,25 @@ export function InsertTextModal({
 				<h2 className="text-lg font-bold text-gray-800">Insert Text</h2>
 			</div>
 
-			<div className="p-6 space-y-4">
-				<InputLabel htmlFor="text-input">
-					Enter the text you want to place on the canvas.
-				</InputLabel>
-				<TextField
-					id="text-input"
+			<div className="p-4 ">
+				<TextInput
 					value={text}
-					label=""
+					label="Enter the text you want to place on the canvas."
 					onChange={(event) => setText(event.target.value)}
 					onKeyDown={handleKeyDown}
 					placeholder="Type something..."
-					variant="outlined"
-					size="medium"
-					fullWidth
 					autoFocus
-					className="bg-white"
+					classNames={{
+						root: "gap-4",
+					}}
 				/>
 			</div>
 
 			<div className="flex justify-end gap-3 pt-3">
-				<Button
-					variant="outlined"
-					color="inherit"
-					onClick={onCloseModal}
-					className="text-gray-600 border-gray-300 hover:bg-gray-100"
-				>
+				<Button variant="cancel" onClick={onCloseModal}>
 					Cancel
 				</Button>
-				<Button
-					variant="contained"
-					color="primary"
-					onClick={handleConfirm}
-					disabled={!text.trim()}
-					disableElevation
-				>
+				<Button onClick={handleConfirm} disabled={!text.trim()}>
 					Insert
 				</Button>
 			</div>

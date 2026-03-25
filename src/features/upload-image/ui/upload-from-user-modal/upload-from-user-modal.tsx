@@ -1,10 +1,10 @@
-import { TextField } from "@mui/material";
-import { useState, type ChangeEvent } from "react";
+import { useRef, useState, type ChangeEvent } from "react";
 import { openDialog } from "@/entities/modal";
 import { clamp } from "@/shared/lib";
 import { useAppDispatch, useAppSelector } from "@/shared/store";
 import { Modal } from "@/shared/ui";
 import { Button } from "@/shared/ui/button";
+import { TextInput } from "@/shared/ui/text-input";
 import { processAndUploadImage } from "../../model";
 
 export function UploadFromUserModal({
@@ -14,6 +14,11 @@ export function UploadFromUserModal({
 	isOpen: boolean;
 	onClose: () => void;
 }>) {
+	const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+	const handleUploadButtonClick = () => {
+		fileInputRef.current?.click();
+	};
 	const dispatch = useAppDispatch();
 	const { numberOfColumns, numberOfRows } = useAppSelector(
 		(state) => state.canvas,
@@ -75,33 +80,26 @@ export function UploadFromUserModal({
 				</div>
 
 				<div className="flex space-y-4 flex-col">
-					<TextField
+					<TextInput
 						type="number"
 						label="Width"
-						variant="standard"
 						value={width}
 						onChange={handleWidthChange}
-						className="block px-3 py-2 focus:outline-none"
 					/>
-					<TextField
+					<TextInput
 						type="number"
 						label="Height"
-						variant="standard"
 						value={height}
 						onChange={handleHeightChange}
-						className="block px-3 py-2 focus:outline-none"
 					/>
 					<div className="flex justify-end gap-3 pt-2">
-						<Button
-							variant="outlined"
-							color="inherit"
-							onClick={onClose}
-						>
+						<Button onClick={onClose} variant="cancel">
 							Cancel
 						</Button>
-						<Button component={"label"}>
+						<Button onClick={handleUploadButtonClick}>
 							Upload{" "}
 							<input
+								ref={fileInputRef}
 								type="file"
 								className="hidden"
 								accept="image/png, image/jpeg"

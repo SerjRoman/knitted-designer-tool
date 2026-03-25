@@ -9,6 +9,7 @@ import {
 } from "@/entities/editor";
 import { selectActiveModal, toggleModal } from "@/entities/modal";
 import { useAppDispatch, useAppSelector } from "@/shared/store";
+import { Button } from "@/shared/ui/button";
 import {
 	removeReferenceImage,
 	selectReferences,
@@ -47,13 +48,14 @@ export function ReferenceImageRnd() {
 			<div className="modal-drag-handle flex h-12 items-center justify-between border-b border-gray-100 bg-gray-50/80 px-4 py-2 backdrop-blur-sm select-none">
 				<div className="flex items-center gap-2">
 					{chosenReference ? (
-						<button
+						<Button
+							variant="ghost"
 							onClick={() => setChosenReference(null)}
 							className="group flex items-center gap-1 rounded-md px-2 py-1 text-sm font-medium text-gray-600 hover:bg-gray-200 hover:text-gray-900 transition-colors"
 						>
 							<ChevronLeft size={16} />
 							<span>Back</span>
-						</button>
+						</Button>
 					) : (
 						<div className="flex items-center gap-2 text-gray-700">
 							<ImageIcon size={18} />

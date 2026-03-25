@@ -1,6 +1,6 @@
-import { TextField } from "@mui/material";
 import { type ChangeEvent } from "react";
 import { clamp } from "@/shared/lib";
+import { TextInput } from "@/shared/ui/text-input";
 
 interface ChangeGridSizesProps {
 	columns: number;
@@ -28,19 +28,17 @@ export function ChangeGridSizes({
 	return (
 		<div className="space-y-4">
 			<div>
-				<TextField
+				<TextInput
 					type="number"
 					label="Number of columns"
-					size="small"
 					value={columns}
 					onChange={handleColChange}
 				/>
 			</div>
 			<div>
-				<TextField
+				<TextInput
 					type="number"
 					label="Number of rows"
-					size="small"
 					value={rows}
 					onChange={handleRowChange}
 				/>

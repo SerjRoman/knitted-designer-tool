@@ -1,7 +1,7 @@
 import { AlertTriangle, CheckCircle, Info } from "lucide-react";
 import type { ReactNode } from "react";
-import { Modal } from "../modal";
 import { Button } from "../../button";
+import { Modal } from "../modal";
 
 type ModalVariant = "success" | "error" | "info";
 

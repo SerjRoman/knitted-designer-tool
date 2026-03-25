@@ -3,6 +3,8 @@ import { useState } from "react";
 import { openDialog } from "@/entities/modal";
 import { setProduct, useAppDispatch, useAppSelector } from "@/shared/store";
 import { Modal } from "@/shared/ui";
+import { Button } from "@/shared/ui/button";
+import { TextInput } from "@/shared/ui/text-input";
 import { saveImageQueries } from "../api/save-image-queries";
 
 export function SaveImageModal({
@@ -193,21 +195,19 @@ export function SaveImageModal({
 				</div>
 
 				<div className="flex flex-col gap-4">
-					<input
+					<TextInput
 						type="text"
 						placeholder="Enter product name"
 						value={productName}
 						onChange={(e) => setProductName(e.target.value)}
-						className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-200"
 					/>
-					<input
+					<TextInput
 						type="text"
 						placeholder="Enter product description"
 						value={productDescription}
 						onChange={(e) => setProductDescription(e.target.value)}
-						className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-200"
 					/>
-					<input
+					<TextInput
 						type="text"
 						placeholder="Enter tags (comma separated)"
 						value={tags.join(",")}
@@ -218,7 +218,6 @@ export function SaveImageModal({
 									.map((tag) => tag.trim()),
 							)
 						}
-						className="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-200"
 					/>
 					<label className="flex items-center gap-2">
 						<input
@@ -237,22 +236,16 @@ export function SaveImageModal({
 							{statusMessage}
 						</div>
 					)}
-					<button
-						type="button"
-						className="border border-gray-300 rounded px-4 py-2 bg-white text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+					<Button
+						variant="cancel"
 						onClick={onClose}
 						disabled={isLoading}
 					>
 						Cancel
-					</button>
-					<button
-						type="button"
-						className="bg-blue-600 text-white rounded px-4 py-2 hover:bg-blue-700 disabled:opacity-50"
-						onClick={onSave}
-						disabled={isLoading}
-					>
+					</Button>
+					<Button onClick={onSave} disabled={isLoading}>
 						{isLoading ? "Saving..." : "Save"}
-					</button>
+					</Button>
 				</div>
 			</div>
 		</Modal>

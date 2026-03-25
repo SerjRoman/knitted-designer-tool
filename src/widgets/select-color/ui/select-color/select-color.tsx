@@ -2,11 +2,11 @@ import { PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { AddColorModal } from "@/features/colors/add-color";
 import { EditCustomColorModal } from "@/features/colors/edit-color";
+import { mergeColor } from "@/features/colors/merge-color";
 import { getPixelsByColorWithColors } from "@/entities/canva";
 import { setCurrentColor } from "@/entities/editor";
 import { MAX_COLORS, useModal } from "@/shared/lib";
 import { useAppDispatch, useAppSelector } from "@/shared/store";
-import { mergeColor } from "@/features/colors/merge-color";
 
 export default function SelectColor() {
 	const dispatch = useAppDispatch();
