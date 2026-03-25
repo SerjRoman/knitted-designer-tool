@@ -56,11 +56,11 @@ export function App() {
 		<div className="flex bg-white overflow-hidden">
 			<div
 				ref={viewportRef}
-				className="flex-1 min-w-0 relative overflow-hidden"
+				className="flex-1 min-w-0 relative overflow-hidden border border-gray-200 shadow-sm"
 			>
 				<div
 					ref={containerRef}
-					className="relative bg-white flex-1"
+					className="relative bg-white flex-1 "
 					style={{
 						width: canvasDimensions.width,
 						height: canvasDimensions.height,
