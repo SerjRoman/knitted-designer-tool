@@ -1,13 +1,12 @@
 import { PlusIcon } from "lucide-react";
 import { useState } from "react";
-import { AddColorModal } from "@/features/add-color";
-import {
-	changeColorToCustom,
-	EditCustomColorModal,
-} from "@/features/edit-color";
+import { AddColorModal } from "@/features/colors/add-color";
+import { EditCustomColorModal } from "@/features/colors/edit-color";
+import { getPixelsByColorWithColors } from "@/entities/canva";
 import { setCurrentColor } from "@/entities/editor";
 import { MAX_COLORS, useModal } from "@/shared/lib";
 import { useAppDispatch, useAppSelector } from "@/shared/store";
+import { mergeColor } from "@/features/colors/merge-color";
 
 export default function SelectColor() {
 	const dispatch = useAppDispatch();
@@ -29,11 +28,11 @@ export default function SelectColor() {
 					onClick={() =>
 						openEditColorModal({ selectedColor: currentColor })
 					}
-					className="row-span-1 flex items-center justify-center border border-gray-300 rounded-lg transition hover:brightness-90"
+					className="row-span-1 flex items-center justify-center border border-gray-300 rounded-lg transition hover:brightness-90 cursor-pointer"
 					style={{ backgroundColor: currentColor }}
 				></button>
 				<button
-					className={`flex flex-row items-center justify-center p-2 rounded-lg border-2 transition-all duration-200 ${
+					className={`flex flex-row items-center justify-center p-2 rounded-lg border-2 transition-all duration-200 cursor-pointer ${
 						maxColorsExceeded && "opacity-50 cursor-not-allowed"
 					}`}
 					disabled={maxColorsExceeded}
@@ -45,7 +44,7 @@ export default function SelectColor() {
 			<div className="col-span-5 grid grid-cols-4 row-auto gap-1">
 				{colors.map((color, index) => (
 					<button
-						key={index}
+						key={color}
 						draggable
 						onDragStart={(e) => {
 							setDraggedIdx(index);
@@ -58,25 +57,31 @@ export default function SelectColor() {
 							}
 						}}
 						onDragLeave={() => setDragOverIdx(null)}
-						onDrop={(e) => {
+						onDrop={async (e) => {
 							e.preventDefault();
 							setDragOverIdx(null);
 							setDraggedIdx(null);
 							if (draggedIdx === null) return;
 							if (draggedIdx === index) return;
 							if (dragOverIdx === null) return;
-							if (
-								colors[dragOverIdx] === undefined ||
-								colors[draggedIdx] === undefined
-							)
-								return;
-							dispatch(
-								changeColorToCustom({
-									prevColor: colors[draggedIdx],
-									newColor: colors[dragOverIdx],
+							const colorToMerge = colors[draggedIdx];
+							const targetColor = colors[dragOverIdx];
+							if (colorToMerge === targetColor) return;
+							if (!colorToMerge || !targetColor) return;
+
+							const pointsBefore = await dispatch(
+								getPixelsByColorWithColors({
+									color: colors[draggedIdx],
+								}),
+							).unwrap();
+							await dispatch(
+								mergeColor({
+									colorToMerge,
+									newColor: targetColor,
+									pixels: pointsBefore,
 								}),
 							);
-							// dispatch(removeColor(colors[draggedIdx]));
+							dispatch(setCurrentColor(colors[dragOverIdx]));
 						}}
 						onDragEnd={() => {
 							setDraggedIdx(null);

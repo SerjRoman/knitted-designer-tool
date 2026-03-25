@@ -1,0 +1,1 @@
+export { mergeColor } from './model/thunks/merge-color';

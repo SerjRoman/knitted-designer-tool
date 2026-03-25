@@ -31,7 +31,7 @@ export const resizeTension = createAppAsyncThunk<
                     pixelHeightBefore: pixelheight,
                     pixelHeightAfter: newPixelHeight,
                     pixelWidthBefore: pixelWidth,
-                    pixelWidthtAfter: newPixelWidth,
+                    pixelWidthAfter: newPixelWidth,
                 },
             })
         );

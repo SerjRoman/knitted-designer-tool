@@ -2,37 +2,31 @@ import { setPixelDimensions } from "@/entities/canva";
 import type { ChangePixelDimensionsActionPayload } from "@/entities/history";
 import { createAppAsyncThunk } from "@/shared/store";
 
-export const undoChangePixelDimensions = createAppAsyncThunk(
-    "history/undoChangePixelDimensions",
-    (
-        {
-            pixelHeightBefore,
-            pixelWidthBefore,
-        }: ChangePixelDimensionsActionPayload,
-        { dispatch }
-    ) => {
-        dispatch(
-            setPixelDimensions({
-                width: pixelWidthBefore,
-                heigth: pixelHeightBefore,
-            })
-        );
-    }
+export const undoChangePixelDimensions = createAppAsyncThunk<
+	void,
+	ChangePixelDimensionsActionPayload
+>(
+	"history/undoChangePixelDimensions",
+	({ pixelHeightBefore, pixelWidthBefore }, { dispatch }) => {
+		dispatch(
+			setPixelDimensions({
+				width: pixelWidthBefore,
+				heigth: pixelHeightBefore,
+			}),
+		);
+	},
 );
-export const redoChangePixelDimensions = createAppAsyncThunk(
-    "history/redoChangePixelDimensions",
-    (
-        {
-            pixelHeightAfter,
-            pixelWidthtAfter,
-        }: ChangePixelDimensionsActionPayload,
-        { dispatch }
-    ) => {
-        dispatch(
-            setPixelDimensions({
-                width: pixelWidthtAfter,
-                heigth: pixelHeightAfter,
-            })
-        );
-    }
+export const redoChangePixelDimensions = createAppAsyncThunk<
+	void,
+	ChangePixelDimensionsActionPayload
+>(
+	"history/redoChangePixelDimensions",
+	({ pixelHeightAfter, pixelWidthAfter }, { dispatch }) => {
+		dispatch(
+			setPixelDimensions({
+				width: pixelWidthAfter,
+				heigth: pixelHeightAfter,
+			}),
+		);
+	},
 );

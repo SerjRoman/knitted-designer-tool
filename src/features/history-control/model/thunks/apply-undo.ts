@@ -9,6 +9,7 @@ import { undoChangePixelDimensions } from "./restore-change-pixel-dimensions";
 import { undoDrawAction } from "./restore-draw-action";
 import { undoEditColorAction } from "./restore-edit-color-action";
 import { undoChangeGridSizesAction } from "./restore-grid-sizes";
+import { undoMergeColorAction } from "./restore-merge-color";
 
 export const applyUndo = createAppAsyncThunk(
 	"editor/apply-undo-action",
@@ -18,7 +19,7 @@ export const applyUndo = createAppAsyncThunk(
 		const currentActionId = selectCurrentActionId(state);
 		if (undoActions.length === 0) return;
 		const currentAction = undoActions.find(
-			(action) => action.id === currentActionId
+			(action) => action.id === currentActionId,
 		);
 		if (!currentAction) {
 			return;
@@ -39,8 +40,13 @@ export const applyUndo = createAppAsyncThunk(
 			case "CHANGE_PIXEL_DIMENSIONS":
 				dispatch(undoChangePixelDimensions(currentAction.payload));
 				break;
+			case "MERGE_COLOR":
+				dispatch(undoMergeColorAction(currentAction.payload));
+				break;
+			default:
+				break;
 		}
 
 		dispatch(undoAction());
-	}
+	},
 );
