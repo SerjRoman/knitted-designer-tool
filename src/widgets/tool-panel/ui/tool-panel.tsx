@@ -11,12 +11,22 @@ import { useModal } from "@/shared/lib";
 import { useAppDispatch } from "@/shared/store";
 
 export function ToolPanel() {
-	const [{ open, isOpen, close }, ModalWrapper] = useModal();
-	const [{ open: openSaveModal }, SaveModalWrapper] = useModal();
+	const [
+		{ open: openUpload, isOpen: isOpenUpload, close: closeUpload },
+		UploadModalWrapper,
+	] = useModal();
+	const [
+		{ open: openSaveModal, isOpen: isOpenSave, close: closeSave },
+		SaveModalWrapper,
+	] = useModal();
 	const dispatch = useAppDispatch();
-	function openModal() {
+	function openModal(modalName: "upload" | "save") {
 		dispatch(closeAllModals());
-		open();
+		if (modalName === "upload") {
+			openUpload();
+		} else {
+			openSaveModal();
+		}
 	}
 	return (
 		<div className="space-y-4">
@@ -35,18 +45,25 @@ export function ToolPanel() {
 					<ToolButton
 						icon={Upload}
 						iconProps={{ size: 24 }}
-						label={"Upload"}
-						onClick={isOpen ? close : openModal}
+						label={"Upload Image"}
+						onClick={
+							isOpenUpload
+								? closeUpload
+								: () => openModal("upload")
+						}
 					/>
 					<ToolButton
 						icon={Download}
+						iconProps={{ size: 24 }}
 						label={"Save"}
-						onClick={() => openSaveModal()}
+						onClick={
+							isOpenSave ? closeSave : () => openModal("save")
+						}
 					/>
 				</div>
 			</div>
 
-			<ModalWrapper ModalComponent={UploadFromUserModal} />
+			<UploadModalWrapper ModalComponent={UploadFromUserModal} />
 			<SaveModalWrapper ModalComponent={SaveImageModal} />
 		</div>
 	);

@@ -49,7 +49,7 @@ export function PreviewImageRnd() {
 			minWidth={300}
 			minHeight={200}
 			bounds="window"
-			className="z-[1000] flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-2xl"
+			className="z-[5] flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-2xl"
 			dragHandleClassName="modal-drag-handle"
 		>
 			<div className="modal-drag-handle flex items-center justify-between border-b border-gray-100 bg-gray-50 px-4 py-3 cursor-move select-none">

@@ -138,7 +138,7 @@ export function UILayer() {
 			draw={handleDraw}
 			style={{
 				position: "absolute",
-				zIndex: 100,
+				zIndex: 4,
 			}}
 			width={canvasDimensions.width}
 			height={canvasDimensions.height}
