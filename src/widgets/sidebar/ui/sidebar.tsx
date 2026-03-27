@@ -1,11 +1,27 @@
-import { Eye, Move, PictureInPicture, ZoomIn, ZoomOut } from "lucide-react";
+import {
+	Eye,
+	Focus,
+	Move,
+	PictureInPicture,
+	Ruler,
+	ZoomIn,
+	ZoomOut,
+} from "lucide-react";
 import { selectToolState, setTool, ToolButton } from "@/entities/editor";
 import { selectActiveModal, toggleModal } from "@/entities/modal";
+import {
+	selectShowCrosshair,
+	selectShowRulers,
+	toggleCrosshair,
+	toggleRulers,
+} from "@/entities/settings";
 import { selectZoomScale, setZoomScale } from "@/entities/viewport";
 import { useAppDispatch, useAppSelector } from "@/shared/store";
 
 export function Sidebar() {
 	const { tool } = useAppSelector(selectToolState);
+	const doShowRulers = useAppSelector(selectShowRulers);
+	const doShowCrosshair = useAppSelector(selectShowCrosshair);
 	const zoomScale = useAppSelector(selectZoomScale);
 	const dispatch = useAppDispatch();
 	const activeModal = useAppSelector(selectActiveModal);
@@ -36,19 +52,29 @@ export function Sidebar() {
 				icon={ZoomIn}
 				label={"Zoom In"}
 				onClick={() => dispatch(setZoomScale(zoomScale * 1.2))}
-				isSelected={activeModal === "preview"}
 			/>
 			<ToolButton.Icon
 				icon={ZoomOut}
 				label={"Zoom Out"}
 				onClick={() => dispatch(setZoomScale(zoomScale / 1.2))}
-				isSelected={activeModal === "preview"}
 			/>
 			<ToolButton.Icon
 				icon={Move}
 				label={"Move"}
 				onClick={() => dispatch(setTool("move"))}
 				isSelected={tool === "move"}
+			/>
+			<ToolButton.Icon
+				icon={Ruler}
+				label={doShowRulers ? "Hide Rulers" : "Show Rulers"}
+				onClick={() => dispatch(toggleRulers())}
+				isSelected={doShowRulers}
+			/>
+			<ToolButton.Icon
+				icon={Focus}
+				label={doShowCrosshair ? "Hide Crosshair" : "Show Crosshair"}
+				onClick={() => dispatch(toggleCrosshair())}
+				isSelected={doShowCrosshair}
 			/>
 		</div>
 	);

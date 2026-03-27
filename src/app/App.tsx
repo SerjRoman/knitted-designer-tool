@@ -16,6 +16,7 @@ import {
 import { useCanvasZoom } from "@/features/zoom-canvas";
 import { selectCanvasDimensions, setCanvasDimensions } from "@/entities/canva";
 import { GlobalStatusDialog, selectActiveModal } from "@/entities/modal";
+import { selectShowRulers } from "@/entities/settings";
 import { useAppSelector, useAppDispatch } from "@/shared/store";
 import { Loader } from "@/shared/ui";
 
@@ -24,7 +25,7 @@ export function App() {
 	const viewportRef = useRef<HTMLDivElement>(null);
 	const { tool } = useAppSelector((state) => state.editor.toolState);
 	const { isPanning } = useAppSelector((state) => state.viewport);
-
+	const doShowRulers = useAppSelector(selectShowRulers);
 	const cursorClasses: Record<string, string> = {
 		default: "cursor-default",
 		brush: "cursor-crosshair",
@@ -86,7 +87,7 @@ export function App() {
 						<>
 							<CanvasLayer />
 							<GridLayer />
-							<RulersLayer />
+							{doShowRulers && <RulersLayer />}
 							<UILayer />
 						</>
 					)}

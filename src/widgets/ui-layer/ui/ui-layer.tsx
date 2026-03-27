@@ -13,6 +13,7 @@ import { TOOLS } from "@/entities/editor";
 import { usePointFromEvent } from "@/shared/lib";
 import { useAppDispatch, useAppSelector } from "@/shared/store";
 import { Canvas } from "@/shared/ui";
+import { selectShowCrosshair } from "@/entities/settings";
 
 export function UILayer() {
 	const [isDrawing, setIsDrawing] = useState(false);
@@ -35,6 +36,7 @@ export function UILayer() {
 	const { toolState } = useAppSelector((state) => state.editor);
 
 	const isPanningOrMove = isPanning || toolState.tool === "move";
+	const doShowCrosshair = useAppSelector(selectShowCrosshair);
 
 	useEffect(() => {
 		if (!drawClipboard.clear) return;
@@ -65,7 +67,7 @@ export function UILayer() {
 				lastValidPoint: lastPoint,
 			});
 
-			if (!isDrawing && point)
+			if (!isDrawing && point && doShowCrosshair)
 				drawCrosshair(
 					context,
 					point,
@@ -91,6 +93,7 @@ export function UILayer() {
 			pixelDimensions.height,
 			numberOfColumns,
 			numberOfRows,
+			doShowCrosshair,
 		],
 	);
 
@@ -146,4 +149,3 @@ export function UILayer() {
 		/>
 	);
 }
-
