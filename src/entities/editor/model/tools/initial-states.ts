@@ -41,6 +41,7 @@ const insertTextInitialState: InsertTextState = {
 	tool: "insertText",
 	text: null,
 };
+const moveInitialState: EditorToolState = { tool: "move" };
 
 export const toolInitialStates: Record<EditorTools, EditorToolState> = {
 	brush: brushInitialState,
@@ -54,4 +55,5 @@ export const toolInitialStates: Record<EditorTools, EditorToolState> = {
 	paste: pasteInitialState,
 	fill: fillInitialState,
 	insertText: insertTextInitialState,
+	move: moveInitialState,
 };

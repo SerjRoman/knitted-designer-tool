@@ -1,4 +1,5 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import { MAX_ZOOM, MIN_ZOOM } from "../constants/constants";
 
 interface ViewportSlice {
 	scale: number;
@@ -15,6 +16,11 @@ const initialState: ViewportSlice = {
 export const viewportSlice = createSlice({
 	initialState,
 	name: "viewport",
+	selectors: {
+		selectZoomScale: (state: ViewportSlice) => state.scale,
+		selectOffsets: (state: ViewportSlice) => state.offsets,
+		selectIsPanning: (state: ViewportSlice) => state.isPanning,
+	},
 	reducers: {
 		startPanning(state) {
 			state.isPanning = true;
@@ -23,6 +29,7 @@ export const viewportSlice = createSlice({
 			state.isPanning = false;
 		},
 		setZoomScale(state, { payload }: PayloadAction<number>) {
+			if (payload < MIN_ZOOM || payload > MAX_ZOOM) return;
 			state.scale = payload;
 		},
 		setOffset(state, { payload }: PayloadAction<{ x: number; y: number }>) {
@@ -34,3 +41,5 @@ export const viewportSlice = createSlice({
 
 export const { startPanning, endPanning, setZoomScale, setOffset } =
 	viewportSlice.actions;
+export const { selectZoomScale, selectOffsets, selectIsPanning } =
+	viewportSlice.selectors;

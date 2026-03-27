@@ -6,6 +6,8 @@ export function useClickOutside(
 ) {
 	useEffect(() => {
 		function handleClickOutside(event: Event) {
+			console.debug("Mouse down in use-click-outside", { event });
+
 			const target = event.target as Node;
 			const elem = ref.current;
 			if (!elem) return;

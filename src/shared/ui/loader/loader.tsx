@@ -1,4 +1,3 @@
-import cn from "clsx";
 type LoaderSize = "xs" | "s" | "m" | "l" | "xl";
 type LoaderColor = "primary" | "secondary" | "white";
 
@@ -26,15 +25,17 @@ export const Loader = ({
 	size = "m",
 	color = "primary",
 }: LoaderProps) => {
-	const loaderClasses = cn(
+	const loaderClasses = [
 		"animate-spin",
 		"rounded-full",
 		"border-solid",
 		"border-gray-200",
 		sizeClasses[size],
 		colorClasses[color],
-		className
-	);
+		className,
+	]
+		.filter(Boolean)
+		.join(" ");
 
 	return (
 		<div role="status" className="inline-block">

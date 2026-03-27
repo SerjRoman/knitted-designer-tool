@@ -1,6 +1,8 @@
 import { useRef } from "react";
 import { createPortal } from "react-dom";
-import { useClickOutside } from "@/shared/lib";
+import { MODAL_ROOT, ROOT } from "../../config/dom";
+import { useClickOutside } from "../../lib/hooks/use-click-outside";
+import { useShadowElement } from "../../lib/hooks/use-shadow-element";
 import type { IModalProps } from "./modal.types";
 
 export function Modal(props: IModalProps) {
@@ -11,6 +13,7 @@ export function Modal(props: IModalProps) {
 		className,
 		doCloseOnClickOutside = false,
 	} = props;
+	const bodyContainer = useShadowElement(ROOT, MODAL_ROOT);
 
 	const contentRef = useRef<HTMLDivElement | null>(null);
 
@@ -29,6 +32,6 @@ export function Modal(props: IModalProps) {
 				{children}
 			</div>
 		</div>,
-		document.body,
+		bodyContainer || document.body,
 	);
 }

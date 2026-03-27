@@ -1,6 +1,10 @@
 import { type RefObject, useEffect } from "react";
-import { setZoomScale } from "@/entities/viewport";
-import { MAX_ZOOM, MIN_ZOOM, ZOOM_SENSITY } from "@/shared/lib";
+import {
+	MAX_ZOOM,
+	MIN_ZOOM,
+	setZoomScale,
+	ZOOM_SENSITY,
+} from "@/entities/viewport";
 import { useAppDispatch, useAppSelector } from "@/shared/store";
 
 export function useCanvasZoom(containerRef: RefObject<HTMLDivElement | null>) {
@@ -16,7 +20,7 @@ export function useCanvasZoom(containerRef: RefObject<HTMLDivElement | null>) {
 			const zoomDirection = event.deltaY < 0 ? 1 : -1;
 			const newScale = Math.max(
 				MIN_ZOOM,
-				Math.min(MAX_ZOOM, scale + zoomDirection / ZOOM_SENSITY)
+				Math.min(MAX_ZOOM, scale + zoomDirection / ZOOM_SENSITY),
 			);
 			dispatch(setZoomScale(newScale));
 		};

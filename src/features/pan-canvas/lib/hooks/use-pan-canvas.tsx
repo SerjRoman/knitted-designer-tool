@@ -1,68 +1,99 @@
-import { useEffect, type RefObject } from "react";
+import { useEffect, useRef, type RefObject } from "react";
 import { endPanning, startPanning, setOffset } from "@/entities/viewport";
 import { useAppDispatch, useAppSelector } from "@/shared/store";
 
 export function usePanCanvas(ref: RefObject<HTMLDivElement | null>) {
 	const dispatch = useAppDispatch();
-	const { isPanning, offsets } = useAppSelector((state) => state.viewport);
+	const { offsets } = useAppSelector((state) => state.viewport);
+	const { tool } = useAppSelector((state) => state.editor.toolState);
+
+	const offsetsRef = useRef(offsets);
+	const toolRef = useRef(tool);
+
+	useEffect(() => {
+		offsetsRef.current = offsets;
+	}, [offsets]);
+
+	useEffect(() => {
+		toolRef.current = tool;
+	}, [tool]);
 
 	useEffect(() => {
 		const containerElement = ref.current;
 		if (!containerElement) return;
 
-		function handleMouseDown(event: MouseEvent) {
-			if (event.altKey || event.button === 2) {
-				dispatch(startPanning());
-			}
-		}
-		function handleMouseUp() {
-			if (isPanning) dispatch(endPanning());
-		}
+		let isDragging = false;
 		let animationFrameId: number | null = null;
 		let lastEvent: MouseEvent | null = null;
+
 		const update = () => {
-			if (!lastEvent) {
+			if (!lastEvent || !isDragging) {
 				animationFrameId = null;
 				return;
 			}
 
-			if (isPanning) {
-				dispatch(
-					setOffset({
-						x: offsets.x + lastEvent.movementX,
-						y: offsets.y + lastEvent.movementY,
-					})
-				);
-			}
+			dispatch(
+				setOffset({
+					x: offsetsRef.current.x + lastEvent.movementX,
+					y: offsetsRef.current.y + lastEvent.movementY,
+				}),
+			);
+
 			lastEvent = null;
 			animationFrameId = null;
 		};
 
 		function handleMouseMove(event: MouseEvent) {
-			const isRightMouseButtonDown = (event.buttons & 2) === 2;
-
-			if ((event.altKey || isRightMouseButtonDown) && isPanning) {
-				lastEvent = event;
-				if (!animationFrameId) {
-					animationFrameId = requestAnimationFrame(update);
-				}
+			if (!isDragging) return;
+			lastEvent = event;
+			if (!animationFrameId) {
+				animationFrameId = requestAnimationFrame(update);
 			}
 		}
+
+		function handleMouseUp() {
+			if (isDragging) {
+				isDragging = false;
+				dispatch(endPanning());
+			}
+
+			document.removeEventListener("mousemove", handleMouseMove);
+			document.removeEventListener("mouseup", handleMouseUp);
+		}
+
+		function handleMouseDown(event: MouseEvent) {
+			if (
+				event.altKey ||
+				event.button === 1 ||
+				event.button === 2 ||
+				toolRef.current === "move"
+			) {
+				isDragging = true;
+				dispatch(startPanning());
+				event.stopPropagation();
+
+				document.addEventListener("mousemove", handleMouseMove);
+				document.addEventListener("mouseup", handleMouseUp);
+			}
+		}
+
 		const handleContextMenu = (event: MouseEvent) => event.preventDefault();
 
 		containerElement.addEventListener("mousedown", handleMouseDown);
-		containerElement.addEventListener("mouseup", handleMouseUp);
-		containerElement.addEventListener("mouseleave", handleMouseUp);
-		containerElement.addEventListener("mousemove", handleMouseMove);
-		document.addEventListener("contextmenu", handleContextMenu);
+		containerElement.addEventListener("contextmenu", handleContextMenu);
+
 		return () => {
+			containerElement.removeEventListener("mousedown", handleMouseDown);
 			containerElement.removeEventListener(
 				"contextmenu",
-				handleContextMenu
+				handleContextMenu,
 			);
-			containerElement.removeEventListener("mousedown", handleMouseDown);
-			containerElement.removeEventListener("mouseup", handleMouseUp);
-			containerElement.removeEventListener("mousemove", handleMouseMove);
+			document.removeEventListener("mousemove", handleMouseMove);
+			document.removeEventListener("mouseup", handleMouseUp);
+
+			if (animationFrameId) {
+				cancelAnimationFrame(animationFrameId);
+			}
 		};
-	}, [dispatch, isPanning, offsets, ref]);
+	}, [dispatch, ref]);
 }

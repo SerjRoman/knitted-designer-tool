@@ -4,16 +4,14 @@ import type { EditorState } from "../types";
 
 function addStrokedPoint(
 	state: EditorState,
-	{ payload }: PayloadAction<PointWithColor>
+	{ payload }: PayloadAction<PointWithColor>,
 ) {
 	if (state.toolState.tool !== "eraser" && state.toolState.tool !== "brush")
 		return;
-	if (!state.toolState.strokedPoints) {
-		state.toolState.strokedPoints = [];
-	}
+	state.toolState.strokedPoints ??= [];
 	if (
-		state.toolState.strokedPoints.find(
-			(point) => point.x === payload.x && point.y === payload.y
+		state.toolState.strokedPoints.some(
+			(point) => point.x === payload.x && point.y === payload.y,
 		)
 	)
 		return;

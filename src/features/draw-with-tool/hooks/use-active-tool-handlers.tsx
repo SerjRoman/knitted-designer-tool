@@ -16,18 +16,15 @@ export function useActiveToolHandlers() {
 	const drawingHandlers = useDrawingTool();
 	const colorPickerHandlers = useColorPickerTool();
 	const lineHandlers = useLineTool();
-	// const pasteHandlers = usePasteTool();
 	const fillHandlers = useFillTool();
 	const selectHandlers = useSelectTool();
 	const shapeHandlers = useShapeTool();
-
 	return useMemo(() => {
 		const handlersMap: Record<string, ToolHandlers> = {
 			brush: drawingHandlers,
 			eraser: drawingHandlers,
 			colorPicker: colorPickerHandlers,
 			line: lineHandlers,
-			// paste: pasteHandlers,
 			fill: fillHandlers,
 			select: selectHandlers,
 			shape: shapeHandlers,

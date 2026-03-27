@@ -8,7 +8,12 @@ export type DrawingTools =
 	| "eraser"
 	| "colorPicker";
 
-export type EditorTools = DrawingTools | ClipboardTools | "fill" | "insertText";
+export type EditorTools =
+	| DrawingTools
+	| ClipboardTools
+	| "fill"
+	| "insertText"
+	| "move";
 
 export type Shapes = "rect" | "ellipse";
 export interface BrushState {
@@ -48,9 +53,12 @@ export interface PasteState {
 export interface FillState {
 	tool: "fill";
 }
+export interface MoveState {
+	tool: "move";
+}
 export interface InsertTextState {
 	tool: "insertText";
-    text: string | null
+	text: string | null;
 }
 
 export type EditorToolState =
@@ -64,7 +72,8 @@ export type EditorToolState =
 	| CopyState
 	| PasteState
 	| FillState
-	| InsertTextState;
+	| InsertTextState
+	| MoveState;
 
 export interface ClipboardState {
 	points: null | PointWithColor[];

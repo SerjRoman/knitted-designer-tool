@@ -22,6 +22,18 @@ import { Loader } from "@/shared/ui";
 export function App() {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const viewportRef = useRef<HTMLDivElement>(null);
+	const { tool } = useAppSelector((state) => state.editor.toolState);
+	const { isPanning } = useAppSelector((state) => state.viewport);
+
+	const cursorClasses: Record<string, string> = {
+		default: "cursor-default",
+		brush: "cursor-crosshair",
+		move: "cursor-grab",
+		panning: "cursor-grabbing",
+	};
+	const cursorClass = isPanning
+		? cursorClasses.panning
+		: cursorClasses[tool] || cursorClasses.default;
 
 	const { status } = useAppSelector((state) => state["features/uploadImage"]);
 	const activeModal = useAppSelector(selectActiveModal);
@@ -56,7 +68,7 @@ export function App() {
 		<div className="flex bg-white overflow-hidden">
 			<div
 				ref={viewportRef}
-				className="flex-1 min-w-0 relative overflow-hidden"
+				className={`flex-1 min-w-0 relative overflow-hidden ${cursorClass}`}
 			>
 				<div
 					ref={containerRef}
@@ -97,7 +109,6 @@ export function App() {
 				</div>
 			</div>
 
-			{/* Модалки */}
 			{activeModal === "reference" && <ReferenceImageRnd />}
 			{activeModal === "preview" && <PreviewImageRnd />}
 			<GlobalStatusDialog />

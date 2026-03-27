@@ -2,7 +2,8 @@ import { useMemo } from "react";
 import { createPortal } from "react-dom";
 import { Rnd } from "react-rnd";
 import { selectActiveModal, toggleModal } from "@/entities/modal";
-import { transformGridToApiFormat } from "@/shared/lib";
+import { MODAL_ROOT, ROOT } from "@/shared/config/dom";
+import { transformGridToApiFormat, useShadowElement } from "@/shared/lib";
 import { useAppDispatch, useAppSelector } from "@/shared/store";
 import { Loader } from "@/shared/ui";
 import { useGetPreviewImage } from "../../api";
@@ -15,6 +16,8 @@ export function PreviewImageRnd() {
 	const activeModal = useAppSelector(selectActiveModal);
 	const horizontalCenter = window.innerWidth / 2;
 	const verticalCenter = window.innerHeight / 2;
+	const bodyContainer = useShadowElement(ROOT, MODAL_ROOT);
+
 	function onClose() {
 		dispatch(toggleModal("preview"));
 	}
@@ -93,6 +96,6 @@ export function PreviewImageRnd() {
 				)}
 			</div>
 		</Rnd>,
-		document.body,
+		bodyContainer || document.body,
 	);
 }

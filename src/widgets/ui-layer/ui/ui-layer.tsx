@@ -34,6 +34,8 @@ export function UILayer() {
 	);
 	const { toolState } = useAppSelector((state) => state.editor);
 
+	const isPanningOrMove = isPanning || toolState.tool === "move";
+
 	useEffect(() => {
 		if (!drawClipboard.clear) return;
 		if (!TOOLS.CLIPBOARD_TOOLS.some((tool) => tool === toolState.tool)) {
@@ -56,7 +58,7 @@ export function UILayer() {
 			context.translate(offsets.x, offsets.y);
 			context.scale(scale, scale);
 
-			if (isPanning || !lastPoint) return;
+			if (isPanningOrMove || !lastPoint) return;
 			drawClipboard.draw?.(context, lastPoint);
 			activeToolHandlers.onDrawPreview?.(context, {
 				currentPoint: point,
@@ -74,23 +76,30 @@ export function UILayer() {
 				);
 		},
 		[
-			offsets,
+			canvasDimensions.width,
+			canvasDimensions.height,
+			offsets.x,
+			offsets.y,
 			scale,
-			isPanning,
+			isPanningOrMove,
 			lastPoint,
+			drawClipboard,
 			activeToolHandlers,
-			isDrawing,
 			point,
-			pixelDimensions,
+			isDrawing,
+			pixelDimensions.width,
+			pixelDimensions.height,
 			numberOfColumns,
 			numberOfRows,
-			drawClipboard,
-			canvasDimensions,
 		],
 	);
 
 	function handleMouseDown(event: MouseEvent<HTMLCanvasElement>) {
-		if (isPanning || !point) return;
+		if (!point) return;
+		if (isPanningOrMove) {
+			activeToolHandlers.onMouseDown?.({ event, point });
+			return;
+		}
 		setIsDrawing(true);
 		activeToolHandlers.onMouseDown?.({ event, point });
 		if (toolState.tool === "paste") {
@@ -137,3 +146,4 @@ export function UILayer() {
 		/>
 	);
 }
+

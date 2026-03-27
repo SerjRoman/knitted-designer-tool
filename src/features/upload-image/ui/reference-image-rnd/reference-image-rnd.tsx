@@ -8,6 +8,8 @@ import {
 	setTool,
 } from "@/entities/editor";
 import { selectActiveModal, toggleModal } from "@/entities/modal";
+import { ROOT, MODAL_ROOT } from "@/shared/config/dom";
+import { useShadowElement } from "@/shared/lib/hooks";
 import { useAppDispatch, useAppSelector } from "@/shared/store";
 import { Button } from "@/shared/ui/button";
 import {
@@ -23,6 +25,8 @@ export function ReferenceImageRnd() {
 	const references = useAppSelector(selectReferences);
 	const horizontalCenter = window.innerWidth / 2;
 	const verticalCenter = window.innerHeight / 2;
+	const bodyContainer = useShadowElement(ROOT, MODAL_ROOT);
+
 	function onClose() {
 		dispatch(toggleModal("reference"));
 	}
@@ -191,6 +195,6 @@ export function ReferenceImageRnd() {
 				)}
 			</div>
 		</Rnd>,
-		document.body,
+		bodyContainer || document.body,
 	);
 }
