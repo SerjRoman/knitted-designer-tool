@@ -17,6 +17,7 @@ export function UploadFromUserModal({
 	const fileInputRef = useRef<HTMLInputElement | null>(null);
 
 	const handleUploadButtonClick = () => {
+		console.log("bkbkbkh");
 		fileInputRef.current?.click();
 	};
 	const dispatch = useAppDispatch();
@@ -26,6 +27,7 @@ export function UploadFromUserModal({
 	const [width, setWidth] = useState<number>(numberOfColumns);
 	const [height, setHeight] = useState<number>(numberOfRows);
 	const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
+		console.log("dsadasdas");
 		const file = event.target.files?.[0];
 		if (!file) return;
 		let variant: "error" | "success" | "info" = "success";
