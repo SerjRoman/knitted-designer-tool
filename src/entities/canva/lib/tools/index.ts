@@ -7,3 +7,4 @@ export { drawPreviewPoints } from "./draw-preview-points";
 export { drawClipboardPreview } from "./draw-clipboard-preview";
 export { getMajorTickMultiplier } from "./get-major-tick-multiplier";
 export { calculateTension } from "./calculate-tensions";
+export { getPointsFromText } from "./get-points-from-text";

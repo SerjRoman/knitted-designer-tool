@@ -1,4 +1,5 @@
 import { useState } from "react";
+import type { PixelFontSize } from "@/entities/canva";
 import { selectToolState, setTool } from "@/entities/editor";
 import { useAppDispatch, useAppSelector } from "@/shared/store";
 import { Modal } from "@/shared/ui";
@@ -15,6 +16,7 @@ export function InsertTextModal({
 }>) {
 	const toolState = useAppSelector(selectToolState);
 	const [text, setText] = useState<string>("");
+	const [size, setSize] = useState<PixelFontSize>("small");
 	const dispatch = useAppDispatch();
 	if (!isOpen || toolState.tool !== "insertText") {
 		return null;
@@ -25,7 +27,7 @@ export function InsertTextModal({
 	}
 	const handleConfirm = async () => {
 		if (!text.trim()) return;
-		await dispatch(drawText(text));
+		await dispatch(drawText({ text, size }));
 		onClose();
 	};
 
@@ -59,6 +61,26 @@ export function InsertTextModal({
 						root: "gap-4",
 					}}
 				/>
+				<div className="mt-4 flex flex-col gap-2">
+					<label
+						htmlFor="size-select"
+						className="text-sm font-medium text-gray-700"
+					>
+						Font Size
+					</label>
+					<select
+						id="size-select"
+						value={size}
+						onChange={(e) =>
+							setSize(e.target.value as PixelFontSize)
+						}
+						className="border border-gray-300 rounded-md shadow-sm outline-none w-full p-2 h-[41px]"
+					>
+						<option value="small">Small (3x5)</option>
+						<option value="medium">Medium (4x6)</option>
+						<option value="large">Large (5x7)</option>
+					</select>
+				</div>
 			</div>
 
 			<div className="flex justify-end gap-3 pt-3">
