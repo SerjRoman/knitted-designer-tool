@@ -1,21 +1,12 @@
-import {
-	selectGrid,
-	selectNumberOfColumns,
-	selectNumberOfRows,
-	setColors,
-} from "@/entities/canva";
-import {
-	setClipboardPoints,
-	setClipboardOrigin,
-	setTool,
-	setPasteRepeat,
-} from "@/entities/editor";
+import { selectGrid, setColors } from "@/entities/canva";
 import {
 	approximateColors,
 	getBoundingBox,
 	getImageDataFromImage,
 	getPopularColorsFromRGBArray,
 	MAX_COLORS,
+	type Point,
+	type PointWithColor,
 	type RGBColor,
 } from "@/shared/lib";
 import { createAppAsyncThunk } from "@/shared/store";
@@ -33,7 +24,7 @@ interface ProcessImagePayload {
 }
 
 export const processAndUploadImage = createAppAsyncThunk<
-	void,
+	{ points: PointWithColor[]; originPoint: Point },
 	ProcessImagePayload
 >(
 	"features/uploadImage/process",
@@ -41,12 +32,13 @@ export const processAndUploadImage = createAppAsyncThunk<
 		{ file, width, height },
 		{ dispatch, getState, rejectWithValue },
 	) => {
-		await new Promise<void>((resolve, reject) => {
+		return await new Promise<{
+			points: PointWithColor[];
+			originPoint: Point;
+		}>((resolve, reject) => {
 			const reader = new FileReader();
 			const state = getState();
 			const grid = selectGrid(state);
-			const gridHeight = selectNumberOfRows(state);
-			const gridWidth = selectNumberOfColumns(state);
 			const previewUrl = URL.createObjectURL(file);
 			reader.onload = (e) => {
 				const img = new Image();
@@ -98,12 +90,7 @@ export const processAndUploadImage = createAppAsyncThunk<
 					const centerX = Math.floor((minX + maxX) / 2);
 					const centerY = Math.floor((minY + maxY) / 2);
 					const originPoint = { x: centerX, y: centerY };
-					dispatch(setClipboardPoints(points));
-					dispatch(setClipboardOrigin(originPoint));
-					dispatch(setTool("paste"));
-					if (gridHeight === height && gridWidth === width) {
-						dispatch(setPasteRepeat(false));
-					}
+
 					dispatch(setColors(stringifiedColors));
 					dispatch(
 						addReferenceImage({
@@ -112,7 +99,7 @@ export const processAndUploadImage = createAppAsyncThunk<
 							originPoint,
 						}),
 					);
-					resolve();
+					resolve({ points, originPoint });
 				};
 				img.src = e.target?.result as string;
 			};

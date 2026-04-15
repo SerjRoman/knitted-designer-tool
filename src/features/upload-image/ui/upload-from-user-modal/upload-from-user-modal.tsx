@@ -1,4 +1,16 @@
 import { useRef, useState, type ChangeEvent } from "react";
+import {
+	selectNumberOfRows,
+	selectNumberOfColumns,
+	setPixelsWithColor,
+	selectGrid,
+} from "@/entities/canva";
+import {
+	setClipboardPoints,
+	setClipboardOrigin,
+	setTool,
+} from "@/entities/editor";
+import { addActionToHistory } from "@/entities/history";
 import { openDialog } from "@/entities/modal";
 import { clamp } from "@/shared/lib";
 import { useAppDispatch, useAppSelector } from "@/shared/store";
@@ -15,9 +27,10 @@ export function UploadFromUserModal({
 	onClose: () => void;
 }>) {
 	const fileInputRef = useRef<HTMLInputElement | null>(null);
-
+	const gridHeight = useAppSelector(selectNumberOfRows);
+	const gridWidth = useAppSelector(selectNumberOfColumns);
+	const grid = useAppSelector(selectGrid);
 	const handleUploadButtonClick = () => {
-		console.log("bkbkbkh");
 		fileInputRef.current?.click();
 	};
 	const dispatch = useAppDispatch();
@@ -27,7 +40,6 @@ export function UploadFromUserModal({
 	const [width, setWidth] = useState<number>(numberOfColumns);
 	const [height, setHeight] = useState<number>(numberOfRows);
 	const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
-		console.log("dsadasdas");
 		const file = event.target.files?.[0];
 		if (!file) return;
 		let variant: "error" | "success" | "info" = "success";
@@ -42,6 +54,29 @@ export function UploadFromUserModal({
 			}),
 		)
 			.unwrap()
+			.then(({ points, originPoint }) => {
+				if (gridHeight === height && gridWidth === width) {
+					const pointsBefore = points.map((p) => ({
+						x: p.x,
+						y: p.y,
+						color: grid[p.y][p.x],
+					}));
+					dispatch(setPixelsWithColor({ points }));
+					dispatch(
+						addActionToHistory({
+							type: "DRAW",
+							payload: {
+								pointsAfter: points,
+								pointsBefore,
+							},
+						}),
+					);
+				} else {
+					dispatch(setClipboardPoints(points));
+					dispatch(setClipboardOrigin(originPoint));
+					dispatch(setTool("paste"));
+				}
+			})
 			.catch((error) => {
 				variant = "error";
 				title = "Upload Failed";
