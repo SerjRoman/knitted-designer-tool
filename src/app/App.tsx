@@ -64,6 +64,7 @@ export function App() {
 
 		return () => resizeObserver.disconnect();
 	}, []);
+	logMemoryUsage();
 	return (
 		<div className="flex bg-white overflow-hidden">
 			<div
@@ -114,4 +115,22 @@ export function App() {
 			<GlobalStatusDialog />
 		</div>
 	);
+}
+
+function logMemoryUsage() {
+	if (
+		"memory" in performance &&
+		typeof performance.memory === "object" &&
+		performance.memory &&
+		"usedJSHeapSize" in performance.memory &&
+		"totalJSHeapSize" in performance.memory &&
+		typeof performance.memory.totalJSHeapSize === "number" &&
+		typeof performance.memory.usedJSHeapSize === "number"
+	) {
+		const usedMB = performance.memory.usedJSHeapSize / 1024 / 1024;
+		const totalMB = performance.memory.totalJSHeapSize / 1024 / 1024;
+		console.log(
+			`Memory usage: ${usedMB.toFixed(2)} MB / ${totalMB.toFixed(2)} MB`,
+		);
+	}
 }
