@@ -10,6 +10,7 @@ export function drawPixelLayer(
 	backgroundColorId: number,
 	colors: string[],
 ) {
+	const startTime = performance.now();
 	context.beginPath();
 	context.fillStyle = colors[backgroundColorId];
 	context.fillRect(0, 0, context.canvas.width, context.canvas.height);
@@ -38,4 +39,6 @@ export function drawPixelLayer(
 		}
 	}
 	context.stroke();
+	const endTime = performance.now();
+	console.log(`Rendering: ${(endTime - startTime).toFixed(2)} ms`);
 }

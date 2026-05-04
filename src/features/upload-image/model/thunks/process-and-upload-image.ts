@@ -1,4 +1,4 @@
-import { selectGrid, setColors } from "@/entities/canva";
+import { setColors } from "@/entities/canva";
 import {
 	approximateColors,
 	getBoundingBox,
@@ -28,17 +28,12 @@ export const processAndUploadImage = createAppAsyncThunk<
 	ProcessImagePayload
 >(
 	"features/uploadImage/process",
-	async (
-		{ file, width, height },
-		{ dispatch, getState, rejectWithValue },
-	) => {
+	async ({ file, width, height }, { dispatch, rejectWithValue }) => {
 		return await new Promise<{
 			points: PointWithCode[];
 			originPoint: Point;
 		}>((resolve, reject) => {
 			const reader = new FileReader();
-			const state = getState();
-			const grid = selectGrid(state);
 			const previewUrl = URL.createObjectURL(file);
 			reader.onload = (e) => {
 				const img = new Image();
@@ -52,7 +47,7 @@ export const processAndUploadImage = createAppAsyncThunk<
 
 					const RGBArray =
 						convertImageDataToRGBArray(resizedImageData);
-					const sameColors = new Set<string>();
+					// const sameColors = new Set<string>();
 					const usedColors: RGBColor[] = [];
 					// grid.forEach((row) => {
 					// 	row.forEach((cell) => {
@@ -95,7 +90,7 @@ export const processAndUploadImage = createAppAsyncThunk<
 					dispatch(
 						addReferenceImage({
 							imageUrl: previewUrl,
-							points,
+							points: [],
 							originPoint,
 						}),
 					);

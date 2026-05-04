@@ -18,7 +18,7 @@ export function transformGridToApiFormat(
 		for (const element of grid[y]) {
 			const lastPixel = row.pixels.at(-1);
 			const currentColor = element;
-			const colorIndex = 1; // CHANGE colorsMap.get(currentColor) ?? 0;
+			const colorIndex = currentColor; // CHANGE
 			if (lastPixel?.color === colorIndex) {
 				lastPixel.count++;
 			} else {

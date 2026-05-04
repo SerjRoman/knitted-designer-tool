@@ -64,7 +64,6 @@ export function App() {
 
 		return () => resizeObserver.disconnect();
 	}, []);
-
 	return (
 		<div className="flex bg-white overflow-hidden">
 			<div
