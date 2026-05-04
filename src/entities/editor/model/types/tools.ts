@@ -1,4 +1,4 @@
-import type { Point, PointWithColor } from "@/shared/lib";
+import type { Point, PointWithCode } from "@/shared/lib";
 
 export type ClipboardTools = "cut" | "copy" | "paste" | "select";
 export type DrawingTools =
@@ -18,7 +18,7 @@ export type EditorTools =
 export type Shapes = "rect" | "ellipse";
 export interface BrushState {
 	tool: "brush";
-	strokedPoints: PointWithColor[] | null;
+	strokedPoints: PointWithCode[] | null;
 }
 export interface LineState {
 	tool: "line";
@@ -31,7 +31,7 @@ export interface ShapeState {
 }
 export interface EraserState {
 	tool: "eraser";
-	strokedPoints: PointWithColor[] | null;
+	strokedPoints: PointWithCode[] | null;
 }
 export interface ColorPickerState {
 	tool: "colorPicker";
@@ -76,12 +76,13 @@ export type EditorToolState =
 	| MoveState;
 
 export interface ClipboardState {
-	points: null | PointWithColor[];
+	points: null | PointWithCode[];
 	origin: null | Point;
 }
 export interface EditorState {
 	toolState: EditorToolState;
-	currentColor: string;
+	currentColorId: number;
+	currentSymbolId: number;
 	selectedPoints: null | Point[];
 	clipboard: ClipboardState;
 }

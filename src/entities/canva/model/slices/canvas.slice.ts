@@ -10,9 +10,15 @@ import {
 	createRow,
 	type Grid,
 	type Point,
-	type PointWithColor,
+	type PointWithCode,
 } from "@/shared/lib";
 import { calculateTension } from "../../lib";
+import {
+	decodeColorId,
+	decodeSymbolId,
+	encodeCellCode,
+	replaceColorId,
+} from "../cell-codec";
 import {
 	CANVAS_HEIGHT,
 	CANVAS_WIDTH,
@@ -22,17 +28,19 @@ import {
 	INITIAL_TENSION_ROWS,
 	INITIAL_TENSION_STITCHES,
 } from "../constants";
+import type { CellCode } from "../types";
 
 interface CanvasSlice {
 	grid: Grid;
 	canvasDimensions: { width: number; height: number };
-	backgroundColor: string;
+	backgroundColorId: number;
 	pixelSize: number;
 	numberOfColumns: number;
 	numberOfRows: number;
 	pixelWidth: number;
 	pixelHeight: number;
 	colors: string[];
+	symbols: string[];
 }
 export const INITIAL_TENSION = calculateTension(
 	INITIAL_TENSION_STITCHES,
@@ -40,15 +48,35 @@ export const INITIAL_TENSION = calculateTension(
 	10,
 );
 
+function resolveColorId(colors: string[], color: string): number {
+	const colorId = colors.indexOf(color);
+	return colorId === -1 ? 0 : colorId;
+}
+
+function getBackgroundCode(state: CanvasSlice): CellCode {
+	return encodeCellCode({
+		colorId: state.backgroundColorId,
+		symbolId: 0,
+	});
+}
+
 const initialState: CanvasSlice = {
-	grid: createEmptyGrid(INITIAL_COLUMNS, INITIAL_ROWS, BACKGROUND_COLOR),
-	backgroundColor: BACKGROUND_COLOR,
+	grid: createEmptyGrid(
+		INITIAL_COLUMNS,
+		INITIAL_ROWS,
+		encodeCellCode({
+			colorId: resolveColorId(Object.values(COLORS), BACKGROUND_COLOR),
+			symbolId: 0,
+		}),
+	),
+	backgroundColorId: resolveColorId(Object.values(COLORS), BACKGROUND_COLOR),
 	pixelSize: INITIAL_PIXEL_SIZE,
 	numberOfColumns: INITIAL_COLUMNS,
 	numberOfRows: INITIAL_ROWS,
 	pixelWidth: INITIAL_TENSION.width,
 	pixelHeight: INITIAL_TENSION.height,
 	colors: Object.values(COLORS),
+	symbols: [""],
 	canvasDimensions: { height: CANVAS_HEIGHT, width: CANVAS_WIDTH },
 };
 
@@ -73,13 +101,16 @@ export const canvasSlice = createSlice({
 		selectPixelWidth: (state) => state.pixelWidth,
 		selectPixelHeight: (state) => state.pixelHeight,
 		selectPixelSize: (state) => state.pixelSize,
-		selectBackgroundColor: (state) => state.backgroundColor,
+		selectBackgroundColorId: (state) => state.backgroundColorId,
+		selectBackgroundColor: (state) =>
+			state.colors[state.backgroundColorId] ?? BACKGROUND_COLOR,
 		selectCanvasDimensions: (state) => state.canvasDimensions,
 		selectColors: (state) => state.colors,
+		selectSymbols: (state) => state.symbols,
 	},
 	reducers: {
-		setBackgroundColor(state, { payload }: PayloadAction<string>) {
-			state.backgroundColor = payload;
+		setBackgroundColorId(state, { payload }: PayloadAction<number>) {
+			state.backgroundColorId = payload;
 		},
 		setCanvasDimensions(
 			state,
@@ -92,12 +123,12 @@ export const canvasSlice = createSlice({
 			{
 				payload: {
 					point: { x, y },
-					color,
+					code,
 				},
-			}: PayloadAction<{ point: Point; color: string }>,
+			}: PayloadAction<{ point: Point; code: CellCode }>,
 		) {
-			if (state.grid[y]?.[x]) {
-				state.grid[y][x] = color;
+			if (state.grid[y]?.[x] !== undefined) {
+				state.grid[y][x] = code;
 			}
 		},
 		setPixels(
@@ -106,28 +137,28 @@ export const canvasSlice = createSlice({
 				payload,
 			}: PayloadAction<{
 				points: Point[];
-				color: string;
+				code: CellCode;
 			}>,
 		) {
 			payload.points.forEach((point) => {
 				const { x, y } = point;
-				if (state.grid[y]?.[x]) {
-					state.grid[y][x] = payload.color;
+				if (state.grid[y]?.[x] !== undefined) {
+					state.grid[y][x] = payload.code;
 				}
 			});
 		},
-		setPixelsWithColor(
+		setPixelsWithCode(
 			state,
 			{
 				payload,
 			}: PayloadAction<{
-				points: PointWithColor[];
+				points: PointWithCode[];
 			}>,
 		) {
 			payload.points.forEach((point) => {
 				const { x, y } = point;
-				if (state.grid[y]?.[x]) {
-					state.grid[y][x] = point.color;
+				if (state.grid[y]?.[x] !== undefined) {
+					state.grid[y][x] = point.code;
 				}
 			});
 		},
@@ -144,15 +175,13 @@ export const canvasSlice = createSlice({
 		addRow(state) {
 			state.numberOfRows++;
 			state.grid.push(
-				createRow(state.backgroundColor, state.numberOfColumns),
+				createRow(getBackgroundCode(state), state.numberOfColumns),
 			);
 		},
 		addColumn(state) {
 			state.numberOfColumns++;
-			state.grid = state.grid.map((row) => [
-				...row,
-				state.backgroundColor,
-			]);
+			const backgroundCode = getBackgroundCode(state);
+			state.grid = state.grid.map((row) => [...row, backgroundCode]);
 		},
 		removeRow(state) {
 			state.numberOfRows--;
@@ -176,7 +205,7 @@ export const canvasSlice = createSlice({
 			const newGrid = createEmptyGrid(
 				numberOfColumns,
 				numberOfRows,
-				state.backgroundColor,
+				getBackgroundCode(state),
 			).map((row, indexY) => {
 				if (indexY > state.grid.length) return row;
 				return row.map((cell, indexX) => {
@@ -202,17 +231,19 @@ export const canvasSlice = createSlice({
 			}: PayloadAction<{ colorToChange: string; newColor: string }>,
 		) {
 			const { colorToChange, newColor } = payload;
-			const colorInArrayIndex = state.colors.indexOf(colorToChange);
-			if (colorInArrayIndex === -1) return;
-			if (!state.colors.includes(newColor)) {
-				state.colors.splice(colorInArrayIndex, 1, newColor);
+			const colorToChangeId = state.colors.indexOf(colorToChange);
+			if (colorToChangeId === -1) return;
+			const newColorId = state.colors.indexOf(newColor);
+			if (newColorId === -1) {
+				state.colors.splice(colorToChangeId, 1, newColor);
+				return;
 			}
 
 			for (let y = 0; y < state.grid.length; y++) {
 				for (let x = 0; x < state.grid[y].length; x++) {
-					const color = state.grid[y][x];
-					if (color !== colorToChange) continue;
-					state.grid[y][x] = newColor;
+					const cellCode = state.grid[y][x];
+					if (decodeColorId(cellCode) !== colorToChangeId) continue;
+					state.grid[y][x] = replaceColorId(cellCode, newColorId);
 				}
 			}
 		},
@@ -222,47 +253,105 @@ export const canvasSlice = createSlice({
 				payload,
 			}: PayloadAction<{
 				pixelsToClear: Point[];
-				pixelsToApply: PointWithColor[];
+				pixelsToApply: PointWithCode[];
 			}>,
 		) {
 			const { pixelsToClear, pixelsToApply } = payload;
+			const backgroundCode = getBackgroundCode(state);
 
 			for (const point of pixelsToClear) {
 				const { x, y } = point;
 				if (state.grid[y]?.[x] !== undefined) {
-					state.grid[y][x] = state.backgroundColor;
+					state.grid[y][x] = backgroundCode;
 				}
 			}
-			for (const { x, y, color } of pixelsToApply) {
+			for (const { x, y, code } of pixelsToApply) {
 				if (state.grid[y]?.[x] !== undefined) {
-					state.grid[y][x] = color;
+					state.grid[y][x] = code;
 				}
 			}
 		},
 		setGrid(state, { payload }: PayloadAction<Grid>) {
 			state.grid = payload;
-			const setColors = new Set<string>();
-			payload.forEach((row) => {
-				row.forEach((cell) => {
-					if (!setColors.has(cell)) {
-						setColors.add(cell);
-					}
-				});
-			});
-			const colors: string[] = Array.from(setColors);
-			state.colors = colors;
 		},
 		setColors(state, { payload }: PayloadAction<string[]>) {
+			const oldColors = [...state.colors];
+			const fallbackColorId =
+				state.backgroundColorId < payload.length
+					? state.backgroundColorId
+					: 0;
+			for (let y = 0; y < state.grid.length; y++) {
+				for (let x = 0; x < state.grid[y].length; x++) {
+					const cellCode = state.grid[y][x];
+					const oldColorId = decodeColorId(cellCode);
+					const color = oldColors[oldColorId];
+					const mappedColorId = color
+						? payload.indexOf(color)
+						: fallbackColorId;
+					const nextColorId =
+						mappedColorId === -1 ? fallbackColorId : mappedColorId;
+					state.grid[y][x] = replaceColorId(cellCode, nextColorId);
+				}
+			}
 			state.colors = payload;
+			if (state.backgroundColorId >= payload.length) {
+				state.backgroundColorId = 0;
+			}
 		},
 		removeColor(state, { payload }: PayloadAction<string>) {
+			const colorToRemoveId = state.colors.indexOf(payload);
+			if (colorToRemoveId === -1) return;
 			state.colors = state.colors.filter((color) => color !== payload);
+			if (state.backgroundColorId === colorToRemoveId) {
+				state.backgroundColorId = 0;
+			} else if (state.backgroundColorId > colorToRemoveId) {
+				state.backgroundColorId--;
+			}
+			const fallbackColorId = state.backgroundColorId;
+			for (let y = 0; y < state.grid.length; y++) {
+				for (let x = 0; x < state.grid[y].length; x++) {
+					const cellCode = state.grid[y][x];
+					const colorId = decodeColorId(cellCode);
+					if (colorId === colorToRemoveId) {
+						state.grid[y][x] = replaceColorId(
+							cellCode,
+							fallbackColorId,
+						);
+						continue;
+					}
+					if (colorId > colorToRemoveId) {
+						state.grid[y][x] = replaceColorId(
+							cellCode,
+							colorId - 1,
+						);
+					}
+				}
+			}
+		},
+		addSymbol(state, { payload }: PayloadAction<string>) {
+			if (state.symbols.includes(payload)) return;
+			state.symbols.push(payload);
+		},
+		setSymbols(state, { payload }: PayloadAction<string[]>) {
+			const symbols = payload.length > 0 ? payload : [""];
+			state.symbols = symbols;
+			for (let y = 0; y < state.grid.length; y++) {
+				for (let x = 0; x < state.grid[y].length; x++) {
+					const cellCode = state.grid[y][x];
+					const symbolId = decodeSymbolId(cellCode);
+					if (symbolId < symbols.length) continue;
+					state.grid[y][x] = encodeCellCode({
+						colorId: decodeColorId(cellCode),
+						symbolId: 0,
+					});
+				}
+			}
 		},
 	},
 });
 
 export const {
-	setBackgroundColor,
+	setBackgroundColorId,
 	setPixel,
 	setPixelSize,
 	addRow,
@@ -271,12 +360,14 @@ export const {
 	removeColumn,
 	updateGridSizes,
 	setPixels,
-	setPixelsWithColor,
+	setPixelsWithCode,
 	addColor,
+	addSymbol,
 	changeColorInGrid,
 	applyFlip,
 	setGrid,
 	setColors,
+	setSymbols,
 	removeColor,
 	setPixelDimensions,
 	setCanvasDimensions,
@@ -288,8 +379,10 @@ export const {
 	selectGrid,
 	selectPixelHeight,
 	selectPixelSize,
+	selectBackgroundColorId,
 	selectPixelWidth,
 	selectBackgroundColor,
 	selectCanvasDimensions,
 	selectColors,
+	selectSymbols,
 } = canvasSlice.selectors;

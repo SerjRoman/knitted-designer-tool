@@ -1,1 +1,1 @@
-export { convertColorsArrayToUrl, convertGridToColorsArray } from "./tools";
+export { convertColorsArrayToUrl } from "./tools";

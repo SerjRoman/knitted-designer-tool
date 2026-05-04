@@ -1,4 +1,4 @@
-import type { PointWithColor } from "@/shared/lib";
+import type { PointWithCode } from "@/shared/lib";
 
 interface ChangeGridSizesData {
     numberOfColumns: number;
@@ -6,14 +6,14 @@ interface ChangeGridSizesData {
 }
 
 export interface DrawActionPayload {
-    pointsBefore: PointWithColor[];
-    pointsAfter: PointWithColor[];
+    pointsBefore: PointWithCode[];
+    pointsAfter: PointWithCode[];
 }
 
 export interface ChangeGridSizesActionPayload {
     sizesBefore: ChangeGridSizesData;
     sizesAfter: ChangeGridSizesData;
-    lostPixels: PointWithColor[];
+    lostPixels: PointWithCode[];
 }
 export interface ChangePixelDimensionsActionPayload {
     pixelWidthBefore: number;
@@ -29,8 +29,8 @@ export type EditColorActionPayload = {
 export interface MergeColorActionPayload {
     colorToMerge: string;
     newColor: string;
-    pixelsBefore: PointWithColor[];
-    pixelsAfter: PointWithColor[];
+    pixelsBefore: PointWithCode[];
+    pixelsAfter: PointWithCode[];
 }
 export type AddColorActionPayload = {
     color: string;

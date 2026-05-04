@@ -1,5 +1,5 @@
 import { changeColorInGrid } from "@/entities/canva";
-import { setCurrentColor } from "@/entities/editor";
+import { setCurrentColorId } from "@/entities/editor";
 import type { EditColorActionPayload } from "@/entities/history";
 import { createAppAsyncThunk } from "@/shared/store";
 
@@ -18,7 +18,7 @@ export const undoEditColorAction = createAppAsyncThunk<
 			newColor: payload.colorBefore,
 		}),
 	);
-	dispatch(setCurrentColor(payload.colorBefore));
+	dispatch(setCurrentColorId(1));// CHANGE
 });
 
 export const redoEditColorAction = createAppAsyncThunk<
@@ -31,5 +31,5 @@ export const redoEditColorAction = createAppAsyncThunk<
 			newColor: payload.colorAfter,
 		}),
 	);
-	dispatch(setCurrentColor(payload.colorAfter));
+	dispatch(setCurrentColorId(1)); // CHANGE
 });

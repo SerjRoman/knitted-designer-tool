@@ -1,23 +1,36 @@
-import { selectBackgroundColor, selectGrid, setPixel } from "@/entities/canva";
 import {
-    addStrokedPoint,
-    selectCurrentColor,
-    selectToolState,
+	paintToCellCode,
+	resolveDrawingPaint,
+	selectBackgroundColorId,
+	selectGrid,
+	setPixel,
+} from "@/entities/canva";
+import {
+	addStrokedPoint,
+	selectCurrentColorId,
+	selectCurrentSymbolId,
+	selectToolState,
 } from "@/entities/editor";
 import type { Point } from "@/shared/lib";
 import { createAppAsyncThunk } from "@/shared/store";
 
 export const drawPixel = createAppAsyncThunk(
-    "canvas/draw-pixel",
-    async (point: Point, { getState, dispatch }) => {
-        const state = getState();
-        const grid = selectGrid(state);
-        const backgroundColor = selectBackgroundColor(state);
-        const currentColor = selectCurrentColor(state);
-        const { tool } = selectToolState(state);
-        const color = tool === "eraser" ? backgroundColor : currentColor;
-        const oldColor = grid[point.y][point.x];
-        dispatch(addStrokedPoint({ ...point, color: oldColor }));
-        dispatch(setPixel({ point: point, color }));
-    }
+	"canvas/draw-pixel",
+	async (point: Point, { getState, dispatch }) => {
+		const state = getState();
+		const grid = selectGrid(state);
+		const backgroundColorId = selectBackgroundColorId(state);
+		const currentColorId = selectCurrentColorId(state);
+		const currentSymbolId = selectCurrentSymbolId(state);
+		const { tool } = selectToolState(state);
+		const paint = resolveDrawingPaint({
+			isEraser: tool === "eraser",
+			currentColorId,
+			backgroundColorId,
+			currentSymbolId,
+		});
+		const oldCode = grid[point.y][point.x];
+		dispatch(addStrokedPoint({ ...point, code: oldCode }));
+		dispatch(setPixel({ point: point, code: paintToCellCode(paint) }));
+	},
 );

@@ -1,4 +1,4 @@
-import { setPixelsWithColor, updateGridSizes } from "@/entities/canva";
+import { setPixelsWithCode, updateGridSizes } from "@/entities/canva";
 import type { ChangeGridSizesActionPayload } from "@/entities/history";
 import { createAppAsyncThunk } from "@/shared/store";
 
@@ -10,7 +10,7 @@ export const undoChangeGridSizesAction = createAppAsyncThunk<
 	({ sizesBefore, lostPixels }, { dispatch }) => {
 		dispatch(updateGridSizes({ ...sizesBefore }));
 		if (lostPixels && lostPixels.length > 0) {
-			dispatch(setPixelsWithColor({ points: lostPixels }));
+			dispatch(setPixelsWithCode({ points: lostPixels }));
 		}
 	},
 );

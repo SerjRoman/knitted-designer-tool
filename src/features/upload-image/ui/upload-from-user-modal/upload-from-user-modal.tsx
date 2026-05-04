@@ -2,8 +2,9 @@ import { useRef, useState, type ChangeEvent } from "react";
 import {
 	selectNumberOfRows,
 	selectNumberOfColumns,
-	setPixelsWithColor,
+	setPixelsWithCode,
 	selectGrid,
+	encodeCellCode,
 } from "@/entities/canva";
 import {
 	setClipboardPoints,
@@ -59,9 +60,12 @@ export function UploadFromUserModal({
 					const pointsBefore = points.map((p) => ({
 						x: p.x,
 						y: p.y,
-						color: grid[p.y][p.x],
+						code: encodeCellCode({
+							colorId: grid[p.y][p.x],
+							symbolId: 0,
+						}),
 					}));
-					dispatch(setPixelsWithColor({ points }));
+					dispatch(setPixelsWithCode({ points }));
 					dispatch(
 						addActionToHistory({
 							type: "DRAW",

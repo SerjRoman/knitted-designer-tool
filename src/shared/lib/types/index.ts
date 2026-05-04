@@ -1,5 +1,5 @@
 export type { Grid } from "./grid";
-export type { Point, PointWithColor } from "./point";
+export type { Point, PointWithCode, PointWithColor } from "./point";
 export type { RGBColor } from "./color";
 
 export type {

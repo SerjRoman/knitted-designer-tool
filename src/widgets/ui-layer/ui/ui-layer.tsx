@@ -10,10 +10,10 @@ import {
 	selectPixelDimensions,
 } from "@/entities/canva";
 import { TOOLS } from "@/entities/editor";
+import { selectShowCrosshair } from "@/entities/settings";
 import { usePointFromEvent } from "@/shared/lib";
 import { useAppDispatch, useAppSelector } from "@/shared/store";
 import { Canvas } from "@/shared/ui";
-import { selectShowCrosshair } from "@/entities/settings";
 
 export function UILayer() {
 	const [isDrawing, setIsDrawing] = useState(false);
@@ -138,7 +138,7 @@ export function UILayer() {
 			draw={handleDraw}
 			style={{
 				position: "absolute",
-				zIndex: 4,
+				zIndex: 5,
 			}}
 			width={canvasDimensions.width}
 			height={canvasDimensions.height}

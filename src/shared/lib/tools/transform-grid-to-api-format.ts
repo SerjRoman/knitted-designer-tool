@@ -5,7 +5,7 @@ export function transformGridToApiFormat(
 	grid: Grid,
 	colors: string[],
 	width: number,
-	height: number
+	height: number,
 ): ApiImageBody {
 	const hexColors = colors.map((color) => RGBAToHEX(color));
 	const colorsMap = new Map<string, number>();
@@ -18,7 +18,7 @@ export function transformGridToApiFormat(
 		for (const element of grid[y]) {
 			const lastPixel = row.pixels.at(-1);
 			const currentColor = element;
-			const colorIndex = colorsMap.get(currentColor)!;
+			const colorIndex = 1; // CHANGE colorsMap.get(currentColor) ?? 0;
 			if (lastPixel?.color === colorIndex) {
 				lastPixel.count++;
 			} else {

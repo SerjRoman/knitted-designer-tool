@@ -2,7 +2,7 @@ import {
 	addColor,
 	removeColor,
 	selectColors,
-	setPixelsWithColor,
+	setPixelsWithCode,
 } from "@/entities/canva";
 import type { MergeColorActionPayload } from "@/entities/history";
 import { createAppAsyncThunk } from "@/shared/store";
@@ -18,7 +18,7 @@ export const undoMergeColorAction = createAppAsyncThunk<
 			dispatch(addColor(colorToMerge));
 		}
 
-		dispatch(setPixelsWithColor({ points: pixelsBefore }));
+		dispatch(setPixelsWithCode({ points: pixelsBefore }));
 	},
 );
 export const redoMergeColorAction = createAppAsyncThunk<
@@ -34,6 +34,6 @@ export const redoMergeColorAction = createAppAsyncThunk<
 		if (colors.includes(colorToMerge)) {
 			dispatch(removeColor(colorToMerge));
 		}
-		dispatch(setPixelsWithColor({ points: pixelsAfter }));
+		dispatch(setPixelsWithCode({ points: pixelsAfter }));
 	},
 );

@@ -1,5 +1,5 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import { COLORS, type Point, type PointWithColor } from "@shared/lib";
+import { type Point, type PointWithCode } from "@shared/lib";
 import {
 	drawingReducers,
 	lineReducers,
@@ -12,7 +12,8 @@ import type { EditorState, EditorTools } from "../types";
 
 const initialState: EditorState = {
 	toolState: { tool: "brush", strokedPoints: null },
-	currentColor: COLORS.black,
+	currentColorId: 1,
+	currentSymbolId: 0,
 	selectedPoints: null,
 	clipboard: {
 		points: null,
@@ -24,7 +25,8 @@ export const editorSlice = createSlice({
 	initialState,
 	name: "editor",
 	selectors: {
-		selectCurrentColor: (state) => state.currentColor,
+		selectCurrentColorId: (state) => state.currentColorId,
+		selectCurrentSymbolId: (state) => state.currentSymbolId,
 		selectToolState: (state) => state.toolState,
 		selectClipboard: (state) => state.clipboard,
 		selectSelectedPoints: (state) => state.selectedPoints,
@@ -33,13 +35,13 @@ export const editorSlice = createSlice({
 		setTool(state, { payload }: PayloadAction<EditorTools>) {
 			state.toolState = toolInitialStates[payload];
 		},
-		setCurrentColor(state, { payload }: PayloadAction<string>) {
-			state.currentColor = payload;
+		setCurrentColorId(state, { payload }: PayloadAction<number>) {
+			state.currentColorId = payload;
 		},
-		setClipboardPoints(
-			state,
-			{ payload }: PayloadAction<PointWithColor[]>,
-		) {
+		setCurrentSymbolId(state, { payload }: PayloadAction<number>) {
+			state.currentSymbolId = payload;
+		},
+		setClipboardPoints(state, { payload }: PayloadAction<PointWithCode[]>) {
 			state.clipboard.points = payload;
 		},
 		setClipboardOrigin(state, { payload }: PayloadAction<Point>) {
@@ -62,7 +64,8 @@ export const editorSlice = createSlice({
 
 export const {
 	setTool,
-	setCurrentColor,
+	setCurrentColorId,
+	setCurrentSymbolId,
 	setLineStartPoint,
 	setShapeStartPoint,
 	clearShapeState,
@@ -83,7 +86,8 @@ export const {
 } = editorSlice.actions;
 export const {
 	selectClipboard,
-	selectCurrentColor,
+	selectCurrentColorId,
+	selectCurrentSymbolId,
 	selectSelectedPoints,
 	selectToolState,
 } = editorSlice.selectors;

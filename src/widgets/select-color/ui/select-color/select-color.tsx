@@ -4,14 +4,15 @@ import { AddColorModal } from "@/features/colors/add-color";
 import { EditCustomColorModal } from "@/features/colors/edit-color";
 import { mergeColor } from "@/features/colors/merge-color";
 import { getPixelsByColorWithColors } from "@/entities/canva";
-import { setCurrentColor } from "@/entities/editor";
+import { setCurrentColorId, setCurrentSymbolId } from "@/entities/editor";
 import { MAX_COLORS, useModal } from "@/shared/lib";
 import { useAppDispatch, useAppSelector } from "@/shared/store";
 
-export default function SelectColor() {
+export function SelectColor() {
 	const dispatch = useAppDispatch();
-	const { currentColor } = useAppSelector((state) => state.editor);
+	const { currentColorId } = useAppSelector((state) => state.editor);
 	const { colors } = useAppSelector((state) => state.canvas);
+	const currentColor = colors[currentColorId] ?? colors[0] ?? "transparent";
 	const [{ open: openEditColorModal }, EditColorModalProvider] = useModal<{
 		selectedColor: string;
 	}>();
@@ -81,7 +82,7 @@ export default function SelectColor() {
 									pixels: pointsBefore,
 								}),
 							);
-							dispatch(setCurrentColor(colors[dragOverIdx]));
+							dispatch(setCurrentColorId(dragOverIdx));
 						}}
 						onDragEnd={() => {
 							setDraggedIdx(null);
@@ -95,8 +96,21 @@ export default function SelectColor() {
 									: "border-gray-200 hover:border-gray-300 transform-none"
 						}`}
 						style={{ backgroundColor: color }}
-						onClick={() => dispatch(setCurrentColor(color))}
+						onClick={() => dispatch(setCurrentColorId(index))}
 					/>
+				))}
+			</div>
+			<div className="col-span-5 grid grid-cols-4 row-auto gap-1">
+				{["*", "|", "/", "-", "+", "x"].map((symbol, index) => (
+					<button
+						key={index + 1}
+						className="w-12 h-12 rounded border-2 border-gray-200 flex items-center justify-center text-gray-500"
+						onClick={() => {
+							dispatch(setCurrentSymbolId(index + 1));
+						}}
+					>
+						{symbol}
+					</button>
 				))}
 			</div>
 

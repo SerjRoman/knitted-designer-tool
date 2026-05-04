@@ -6,7 +6,7 @@ import {
 	getPopularColorsFromRGBArray,
 	MAX_COLORS,
 	type Point,
-	type PointWithColor,
+	type PointWithCode,
 	type RGBColor,
 } from "@/shared/lib";
 import { createAppAsyncThunk } from "@/shared/store";
@@ -24,7 +24,7 @@ interface ProcessImagePayload {
 }
 
 export const processAndUploadImage = createAppAsyncThunk<
-	{ points: PointWithColor[]; originPoint: Point },
+	{ points: PointWithCode[]; originPoint: Point },
 	ProcessImagePayload
 >(
 	"features/uploadImage/process",
@@ -33,7 +33,7 @@ export const processAndUploadImage = createAppAsyncThunk<
 		{ dispatch, getState, rejectWithValue },
 	) => {
 		return await new Promise<{
-			points: PointWithColor[];
+			points: PointWithCode[];
 			originPoint: Point;
 		}>((resolve, reject) => {
 			const reader = new FileReader();
@@ -54,17 +54,17 @@ export const processAndUploadImage = createAppAsyncThunk<
 						convertImageDataToRGBArray(resizedImageData);
 					const sameColors = new Set<string>();
 					const usedColors: RGBColor[] = [];
-					grid.forEach((row) => {
-						row.forEach((cell) => {
-							const [r, g, b] = cell.match(/\d+/g)!.map(Number);
-							const key = `r${r},g${g},b${b}}`;
-							const rgbColor: RGBColor = { r, g, b };
-							if (!sameColors.has(key)) {
-								usedColors.push(rgbColor);
-								sameColors.add(key);
-							}
-						});
-					});
+					// grid.forEach((row) => {
+					// 	row.forEach((cell) => {
+					// 		const [r, g, b] = cell.match(/\d+/g)!.map(Number);
+					// 		const key = `r${r},g${g},b${b}}`;
+					// 		const rgbColor: RGBColor = { r, g, b };
+					// 		if (!sameColors.has(key)) {
+					// 			usedColors.push(rgbColor);
+					// 			sameColors.add(key);
+					// 		}
+					// 	});
+					// });
 					const popularColors = getPopularColorsFromRGBArray(
 						RGBArray,
 						MAX_COLORS,
@@ -99,7 +99,7 @@ export const processAndUploadImage = createAppAsyncThunk<
 							originPoint,
 						}),
 					);
-					resolve({ points, originPoint });
+					resolve({ points: [], originPoint });
 				};
 				img.src = e.target?.result as string;
 			};

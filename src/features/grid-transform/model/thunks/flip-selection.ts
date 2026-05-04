@@ -1,11 +1,12 @@
 import {
-    applyFlip,
-    selectBackgroundColor,
-    selectGrid,
+	applyFlip,
+	encodeCellCode,
+	selectBackgroundColorId,
+	selectGrid,
 } from "@/entities/canva";
 import { selectSelectedPoints, setSelectedPoints } from "@/entities/editor";
 import { addActionToHistory } from "@/entities/history";
-import { getBoundingBox, type PointWithColor } from "@/shared/lib";
+import { getBoundingBox, type PointWithCode } from "@/shared/lib";
 import { createAppAsyncThunk } from "@/shared/store";
 
 type FlipDirection = "horizontal" | "vertical";
@@ -13,35 +14,36 @@ type FlipDirection = "horizontal" | "vertical";
 export const flipSelection = createAppAsyncThunk(
     "canvas/flip-selection",
     async (direction: FlipDirection, { getState, dispatch }) => {
-        const state = getState();
-        const selectedPoints = selectSelectedPoints(state);
-        const grid = selectGrid(state);
-        const backgroundColor = selectBackgroundColor(state);
+		const state = getState();
+		const selectedPoints = selectSelectedPoints(state);
+		const grid = selectGrid(state);
+		const backgroundColorId = selectBackgroundColorId(state);
+		const backgroundCode = encodeCellCode({ colorId: backgroundColorId, symbolId: 0 });
 
         if (!selectedPoints || selectedPoints.length === 0) {
             return;
         }
-        const pointsBefore: PointWithColor[] = [];
-        const pointsAfter: PointWithColor[] = [];
+		const pointsBefore: PointWithCode[] = [];
+		const pointsAfter: PointWithCode[] = [];
 
-        const { minX, maxX, minY, maxY } = getBoundingBox(selectedPoints);
+		const { minX, maxX, minY, maxY } = getBoundingBox(selectedPoints);
 
-        selectedPoints.forEach((point) => {
-            const color = grid[point.y]?.[point.x] ?? backgroundColor;
+		selectedPoints.forEach((point) => {
+			const code = grid[point.y]?.[point.x] ?? backgroundCode;
 
             const newX =
                 direction === "horizontal" ? minX + maxX - point.x : point.x;
             const newY =
                 direction === "vertical" ? minY + maxY - point.y : point.y;
-            const pointBefore: PointWithColor = {
-                ...point,
-                color,
-            };
-            const pointAfter: PointWithColor = {
-                x: Math.floor(newX),
-                y: Math.floor(newY),
-                color,
-            };
+			const pointBefore: PointWithCode = {
+				...point,
+				code,
+			};
+			const pointAfter: PointWithCode = {
+				x: Math.floor(newX),
+				y: Math.floor(newY),
+				code,
+			};
             pointsAfter.push(pointAfter);
             pointsBefore.push(pointBefore);
         });

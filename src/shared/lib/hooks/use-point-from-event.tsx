@@ -23,7 +23,10 @@ export function usePointFromEvent({
 		const gridY = Math.floor(
 			(offsetY - offsets.y) / pixelDimensions.height / scale,
 		);
-		if (grid[gridY]?.[gridX]) {
+		if (
+			grid[gridY]?.[gridX] !== null &&
+			grid[gridY]?.[gridX] !== undefined
+		) {
 			setPoint({ x: gridX, y: gridY });
 			setLastPoint({ x: gridX, y: gridY });
 		} else {

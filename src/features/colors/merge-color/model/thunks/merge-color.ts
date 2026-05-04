@@ -1,29 +1,32 @@
-import { removeColor, setPixelsWithColor } from "@/entities/canva";
+import { decodeColorId, removeColor, replaceColorId, setPixelsWithCode } from "@/entities/canva";
 import { addActionToHistory } from "@/entities/history";
-import type { PointWithColor } from "@/shared/lib";
+import type { PointWithCode } from "@/shared/lib";
 import { createAppAsyncThunk } from "@/shared/store";
 
 interface MergeColorPayload {
 	colorToMerge: string;
 	newColor: string;
-	pixels: PointWithColor[];
+	pixels: PointWithCode[];
 }
 
 export const mergeColor = createAppAsyncThunk(
 	"features/colors/mergeColor",
-	async (payload: MergeColorPayload, { dispatch }) => {
+	async (payload: MergeColorPayload, { dispatch, getState }) => {
 		const { colorToMerge, newColor, pixels } = payload;
 		if (colorToMerge === newColor) return;
-		const pixelsAfter = pixels.map((pixel) => ({
+		const colors = getState().canvas.colors;
+		const colorToMergeId = colors.indexOf(colorToMerge);
+		const newColorId = colors.indexOf(newColor);
+		if (colorToMergeId === -1 || newColorId === -1) return;
+		const pixelsBefore = pixels
+			.filter((pixel) => decodeColorId(pixel.code) === colorToMergeId)
+			.map((pixel) => ({ ...pixel }));
+		const pixelsAfter = pixelsBefore.map((pixel) => ({
 			...pixel,
-			color: newColor,
-		}));
-		const pixelsBefore = pixels.map((pixel) => ({
-			...pixel,
-			color: colorToMerge,
+			code: replaceColorId(pixel.code, newColorId),
 		}));
 		dispatch(
-			setPixelsWithColor({
+			setPixelsWithCode({
 				points: pixelsAfter,
 			}),
 		);

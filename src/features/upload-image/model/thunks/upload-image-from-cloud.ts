@@ -1,6 +1,11 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { updateGridSizes, setColors, setGrid } from "@/entities/canva";
-import { setCurrentColor } from "@/entities/editor";
+import {
+	updateGridSizes,
+	setColors,
+	setGrid,
+	encodeCellCode,
+} from "@/entities/canva";
+import { setCurrentColorId } from "@/entities/editor";
 import { ApiClient } from "@/shared/api";
 import { HEXToRGB, type Grid, type ApiImageBody } from "@/shared/lib";
 
@@ -36,15 +41,20 @@ export const uploadImageFromCloud = createAsyncThunk(
 			const grid: Grid = Array.from<[]>({ length: height }).fill([]);
 			for (const row of rows) {
 				const transformedRow = row.pixels.flatMap((pixel) => {
-					const array = Array.from<string>({
+					const array = Array.from<number>({
 						length: pixel.count,
-					}).fill(RGBColors[pixel.color]);
+					}).fill(
+						encodeCellCode({
+							colorId: pixel.color,
+							symbolId: 0,
+						}),
+					);
 					return array;
 				});
 				grid[row.index] = transformedRow;
 			}
 			dispatch(setColors(RGBColors));
-			dispatch(setCurrentColor(RGBColors[0]));
+			dispatch(setCurrentColorId(0));
 			dispatch(setGrid(grid));
 			dispatch(
 				updateGridSizes({

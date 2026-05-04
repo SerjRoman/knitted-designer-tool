@@ -8,7 +8,9 @@ import { useAppSelector } from "@/shared/store";
 import { Canvas } from "@/shared/ui";
 
 export function CanvasLayer() {
-	const { grid } = useAppSelector((state) => state.canvas);
+	const { grid, backgroundColorId, colors } = useAppSelector(
+		(state) => state.canvas,
+	);
 	const { scale, offsets } = useAppSelector((state) => state.viewport);
 	const pixelDimensions = useAppSelector(selectPixelDimensions);
 	const canvasDimensions = useAppSelector(selectCanvasDimensions);
@@ -30,9 +32,19 @@ export function CanvasLayer() {
 				grid,
 				pixelDimensions.width,
 				pixelDimensions.height,
+				backgroundColorId,
+				colors,
 			);
 		},
-		[grid, scale, offsets, pixelDimensions, canvasDimensions],
+		[
+			grid,
+			scale,
+			offsets,
+			pixelDimensions,
+			canvasDimensions,
+			backgroundColorId,
+			colors,
+		],
 	);
 
 	return (

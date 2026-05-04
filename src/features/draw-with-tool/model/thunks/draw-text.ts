@@ -1,17 +1,19 @@
 import {
+	buildPaintDiff,
+	createPaint,
 	getPointsFromText,
 	selectGrid,
 	type PixelFontSize,
 } from "@/entities/canva";
 import {
-	selectCurrentColor,
+	selectCurrentColorId,
+	selectCurrentSymbolId,
 	selectToolState,
 	setClipboardOrigin,
 	setClipboardPoints,
 	setTool,
 } from "@/entities/editor";
 import { addActionToHistory } from "@/entities/history";
-import type { PointWithColor } from "@/shared/lib";
 import { getBoundingBox } from "@/shared/lib/tools/";
 import { createAppAsyncThunk } from "@/shared/store";
 interface DrawTextPayload {
@@ -24,30 +26,29 @@ export const drawText = createAppAsyncThunk<void, DrawTextPayload>(
 		const state = getState();
 		const grid = selectGrid(state);
 		const toolState = selectToolState(state);
-		const currentColor = selectCurrentColor(state);
+		const currentColorId = selectCurrentColorId(state);
+		const currentSymbolId = selectCurrentSymbolId(state);
 		if (toolState.tool !== "insertText") return;
 		const pointsToFill = getPointsFromText(text, size);
-		const pointsBefore: PointWithColor[] = [];
-		const pointsAfter: PointWithColor[] = [];
-		pointsToFill.forEach((point) => {
-			const oldColor = grid[point.y][point.x];
-			pointsBefore.push({ ...point, color: oldColor });
-			pointsAfter.push({ ...point, color: currentColor });
+		const paintDiff = buildPaintDiff({
+			points: pointsToFill,
+			grid,
+			nextPaint: createPaint(currentColorId, currentSymbolId),
 		});
 		const { maxX, maxY, minX, minY } = getBoundingBox(pointsToFill);
 		const centerX = Math.floor((minX + maxX) / 2);
 		const centerY = Math.floor((minY + maxY) / 2);
 		const originPoint = { x: centerX, y: centerY };
 
-		dispatch(setClipboardPoints(pointsAfter));
+		dispatch(setClipboardPoints(paintDiff.pointsAfter));
 		dispatch(setClipboardOrigin(originPoint));
 		dispatch(setTool("paste"));
 		dispatch(
 			addActionToHistory({
 				type: "DRAW",
 				payload: {
-					pointsBefore,
-					pointsAfter,
+					pointsBefore: paintDiff.pointsBefore,
+					pointsAfter: paintDiff.pointsAfter,
 				},
 			}),
 		);

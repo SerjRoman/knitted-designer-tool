@@ -1,1 +1,1 @@
-export { default as SelectColor } from "./select-color";
+export { SelectColor } from "./select-color";

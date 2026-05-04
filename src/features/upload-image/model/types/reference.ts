@@ -1,8 +1,8 @@
-import type { Point, PointWithColor } from "@/shared/lib";
+import type { Point, PointWithCode } from "@/shared/lib";
 
 export interface Reference {
 	id: string;
 	imageUrl: string;
-	points: PointWithColor[];
+	points: PointWithCode[];
 	originPoint: Point;
 }

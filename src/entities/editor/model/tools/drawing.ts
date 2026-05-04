@@ -1,10 +1,10 @@
 import type { PayloadAction } from "@reduxjs/toolkit";
-import type { PointWithColor } from "@/shared/lib";
+import type { PointWithCode } from "@/shared/lib";
 import type { EditorState } from "../types";
 
 function addStrokedPoint(
 	state: EditorState,
-	{ payload }: PayloadAction<PointWithColor>,
+	{ payload }: PayloadAction<PointWithCode>,
 ) {
 	if (state.toolState.tool !== "eraser" && state.toolState.tool !== "brush")
 		return;

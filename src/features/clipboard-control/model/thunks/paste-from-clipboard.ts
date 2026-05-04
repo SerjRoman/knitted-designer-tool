@@ -1,12 +1,12 @@
-import { selectGrid, setPixelsWithColor } from "@/entities/canva";
+import { selectGrid, setPixelsWithCode } from "@/entities/canva";
 import {
-    clearClipboard,
-    selectClipboard,
-    selectToolState,
-    setTool,
+	clearClipboard,
+	selectClipboard,
+	selectToolState,
+	setTool,
 } from "@/entities/editor";
 import { addActionToHistory } from "@/entities/history";
-import { type Point, type PointWithColor } from "@/shared/lib";
+import { type Point, type PointWithCode } from "@/shared/lib";
 import { createAppAsyncThunk } from "@/shared/store";
 
 export const pasteFromClipboard = createAppAsyncThunk(
@@ -22,30 +22,30 @@ export const pasteFromClipboard = createAppAsyncThunk(
             toolState.tool !== "paste"
         )
             return;
-        const origin = {
-            x: offsetPoint.x - clipboard.origin.x,
-            y: offsetPoint.y - clipboard.origin.y,
-        };
-        const pointsBefore: PointWithColor[] = [];
-        const pointsAfter: PointWithColor[] = [];
-        clipboard.points.forEach((point) => {
-            const [x, y] = [point.x + origin.x, point.y + origin.y];
-            if (x < 0 || y < 0 || y >= grid.length || x >= grid[y].length)
-                return;
-            const pointAfter = {
-                x: x,
-                y: y,
-                color: point.color,
-            };
-            const pointBefore = {
-                x,
-                y,
-                color: grid[y][x],
-            };
-            pointsAfter.push(pointAfter);
-            pointsBefore.push(pointBefore);
-        });
-        dispatch(setPixelsWithColor({ points: pointsAfter }));
+		const origin = {
+			x: offsetPoint.x - clipboard.origin.x,
+			y: offsetPoint.y - clipboard.origin.y,
+		};
+		const pointsBefore: PointWithCode[] = [];
+		const pointsAfter: PointWithCode[] = [];
+		clipboard.points.forEach((point) => {
+			const [x, y] = [point.x + origin.x, point.y + origin.y];
+			if (x < 0 || y < 0 || y >= grid.length || x >= grid[y].length)
+				return;
+			const pointAfter = {
+				x: x,
+				y: y,
+				code: point.code,
+			};
+			const pointBefore = {
+				x,
+				y,
+				code: grid[y][x],
+			};
+			pointsAfter.push(pointAfter);
+			pointsBefore.push(pointBefore);
+		});
+		dispatch(setPixelsWithCode({ points: pointsAfter }));
         if (!toolState.repeat) {
             dispatch(clearClipboard());
             dispatch(setTool("brush"));
@@ -53,11 +53,11 @@ export const pasteFromClipboard = createAppAsyncThunk(
         dispatch(
             addActionToHistory({
                 type: "DRAW",
-                payload: {
-                    pointsAfter,
-                    pointsBefore,
-                },
-            }),
-        );
-    },
+				payload: {
+					pointsAfter,
+					pointsBefore,
+				},
+			}),
+		);
+	},
 );

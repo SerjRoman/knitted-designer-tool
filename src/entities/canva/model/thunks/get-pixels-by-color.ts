@@ -1,5 +1,6 @@
-import type { Point, PointWithColor } from "@/shared/lib";
+import type { Point, PointWithCode } from "@/shared/lib";
 import { createAppAsyncThunk } from "@/shared/store/store";
+import { decodeColorId, encodeCellCode } from "../cell-codec";
 import { selectGrid } from "../slices";
 
 interface GetPixelsByColorPayload {
@@ -12,11 +13,14 @@ export const getPixelsByColor = createAppAsyncThunk<
 	"canvas/getPixelsByColor",
 	async (payload: GetPixelsByColorPayload, { getState }) => {
 		const state = getState();
+		const colors = state.canvas.colors;
+		const colorId = colors.indexOf(payload.color);
+		if (colorId === -1) return [];
 		const grid = selectGrid(state);
 		const pixels: Point[] = [];
 		for (let y = 0; y < grid.length; y++) {
 			for (let x = 0; x < grid[y].length; x++) {
-				if (grid[y][x] === payload.color) {
+				if (decodeColorId(grid[y][x]) === colorId) {
 					pixels.push({ x, y });
 				}
 			}
@@ -25,21 +29,28 @@ export const getPixelsByColor = createAppAsyncThunk<
 	},
 );
 export const getPixelsByColorWithColors = createAppAsyncThunk<
-	PointWithColor[],
+	PointWithCode[],
 	GetPixelsByColorPayload
 >(
 	"canvas/getPixelsByColor/withColors",
 	async (payload: GetPixelsByColorPayload, { getState }) => {
 		const state = getState();
+		const colors = state.canvas.colors;
+		const colorId = colors.indexOf(payload.color);
+		if (colorId === -1) return [];
 		const grid = selectGrid(state);
-		const pixelsWithColor: PointWithColor[] = [];
+		const pixelsWithCode: PointWithCode[] = [];
 		for (let y = 0; y < grid.length; y++) {
 			for (let x = 0; x < grid[y].length; x++) {
-				if (grid[y][x] === payload.color) {
-					pixelsWithColor.push({ x, y, color: payload.color });
+				if (decodeColorId(grid[y][x]) === colorId) {
+					pixelsWithCode.push({
+						x,
+						y,
+						code: encodeCellCode({ colorId, symbolId: 0 }),
+					});
 				}
 			}
 		}
-		return pixelsWithColor;
+		return pixelsWithCode;
 	},
 );

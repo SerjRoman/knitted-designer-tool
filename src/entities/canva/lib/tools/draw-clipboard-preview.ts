@@ -1,13 +1,17 @@
-import type { Point, PointWithColor } from "@/shared/lib";
+import type { Point, PointWithCode } from "@/shared/lib";
+import { decodeColorId } from "../../model";
 
 export function drawClipboardPreview(
 	context: CanvasRenderingContext2D,
-	clipboardPoints: PointWithColor[],
+	clipboardPoints: PointWithCode[],
 	origin: Point,
-	pixelWidth: number,
-	pixelHeight: number,
-	numberOfColumns: number,
-	numberOfRows: number
+	sizes: {
+		pixelWidth: number;
+		pixelHeight: number;
+		numberOfColumns: number;
+		numberOfRows: number;
+	},
+	colors: string[],
 ) {
 	context.globalAlpha = 0.75;
 	for (const point of clipboardPoints) {
@@ -15,19 +19,19 @@ export function drawClipboardPreview(
 		const worldY = point.y + origin.y;
 
 		if (
-			worldX >= numberOfColumns ||
-			worldY >= numberOfRows ||
+			worldX >= sizes.numberOfColumns ||
+			worldY >= sizes.numberOfRows ||
 			worldX < 0 ||
 			worldY < 0
 		) {
 			continue;
 		}
 
-		context.fillStyle = point.color;
-		const rectX = worldX * pixelWidth;
-		const rectY = worldY * pixelHeight;
+		context.fillStyle = colors[decodeColorId(point.code)];
+		const rectX = worldX * sizes.pixelWidth;
+		const rectY = worldY * sizes.pixelHeight;
 
-		context.fillRect(rectX, rectY, pixelWidth, pixelHeight);
+		context.fillRect(rectX, rectY, sizes.pixelWidth, sizes.pixelHeight);
 	}
 
 	context.globalAlpha = 1;
