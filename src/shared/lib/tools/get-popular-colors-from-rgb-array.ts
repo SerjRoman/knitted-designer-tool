@@ -2,10 +2,9 @@ import { SIMILARITY_THRESHOLD } from "../constants";
 import type { RGBColor } from "../types";
 import { calculateColorDistance } from "./calculate-color-distance";
 
-
 export function getPopularColorsFromRGBArray(
 	colorsArray: RGBColor[],
-	maxColors: number
+	maxColors: number,
 ): RGBColor[] {
 	const colorCounts = new Map<string, { color: RGBColor; count: number }>();
 	for (const color of colorsArray) {
@@ -17,7 +16,7 @@ export function getPopularColorsFromRGBArray(
 	}
 
 	const sortedColors = Array.from(colorCounts.values()).sort(
-		(a, b) => b.count - a.count
+		(a, b) => b.count - a.count,
 	);
 
 	const palette: RGBColor[] = [];
@@ -50,7 +49,7 @@ export function getPopularColorsFromRGBArray(
 			(p) =>
 				p.r === colorToAdd.r &&
 				p.g === colorToAdd.g &&
-				p.b === colorToAdd.b
+				p.b === colorToAdd.b,
 		);
 		if (isInPalette) {
 			i++;
@@ -72,4 +71,3 @@ export function getPopularColorsFromRGBArray(
 
 	return palette;
 }
-

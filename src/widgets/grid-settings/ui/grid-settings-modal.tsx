@@ -1,15 +1,15 @@
 import { useState } from "react";
 import { ChangeGridSizes, resizeGrid } from "@/features/resize-grid";
 import { resizeTension, ResizeTensionSlider } from "@/features/resize-tension";
+import { calculateTension } from "@/entities/canva";
 import {
 	INITIAL_TENSION_CM,
-	calculateTension,
 	INITIAL_TENSION_STITCHES,
 	INITIAL_TENSION_ROWS,
-} from "@/entities/canva";
+} from "@/shared/lib";
 import { useAppDispatch, useAppSelector } from "@/shared/store";
-import { Modal } from "@/shared/ui";
 import { Button } from "@/shared/ui/button";
+import { Modal } from "@/shared/ui/modal";
 
 export function GridSettingsModal({
 	onClose,

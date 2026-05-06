@@ -10,18 +10,18 @@ import { type Point, type PointWithCode } from "@/shared/lib";
 import { createAppAsyncThunk } from "@/shared/store";
 
 export const pasteFromClipboard = createAppAsyncThunk(
-    "editor/paster-from-clipboard",
-    (offsetPoint: Point, { getState, dispatch }) => {
-        const state = getState();
-        const clipboard = selectClipboard(state);
-        const toolState = selectToolState(state);
-        const grid = selectGrid(state);
-        if (
-            !clipboard.origin ||
-            !clipboard.points ||
-            toolState.tool !== "paste"
-        )
-            return;
+	"editor/paster-from-clipboard",
+	(offsetPoint: Point, { getState, dispatch }) => {
+		const state = getState();
+		const clipboard = selectClipboard(state);
+		const toolState = selectToolState(state);
+		const grid = selectGrid(state);
+		if (
+			!clipboard.origin ||
+			!clipboard.points ||
+			toolState.tool !== "paste"
+		)
+			return;
 		const origin = {
 			x: offsetPoint.x - clipboard.origin.x,
 			y: offsetPoint.y - clipboard.origin.y,
@@ -46,13 +46,13 @@ export const pasteFromClipboard = createAppAsyncThunk(
 			pointsBefore.push(pointBefore);
 		});
 		dispatch(setPixelsWithCode({ points: pointsAfter }));
-        if (!toolState.repeat) {
-            dispatch(clearClipboard());
-            dispatch(setTool("brush"));
-        }
-        dispatch(
-            addActionToHistory({
-                type: "DRAW",
+		if (!toolState.repeat) {
+			dispatch(clearClipboard());
+			dispatch(setTool("brush"));
+		}
+		dispatch(
+			addActionToHistory({
+				type: "DRAW",
 				payload: {
 					pointsAfter,
 					pointsBefore,

@@ -1,9 +1,7 @@
-import type { Point } from "@/shared/lib";
-import { FONT_SIZES, PIXEL_FONTS } from "../constants/pixel-font";
+import { FONT_SIZES, PIXEL_FONTS, type Point } from "@/shared/lib";
 import type { PixelFontSize } from "../types/pixel-font-size";
 
 export function getPointsFromText(text: string, size: PixelFontSize): Point[] {
-	console.log("Getting points from text:", { text, size });
 	const points: Point[] = [];
 	const baseSize = FONT_SIZES[size];
 	let currentX = 0;

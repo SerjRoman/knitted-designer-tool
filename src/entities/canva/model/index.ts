@@ -1,5 +1,4 @@
 export * from "./slices";
-export * from "./constants";
 export * from "./types";
 export * from "./cell-codec";
 export * from "./paint-facade";

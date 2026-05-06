@@ -6,6 +6,15 @@ export const COLORS = {
 	yellow: "rgb(255, 255, 0)",
 	red: "rgb(240, 0, 0)",
 };
+export const SYMBOLS = {
+	empty: "",
+	star: "*",
+	vLine: "│",
+	slash: "/",
+	hLine: "─",
+	plus: "+",
+	x: "x",
+};
 export const MAX_COLORS = 12;
 
 export const BACKGROUND_COLOR = `rgb(255, 255, 255)`;
@@ -16,3 +25,4 @@ export const CROSSHAIR_RECT_COLOR = `rgba(0,0,0, 0.3)`;
 export const GRID_COLOR = `rgb(0,0,0)`;
 export const CROSSHAIR_ALPHA = 0.7;
 export const SIMILARITY_THRESHOLD = 70;
+export const SELECTION_COLOR = `rgba(0, 150, 255, 0.2)`;

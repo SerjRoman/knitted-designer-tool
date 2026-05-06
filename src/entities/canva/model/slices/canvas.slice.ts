@@ -5,13 +5,22 @@ import {
 } from "@reduxjs/toolkit";
 import {
 	BACKGROUND_COLOR,
+	CANVAS_HEIGHT,
+	CANVAS_WIDTH,
 	COLORS,
 	createEmptyGrid,
 	createRow,
+	INITIAL_COLUMNS,
+	INITIAL_PIXEL_SIZE,
+	INITIAL_ROWS,
+	INITIAL_TENSION_ROWS,
+	INITIAL_TENSION_STITCHES,
+	SYMBOLS,
 	type Grid,
 	type Point,
 	type PointWithCode,
 } from "@/shared/lib";
+
 import { calculateTension } from "../../lib";
 import {
 	decodeColorId,
@@ -19,15 +28,7 @@ import {
 	encodeCellCode,
 	replaceColorId,
 } from "../cell-codec";
-import {
-	CANVAS_HEIGHT,
-	CANVAS_WIDTH,
-	INITIAL_COLUMNS,
-	INITIAL_PIXEL_SIZE,
-	INITIAL_ROWS,
-	INITIAL_TENSION_ROWS,
-	INITIAL_TENSION_STITCHES,
-} from "../constants";
+
 import type { CellCode } from "../types";
 
 interface CanvasSlice {
@@ -76,7 +77,7 @@ const initialState: CanvasSlice = {
 	pixelWidth: INITIAL_TENSION.width,
 	pixelHeight: INITIAL_TENSION.height,
 	colors: Object.values(COLORS),
-	symbols: [""],
+	symbols: Object.values(SYMBOLS),
 	canvasDimensions: { height: CANVAS_HEIGHT, width: CANVAS_WIDTH },
 };
 

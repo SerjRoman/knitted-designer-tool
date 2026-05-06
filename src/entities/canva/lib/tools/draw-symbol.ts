@@ -11,7 +11,6 @@ export function drawSymbol(
 
 	const centerX = x + width / 2;
 	const centerY = y + height / 2;
-
 	switch (symbolId) {
 		case 1:
 			context.moveTo(centerX, y);

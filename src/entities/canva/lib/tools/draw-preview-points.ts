@@ -1,11 +1,11 @@
-import { type Point } from "@/shared/lib";
+import { SELECTION_COLOR, type Point } from "@/shared/lib";
 
 export function drawPreviewPoints(
 	context: CanvasRenderingContext2D,
 	points: Point[],
 	pixelWidth: number,
 	pixelHeight: number,
-	color = "rgba(0, 150, 255, 0.7)"
+	color = SELECTION_COLOR,
 ) {
 	context.fillStyle = color;
 

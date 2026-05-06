@@ -1,28 +1,33 @@
-import { addColor, changeColorInGrid, removeColor } from "@/entities/canva";
+import {
+	addColor,
+	changeColorInGrid,
+	removeColor,
+	selectBackgroundColor,
+	selectColors,
+} from "@/entities/canva";
 import { setCurrentColorId } from "@/entities/editor";
 import type { AddColorActionPayload } from "@/entities/history";
-import { BACKGROUND_COLOR } from "@/shared/lib";
 import { createAppAsyncThunk } from "@/shared/store";
 
 export const undoAddColorAction = createAppAsyncThunk(
 	"history/undoAddColorAction",
 	(payload: AddColorActionPayload, { getState, dispatch }) => {
-		const {
-			canvas: { colors },
-		} = getState();
+		const state = getState();
+		const colors = selectColors(state);
+		const backgroundColor = selectBackgroundColor(state);
 		const colorToRemove = payload.color;
-		let colorInsteadOfRemoved: string = BACKGROUND_COLOR;
+		let colorInsteadOfRemoved: string = backgroundColor;
 
-		const whiteColorFromPalette = colors.find(
-			(color) => color === BACKGROUND_COLOR,
+		const bgColorFromPalette = colors.find(
+			(color) => color === backgroundColor,
 		);
 		const firstColorInPalette = colors.at(0);
-		if (whiteColorFromPalette) {
-			colorInsteadOfRemoved = whiteColorFromPalette;
+		if (bgColorFromPalette) {
+			colorInsteadOfRemoved = bgColorFromPalette;
 		} else if (firstColorInPalette) {
 			colorInsteadOfRemoved = firstColorInPalette;
 		} else {
-			dispatch(addColor(BACKGROUND_COLOR));
+			dispatch(addColor(backgroundColor));
 		}
 
 		dispatch(
@@ -32,13 +37,19 @@ export const undoAddColorAction = createAppAsyncThunk(
 			}),
 		);
 		dispatch(removeColor(colorToRemove));
-		dispatch(setCurrentColorId(2)); // CHANGE
+		const colorId = colors.indexOf(colorInsteadOfRemoved);
+		dispatch(setCurrentColorId(colorId));
 	},
 );
 export const redoAddColorAction = createAppAsyncThunk(
 	"history/redoAddColorAction",
-	(payload: AddColorActionPayload, { dispatch }) => {
+	(payload: AddColorActionPayload, { getState, dispatch }) => {
+		const state = getState();
+		const colors = selectColors(state);
+		const existingColorId = colors.indexOf(payload.color);
+		const nextColorId =
+			existingColorId === -1 ? colors.length : existingColorId;
 		dispatch(addColor(payload.color));
-		dispatch(setCurrentColorId(1)); // CHANGE
+		dispatch(setCurrentColorId(nextColorId));
 	},
 );

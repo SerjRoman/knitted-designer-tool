@@ -1,8 +1,8 @@
 import {
 	BACKGROUND_COLOR,
 	RULER_TEXT_COLOR,
-	RULER_SIZE,
 	RULER_LINE_COLOR,
+	RULER_SIZE,
 } from "@/shared/lib";
 import { getMajorTickMultiplier } from "./get-major-tick-multiplier";
 

@@ -3,15 +3,15 @@ import { createAppAsyncThunk } from "@/shared/store/store";
 import { decodeColorId, encodeCellCode } from "../cell-codec";
 import { selectGrid } from "../slices";
 
-interface GetPixelsByColorPayload {
+interface GetPixelsByCodePayload {
 	color: string;
 }
 export const getPixelsByColor = createAppAsyncThunk<
 	Point[],
-	GetPixelsByColorPayload
+	GetPixelsByCodePayload
 >(
 	"canvas/getPixelsByColor",
-	async (payload: GetPixelsByColorPayload, { getState }) => {
+	async (payload: GetPixelsByCodePayload, { getState }) => {
 		const state = getState();
 		const colors = state.canvas.colors;
 		const colorId = colors.indexOf(payload.color);
@@ -30,10 +30,10 @@ export const getPixelsByColor = createAppAsyncThunk<
 );
 export const getPixelsByColorWithColors = createAppAsyncThunk<
 	PointWithCode[],
-	GetPixelsByColorPayload
+	GetPixelsByCodePayload
 >(
 	"canvas/getPixelsByColor/withColors",
-	async (payload: GetPixelsByColorPayload, { getState }) => {
+	async (payload: GetPixelsByCodePayload, { getState }) => {
 		const state = getState();
 		const colors = state.canvas.colors;
 		const colorId = colors.indexOf(payload.color);

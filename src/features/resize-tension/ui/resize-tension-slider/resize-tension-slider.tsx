@@ -1,6 +1,5 @@
 import { type ChangeEvent } from "react";
-import { INITIAL_TENSION_CM } from "@/entities/canva";
-import { clamp } from "@/shared/lib";
+import { clamp, INITIAL_TENSION_CM } from "@/shared/lib";
 import { TextInput } from "@/shared/ui/text-input";
 import { Slider } from "@shared/ui/slider";
 

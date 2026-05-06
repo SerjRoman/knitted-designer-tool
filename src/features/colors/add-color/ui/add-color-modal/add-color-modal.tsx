@@ -2,7 +2,8 @@ import { useState } from "react";
 import { addColor } from "@/entities/canva";
 import { setCurrentColorId } from "@/entities/editor";
 import { addActionToHistory } from "@/entities/history";
-import { HEXToRGB, RGBAToHEX } from "@/shared/lib";
+import { openDialog } from "@/entities/modal";
+import { HEXToRGB, MAX_COLORS, RGBAToHEX } from "@/shared/lib";
 import { useAppDispatch, useAppSelector } from "@/shared/store";
 import { Modal } from "@/shared/ui";
 import { Button } from "@/shared/ui/button";
@@ -17,11 +18,23 @@ export function AddColorModal({
 	const [color, setColor] = useState("");
 	const dispatch = useAppDispatch();
 	const colors = useAppSelector((state) => state.canvas.colors);
+	const maxColorsExceeded = MAX_COLORS <= colors.length;
 	if (!isOpen) return;
 	const handleSaveColor = () => {
 		if (!color) return;
+		if (maxColorsExceeded) {
+			dispatch(
+				openDialog({
+					variant: "error",
+					title: "Maximum colors reached",
+					message: `You can only have up to ${MAX_COLORS} colors in your palette. Please delete an existing color before adding a new one.`,
+				}),
+			);
+			return;
+		}
 		const existingColorId = colors.indexOf(color);
-		const nextColorId = existingColorId === -1 ? colors.length : existingColorId;
+		const nextColorId =
+			existingColorId === -1 ? colors.length : existingColorId;
 		dispatch(addColor(color));
 		dispatch(setCurrentColorId(nextColorId));
 		dispatch(addActionToHistory({ type: "ADD_COLOR", payload: { color } }));

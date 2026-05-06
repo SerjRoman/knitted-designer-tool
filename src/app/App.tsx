@@ -2,8 +2,8 @@ import { useEffect, useLayoutEffect, useRef } from "react";
 import { CanvasLayer } from "@/widgets/canvas-layer";
 import { GridLayer } from "@/widgets/grid-layer";
 import { GridSettings } from "@/widgets/grid-settings";
+import { PalettePanel } from "@/widgets/palette-panel";
 import { RulersLayer } from "@/widgets/rulers-layer";
-import { SelectColor } from "@/widgets/select-color";
 import { Sidebar } from "@/widgets/sidebar";
 import { ToolPanel } from "@/widgets/tool-panel";
 import { UILayer } from "@/widgets/ui-layer";
@@ -63,8 +63,7 @@ export function App() {
 		resizeObserver.observe(viewportRef.current);
 
 		return () => resizeObserver.disconnect();
-	}, []);
-	logMemoryUsage();
+	}, [dispatch]);
 	return (
 		<div className="flex bg-white overflow-hidden">
 			<div
@@ -97,12 +96,8 @@ export function App() {
 			<div className="flex h-screen shrink-0 z-20 ">
 				<div className="w-96 h-screen border-l border-gray-200  p-6 bg-white space-y-6 shrink-0">
 					<GridSettings />
-					<div className="bg-gray-50 rounded-xl p-4 border border-gray-200 shadow-sm">
-						<h3 className="text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wide">
-							COLORS
-						</h3>
-						<SelectColor />
-					</div>
+
+					<PalettePanel />
 
 					<div className="bg-gray-50 rounded-xl p-4 border border-gray-200 shadow-sm">
 						<ToolPanel />
@@ -115,22 +110,4 @@ export function App() {
 			<GlobalStatusDialog />
 		</div>
 	);
-}
-
-function logMemoryUsage() {
-	if (
-		"memory" in performance &&
-		typeof performance.memory === "object" &&
-		performance.memory &&
-		"usedJSHeapSize" in performance.memory &&
-		"totalJSHeapSize" in performance.memory &&
-		typeof performance.memory.totalJSHeapSize === "number" &&
-		typeof performance.memory.usedJSHeapSize === "number"
-	) {
-		const usedMB = performance.memory.usedJSHeapSize / 1024 / 1024;
-		const totalMB = performance.memory.totalJSHeapSize / 1024 / 1024;
-		console.log(
-			`Memory usage: ${usedMB.toFixed(2)} MB / ${totalMB.toFixed(2)} MB`,
-		);
-	}
 }
