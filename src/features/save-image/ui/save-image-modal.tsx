@@ -60,6 +60,7 @@ export function SaveImageModal({
 			saveImageQueries.saveImageToCloud({
 				filename,
 				colors: canvas.colors,
+				symbols: canvas.symbols,
 				grid: canvas.grid,
 				numberOfColumns: canvas.numberOfColumns,
 				numberOfRows: canvas.numberOfRows,

@@ -9,7 +9,7 @@ import { Loader } from "@/shared/ui";
 import { useGetPreviewImage } from "../../api";
 
 export function PreviewImageRnd() {
-	const { grid, numberOfColumns, numberOfRows, colors } = useAppSelector(
+	const { grid, numberOfColumns, numberOfRows, colors, symbols } = useAppSelector(
 		(state) => state.canvas,
 	);
 	const dispatch = useAppDispatch();
@@ -26,10 +26,11 @@ export function PreviewImageRnd() {
 			transformGridToApiFormat(
 				grid,
 				colors,
+				symbols,
 				numberOfColumns,
 				numberOfRows,
 			),
-		[colors, grid, numberOfColumns, numberOfRows],
+		[colors, grid, numberOfColumns, numberOfRows, symbols],
 	);
 	const { isLoading, error, refetch } = useGetPreviewImage({ body });
 

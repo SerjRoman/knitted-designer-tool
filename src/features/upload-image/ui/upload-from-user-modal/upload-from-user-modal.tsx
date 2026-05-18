@@ -4,7 +4,6 @@ import {
 	selectNumberOfColumns,
 	setPixelsWithCode,
 	selectGrid,
-	encodeCellCode,
 } from "@/entities/canva";
 import {
 	setClipboardPoints,
@@ -40,6 +39,7 @@ export function UploadFromUserModal({
 	);
 	const [width, setWidth] = useState<number>(numberOfColumns);
 	const [height, setHeight] = useState<number>(numberOfRows);
+	const [replacePalette, setReplacePalette] = useState<boolean>(false);
 	const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
 		const file = event.target.files?.[0];
 		if (!file) return;
@@ -52,6 +52,7 @@ export function UploadFromUserModal({
 				file,
 				width,
 				height,
+				replacePalette,
 			}),
 		)
 			.unwrap()
@@ -60,10 +61,7 @@ export function UploadFromUserModal({
 					const pointsBefore = points.map((p) => ({
 						x: p.x,
 						y: p.y,
-						code: encodeCellCode({
-							colorId: grid[p.y][p.x],
-							symbolId: 0,
-						}),
+						code: grid[p.y][p.x],
 					}));
 					dispatch(setPixelsWithCode({ points }));
 					dispatch(
@@ -133,6 +131,20 @@ export function UploadFromUserModal({
 						value={height}
 						onChange={handleHeightChange}
 					/>
+					<label className="flex items-start gap-2 text-sm text-gray-700">
+						<input
+							type="checkbox"
+							checked={replacePalette}
+							onChange={(event) =>
+								setReplacePalette(event.target.checked)
+							}
+							className="mt-0.5 accent-blue-500"
+						/>
+						<span>
+							Replace existing palette with image colors
+							(removes old colors)
+						</span>
+					</label>
 					<div className="flex justify-end gap-3 pt-2">
 						<Button onClick={onClose} variant="cancel">
 							Cancel

@@ -1,4 +1,10 @@
-import { setColors } from "@/entities/canva";
+import {
+	addColor,
+	selectBackgroundColor,
+	selectColors,
+	setBackgroundColorId,
+	setColors,
+} from "@/entities/canva";
 import {
 	approximateColors,
 	getBoundingBox,
@@ -21,6 +27,28 @@ interface ProcessImagePayload {
 	file: File;
 	width: number;
 	height: number;
+	replacePalette: boolean;
+}
+
+function parseRGBColor(color: string): RGBColor {
+	const channels = color.match(/\d+/g)?.map(Number);
+	if (!channels || channels.length < 3) {
+		throw new Error(`Invalid RGB color: ${color}`);
+	}
+
+	return {
+		r: channels[0],
+		g: channels[1],
+		b: channels[2],
+	};
+}
+
+function formatRGBColor(color: RGBColor): string {
+	return `rgb(${color.r}, ${color.g}, ${color.b})`;
+}
+
+function getRGBKey(color: RGBColor): string {
+	return `${color.r},${color.g},${color.b}`;
 }
 
 export const processAndUploadImage = createAppAsyncThunk<
@@ -28,7 +56,10 @@ export const processAndUploadImage = createAppAsyncThunk<
 	ProcessImagePayload
 >(
 	"features/uploadImage/process",
-	async ({ file, width, height }, { dispatch, rejectWithValue }) => {
+	async (
+		{ file, width, height, replacePalette },
+		{ dispatch, getState, rejectWithValue },
+	) => {
 		return await new Promise<{
 			points: PointWithCode[];
 			originPoint: Point;
@@ -47,19 +78,14 @@ export const processAndUploadImage = createAppAsyncThunk<
 
 					const RGBArray =
 						convertImageDataToRGBArray(resizedImageData);
-					// const sameColors = new Set<string>();
-					const usedColors: RGBColor[] = [];
-					// grid.forEach((row) => {
-					// 	row.forEach((cell) => {
-					// 		const [r, g, b] = cell.match(/\d+/g)!.map(Number);
-					// 		const key = `r${r},g${g},b${b}}`;
-					// 		const rgbColor: RGBColor = { r, g, b };
-					// 		if (!sameColors.has(key)) {
-					// 			usedColors.push(rgbColor);
-					// 			sameColors.add(key);
-					// 		}
-					// 	});
-					// });
+					const existingColors = selectColors(getState());
+					const backgroundColor = selectBackgroundColor(getState());
+					const backgroundRGBColor = parseRGBColor(backgroundColor);
+					const usedColors: RGBColor[] = replacePalette
+						? [backgroundRGBColor]
+						: existingColors
+								.slice(0, MAX_COLORS)
+								.map(parseRGBColor);
 					const popularColors = getPopularColorsFromRGBArray(
 						RGBArray,
 						MAX_COLORS,
@@ -67,10 +93,41 @@ export const processAndUploadImage = createAppAsyncThunk<
 					const finalColors = approximateColors(
 						usedColors,
 						popularColors,
-					);
-					const stringifiedColors = finalColors.map(
-						(color) => `rgb(${color.r}, ${color.g}, ${color.b})`,
-					);
+					).slice(0, MAX_COLORS);
+
+					const colorIdByRGBKey = new Map<string, number>();
+					if (replacePalette) {
+						finalColors.forEach((color, colorId) => {
+							colorIdByRGBKey.set(getRGBKey(color), colorId);
+						});
+						dispatch(setBackgroundColorId(0));
+						dispatch(setColors(finalColors.map(formatRGBColor)));
+					} else {
+						const colorIdByExistingKey = new Map<string, number>();
+						existingColors.forEach((color, colorId) => {
+							colorIdByExistingKey.set(
+								getRGBKey(parseRGBColor(color)),
+								colorId,
+							);
+						});
+
+						let nextColorId = existingColors.length;
+						for (const color of finalColors) {
+							const rgbKey = getRGBKey(color);
+							const colorString = formatRGBColor(color);
+							let colorId = colorIdByExistingKey.get(rgbKey);
+
+							if (colorId === undefined) {
+								colorId = nextColorId;
+								nextColorId++;
+								colorIdByExistingKey.set(rgbKey, colorId);
+								dispatch(addColor(colorString));
+							}
+
+							colorIdByRGBKey.set(rgbKey, colorId);
+						}
+					}
+
 					const quantizedRGBArray = quantizeRGBArrayByPalette(
 						RGBArray,
 						finalColors,
@@ -79,6 +136,7 @@ export const processAndUploadImage = createAppAsyncThunk<
 						quantizedRGBArray,
 						width,
 						height,
+						colorIdByRGBKey,
 					);
 
 					const { maxX, maxY, minX, minY } = getBoundingBox(points);
@@ -86,15 +144,14 @@ export const processAndUploadImage = createAppAsyncThunk<
 					const centerY = Math.floor((minY + maxY) / 2);
 					const originPoint = { x: centerX, y: centerY };
 
-					dispatch(setColors(stringifiedColors));
 					dispatch(
 						addReferenceImage({
 							imageUrl: previewUrl,
-							points: [],
+							points,
 							originPoint,
 						}),
 					);
-					resolve({ points: [], originPoint });
+					resolve({ points, originPoint });
 				};
 				img.src = e.target?.result as string;
 			};

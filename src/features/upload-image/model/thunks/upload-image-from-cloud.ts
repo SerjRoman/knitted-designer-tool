@@ -3,7 +3,7 @@ import {
 	updateGridSizes,
 	setColors,
 	setGrid,
-	encodeCellCode,
+	setSymbols,
 } from "@/entities/canva";
 import { setCurrentColorId } from "@/entities/editor";
 import { ApiClient } from "@/shared/api";
@@ -30,38 +30,28 @@ export const uploadImageFromCloud = createAsyncThunk(
 					});
 				}
 			}
-			const { width, height, colors, rows } = data;
+			const { width, height, colors, symbols, rows } = data;
 			const RGBColors = colors.map(HEXToRGB);
-			dispatch(
-				updateGridSizes({
-					numberOfColumns: width,
-					numberOfRows: height,
-				}),
-			);
 			const grid: Grid = Array.from<[]>({ length: height }).fill([]);
 			for (const row of rows) {
 				const transformedRow = row.pixels.flatMap((pixel) => {
 					const array = Array.from<number>({
 						length: pixel.count,
-					}).fill(
-						encodeCellCode({
-							colorId: pixel.color,
-							symbolId: 0,
-						}),
-					);
+					}).fill(pixel.code);
 					return array;
 				});
 				grid[row.index] = transformedRow;
 			}
 			dispatch(setColors(RGBColors));
+			dispatch(setSymbols(symbols));
 			dispatch(setCurrentColorId(0));
-			dispatch(setGrid(grid));
 			dispatch(
 				updateGridSizes({
 					numberOfColumns: width,
 					numberOfRows: height,
 				}),
 			);
+			dispatch(setGrid(grid));
 		} catch (error) {
 			console.error(error);
 			return rejectWithValue({

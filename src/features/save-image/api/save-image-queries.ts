@@ -17,6 +17,7 @@ export interface AttachImagePayload {
 export interface SaveImageToCloudPayload {
 	filename: string;
 	colors: string[];
+	symbols: string[];
 	grid: Grid;
 	numberOfColumns: number;
 	numberOfRows: number;
@@ -131,12 +132,20 @@ export const saveImageQueries = {
 		payload: SaveImageToCloudPayload,
 	): Promise<void> => {
 		try {
-			const { colors, grid, numberOfColumns, numberOfRows, filename } =
+			const {
+				colors,
+				symbols,
+				grid,
+				numberOfColumns,
+				numberOfRows,
+				filename,
+			} =
 				payload;
 
 			const dataToSend = transformGridToApiFormat(
 				grid,
 				colors,
+				symbols,
 				numberOfColumns,
 				numberOfRows,
 			);
