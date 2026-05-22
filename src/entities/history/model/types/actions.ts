@@ -25,15 +25,32 @@ export type EditColorActionPayload = {
     colorBefore: string;
     colorAfter: string;
 };
+export type EditSymbolActionPayload = {
+    symbolBefore: string;
+    symbolAfter: string;
+};
 
 export interface MergeColorActionPayload {
     colorToMerge: string;
     newColor: string;
     pixelsBefore: PointWithCode[];
     pixelsAfter: PointWithCode[];
+    colorsBefore: string[];
+    colorsAfter: string[];
+}
+export interface MergeSymbolActionPayload {
+    symbolToMerge: string;
+    newSymbol: string;
+    pixelsBefore: PointWithCode[];
+    pixelsAfter: PointWithCode[];
+    symbolsBefore: string[];
+    symbolsAfter: string[];
 }
 export type AddColorActionPayload = {
     color: string;
+};
+export type AddSymbolActionPayload = {
+    symbol: string;
 };
 export type ActionType =
     | "DRAW"
@@ -41,7 +58,9 @@ export type ActionType =
     | "CHANGE_PIXEL_DIMENSIONS"
     | "ADD_COLOR"
     | "EDIT_COLOR"
-    | "MERGE_COLOR";
+    | "MERGE_COLOR"
+    | "ADD_SYMBOL"
+    | "MERGE_SYMBOL";
 
 export type DrawAction = {
     payload: DrawActionPayload;
@@ -59,13 +78,25 @@ export type EditColorAction = {
     payload: EditColorActionPayload;
     type: "EDIT_COLOR";
 };
+export type EditSymbolAction = {
+    payload: EditSymbolActionPayload;
+    type: "EDIT_SYMBOL";
+};
 export type AddColorAction = {
     payload: AddColorActionPayload;
     type: "ADD_COLOR";
 };
+export type AddSymbolAction = {
+    payload: AddSymbolActionPayload;
+    type: "ADD_SYMBOL";
+};
 export type MergeColorAction = {
     payload: MergeColorActionPayload;
     type: "MERGE_COLOR";
+};
+export type MergeSymbolAction = {
+    payload: MergeSymbolActionPayload;
+    type: "MERGE_SYMBOL";
 };
 export type ActionInput =
     | ChangeGridSizesAction
@@ -73,5 +104,8 @@ export type ActionInput =
     | AddColorAction
     | EditColorAction
     | ChangePixelDimensionsAction
-    | MergeColorAction;
+    | MergeColorAction
+    | AddSymbolAction
+    | MergeSymbolAction
+    | EditSymbolAction;
 export type Action = { id: string } & ActionInput;

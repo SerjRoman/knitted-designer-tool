@@ -16,6 +16,7 @@ export const SYMBOLS = {
 	x: "x",
 };
 export const MAX_COLORS = 12;
+export const MAX_SYMBOLS = 12;
 
 export const BACKGROUND_COLOR = `rgb(255, 255, 255)`;
 export const RULER_TEXT_COLOR = `rgb(240, 0, 0)`;

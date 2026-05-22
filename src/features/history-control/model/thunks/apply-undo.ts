@@ -10,6 +10,9 @@ import { undoDrawAction } from "./restore-draw-action";
 import { undoEditColorAction } from "./restore-edit-color-action";
 import { undoChangeGridSizesAction } from "./restore-grid-sizes";
 import { undoMergeColorAction } from "./restore-merge-color";
+import { undoAddSymbolAction } from "./restore-add-symbol-action";
+import { undoEditSymbolAction } from "./restore-edit-symbol-action";
+import { undoMergeSymbolAction } from "./restore-merge-symbol";
 
 export const applyUndo = createAppAsyncThunk(
 	"editor/apply-undo-action",
@@ -42,6 +45,15 @@ export const applyUndo = createAppAsyncThunk(
 				break;
 			case "MERGE_COLOR":
 				dispatch(undoMergeColorAction(currentAction.payload));
+				break;
+			case "ADD_SYMBOL":
+				dispatch(undoAddSymbolAction(currentAction.payload));
+				break;
+			case "EDIT_SYMBOL":
+				dispatch(undoEditSymbolAction(currentAction.payload));
+				break;
+			case "MERGE_SYMBOL":
+				dispatch(undoMergeSymbolAction(currentAction.payload));
 				break;
 			default:
 				break;

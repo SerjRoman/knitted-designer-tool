@@ -1,17 +1,35 @@
 import { PlusIcon } from "lucide-react";
+import { useState } from "react";
+import { AddSymbolModal } from "@/features/symbols/add-symbol/ui/add-symbol-modal/add-symbol-modal";
+import { EditCustomSymbolModal } from "@/features/symbols/edit-symbol/ui/edit-symbol-modal/edit-symbol-modal";
+import { mergeSymbol } from "@/features/symbols/merge-symbol";
+import { getPixelsBySymbolWithSymbols } from "@/entities/canva";
 import { setCurrentSymbolId } from "@/entities/editor";
+import { useModal, MAX_SYMBOLS } from "@/shared/lib";
 import { useAppDispatch, useAppSelector } from "@/shared/store";
 import { SelectedPaint } from "./selected-paint";
 
 export function SymbolsPanel() {
 	const dispatch = useAppDispatch();
+	const { currentSymbolId } = useAppSelector((state) => state.editor);
 	const { symbols } = useAppSelector((state) => state.canvas);
-	const maxSymbolsExceeded = true;
+	const currentSymbol = symbols[currentSymbolId] ?? symbols[0] ?? "";
+
+	const [{ open: openEditSymbolModal }, EditSymbolModalProvider] = useModal<{
+		selectedSymbol: string;
+	}>();
+	const [{ open: openAddNewSymbolModal }, ModalAddNewSymbolProvider] =
+		useModal();
+
+	const maxSymbolsExceeded = MAX_SYMBOLS <= symbols.length;
+	const [draggedIdx, setDraggedIdx] = useState<number | null>(null);
+	const [dragOverIdx, setDragOverIdx] = useState<number | null>(null);
+
 	return (
 		<div className="grid grid-cols-7 gap-2 ">
 			<div className="col-span-2 grid grid-rows-2 grid-cols-1 gap-3">
 				<button
-					onClick={() => 0} // TODO: open edit symbol modal}
+					onClick={() => openEditSymbolModal({ selectedSymbol: currentSymbol })}
 					className="row-span-1 flex items-center justify-center border border-gray-300 rounded-lg transition hover:brightness-90 cursor-pointer overflow-hidden"
 				>
 					<SelectedPaint />
@@ -20,8 +38,8 @@ export function SymbolsPanel() {
 					className={`flex flex-row items-center justify-center p-2 rounded-lg border transition-all duration-200 cursor-pointer ${
 						maxSymbolsExceeded && "opacity-50 cursor-not-allowed"
 					}`}
-					onClick={() => 0} // TODO: open add symbol modal
-					disabled
+					disabled={maxSymbolsExceeded}
+					onClick={() => openAddNewSymbolModal()}
 				>
 					<PlusIcon size={20} /> Add
 				</button>
@@ -30,22 +48,68 @@ export function SymbolsPanel() {
 				{symbols.map((symbol, index) => (
 					<button
 						key={symbol}
+						draggable
+						onDragStart={(e) => {
+							setDraggedIdx(index);
+							e.dataTransfer.effectAllowed = "move";
+						}}
+						onDragOver={(e) => {
+							e.preventDefault();
+							if (draggedIdx !== index) {
+								setDragOverIdx(index);
+							}
+						}}
+						onDragLeave={() => setDragOverIdx(null)}
+						onDrop={async (e) => {
+							e.preventDefault();
+							setDragOverIdx(null);
+							setDraggedIdx(null);
+							if (draggedIdx === null) return;
+							if (draggedIdx === index) return;
+							if (dragOverIdx === null) return;
+							const symbolToMerge = symbols[draggedIdx];
+							const targetSymbol = symbols[dragOverIdx];
+							if (symbolToMerge === targetSymbol) return;
+							if (!symbolToMerge || !targetSymbol) return;
+
+							const pointsBefore = await dispatch(
+								getPixelsBySymbolWithSymbols({
+									symbol: symbols[draggedIdx],
+								}),
+							).unwrap();
+							await dispatch(
+								mergeSymbol({
+									symbolToMerge,
+									newSymbol: targetSymbol,
+									pixels: pointsBefore,
+								}),
+							);
+							dispatch(setCurrentSymbolId(dragOverIdx));
+						}}
+						onDragEnd={() => {
+							setDraggedIdx(null);
+							setDragOverIdx(null);
+						}}
 						className={`
                             w-12 h-12 rounded border-2 flex items-center justify-center
-                            text-gray-500 
+                            text-gray-500 transition-all duration-150 cursor-grab active:cursor-grabbing
                             ${
-								// currentSymbolId === index
-								// ? "border-blue-500 bg-blue-200 text-black shadow-md"
-								"border-gray-200 hover:border-gray-300"
+								dragOverIdx === index
+									? "border-blue-500 scale-110 z-10 shadow-md bg-blue-50"
+									: draggedIdx === index
+										? "opacity-40 border-dashed border-gray-400"
+										: currentSymbolId === index
+										  ? "border-gray-500 bg-gray-100"
+										  : "border-gray-200 hover:border-gray-300 transform-none"
 							}`}
-						onClick={() => {
-							dispatch(setCurrentSymbolId(index));
-						}}
+						onClick={() => dispatch(setCurrentSymbolId(index))}
 					>
 						{symbol}
 					</button>
 				))}
 			</div>
+			<EditSymbolModalProvider ModalComponent={EditCustomSymbolModal} />
+			<ModalAddNewSymbolProvider ModalComponent={AddSymbolModal} />
 		</div>
 	);
 }

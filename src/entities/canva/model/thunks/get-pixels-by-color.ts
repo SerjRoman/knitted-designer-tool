@@ -46,7 +46,7 @@ export const getPixelsByColorWithColors = createAppAsyncThunk<
 					pixelsWithCode.push({
 						x,
 						y,
-						code: encodeCellCode({ colorId, symbolId: 0 }),
+						code: grid[y][x],
 					});
 				}
 			}

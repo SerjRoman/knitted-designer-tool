@@ -27,6 +27,7 @@ import {
 	decodeSymbolId,
 	encodeCellCode,
 	replaceColorId,
+	replaceSymbolId,
 } from "../cell-codec";
 
 import type { CellCode } from "../types";
@@ -333,18 +334,62 @@ export const canvasSlice = createSlice({
 			if (state.symbols.includes(payload)) return;
 			state.symbols.push(payload);
 		},
+		changeSymbolInGrid(
+			state,
+			{
+				payload,
+			}: PayloadAction<{ symbolToChange: string; newSymbol: string }>,
+		) {
+			const { symbolToChange, newSymbol } = payload;
+			const symbolToChangeId = state.symbols.indexOf(symbolToChange);
+			if (symbolToChangeId === -1) return;
+			const newSymbolId = state.symbols.indexOf(newSymbol);
+			if (newSymbolId === -1) {
+				state.symbols.splice(symbolToChangeId, 1, newSymbol);
+				return;
+			}
+
+			for (let y = 0; y < state.grid.length; y++) {
+				for (let x = 0; x < state.grid[y].length; x++) {
+					const cellCode = state.grid[y][x];
+					if (decodeSymbolId(cellCode) !== symbolToChangeId) continue;
+					state.grid[y][x] = replaceSymbolId(cellCode, newSymbolId);
+				}
+			}
+		},
 		setSymbols(state, { payload }: PayloadAction<string[]>) {
+			const oldSymbols = [...state.symbols];
 			const symbols = payload.length > 0 ? payload : [""];
+			for (let y = 0; y < state.grid.length; y++) {
+				for (let x = 0; x < state.grid[y].length; x++) {
+					const cellCode = state.grid[y][x];
+					const oldSymbolId = decodeSymbolId(cellCode);
+					const symbol = oldSymbols[oldSymbolId];
+					const mappedSymbolId = symbol
+						? symbols.indexOf(symbol)
+						: 0;
+					const nextSymbolId =
+						mappedSymbolId === -1 ? 0 : mappedSymbolId;
+					state.grid[y][x] = replaceSymbolId(cellCode, nextSymbolId);
+				}
+			}
 			state.symbols = symbols;
+		},
+		removeSymbol(state, { payload }: PayloadAction<string>) {
+			const symbolToRemoveId = state.symbols.indexOf(payload);
+			if (symbolToRemoveId === -1) return;
+			state.symbols = state.symbols.filter((symbol) => symbol !== payload);
 			for (let y = 0; y < state.grid.length; y++) {
 				for (let x = 0; x < state.grid[y].length; x++) {
 					const cellCode = state.grid[y][x];
 					const symbolId = decodeSymbolId(cellCode);
-					if (symbolId < symbols.length) continue;
-					state.grid[y][x] = encodeCellCode({
-						colorId: decodeColorId(cellCode),
-						symbolId: 0,
-					});
+					if (symbolId === symbolToRemoveId) {
+						state.grid[y][x] = replaceSymbolId(cellCode, 0);
+						continue;
+					}
+					if (symbolId > symbolToRemoveId) {
+						state.grid[y][x] = replaceSymbolId(cellCode, symbolId - 1);
+					}
 				}
 			}
 		},
@@ -365,11 +410,13 @@ export const {
 	addColor,
 	addSymbol,
 	changeColorInGrid,
+	changeSymbolInGrid,
 	applyFlip,
 	setGrid,
 	setColors,
 	setSymbols,
 	removeColor,
+	removeSymbol,
 	setPixelDimensions,
 	setCanvasDimensions,
 } = canvasSlice.actions;

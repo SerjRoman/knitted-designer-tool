@@ -40,6 +40,8 @@ export const mergeColor = createAppAsyncThunk(
 					pixelsAfter,
 					colorToMerge,
 					newColor,
+					colorsBefore: colors,
+					colorsAfter: colors.filter((color) => color !== colorToMerge),
 				},
 			}),
 		);
