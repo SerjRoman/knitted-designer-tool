@@ -1,6 +1,6 @@
 import type { Point, PointWithCode } from "@/shared/lib";
 import { createAppAsyncThunk } from "@/shared/store/store";
-import { decodeColorId, encodeCellCode } from "../cell-codec";
+import { decodeColorId } from "../cell-codec";
 import { selectGrid } from "../slices";
 
 interface GetPixelsByCodePayload {
