@@ -1,6 +1,7 @@
 import { useState } from "react";
+import { getSymbolDescription } from "@/entities/canva";
 import { useAppDispatch } from "@/shared/store";
-import { Modal } from "@/shared/ui";
+import { Modal, Tooltip } from "@/shared/ui";
 import { Button } from "@/shared/ui/button";
 import { changeSymbolToCustom } from "../../model";
 
@@ -21,10 +22,10 @@ const ALL_SYMBOLS = [
 	"*",
 	"(",
 	")",
+	"+",
 	"-",
 	"_",
 	"=",
-	"+",
 	"[",
 	"]",
 	"{",
@@ -117,15 +118,25 @@ export function EditCustomSymbolModal({
 
 				<div className="flex flex-col gap-2 mb-4">
 					<span className="text-sm text-gray-700">Pick:</span>
-					<div className="grid grid-cols-10 gap-1 h-32 overflow-y-auto border border-gray-200 p-1 rounded">
+					<div className="grid grid-cols-2 gap-1.5 h-48 overflow-y-auto border border-gray-200 p-2 rounded">
 						{ALL_SYMBOLS.map((s) => (
-							<button
+							<Tooltip
 								key={s}
-								onClick={() => setCustomSymbol(s)}
-								className={`w-6 h-6 flex items-center justify-center border rounded ${customSymbol === s ? "border-blue-500 bg-blue-100 text-blue-800" : "border-gray-200 hover:bg-gray-100 text-gray-600"}`}
+								text={getSymbolDescription(s)}
+								position="top"
+								className="w-full"
 							>
-								{s}
-							</button>
+								<button
+									onClick={() => setCustomSymbol(s)}
+									className={`w-full h-10 flex items-center justify-center border rounded-lg text-lg transition-all duration-150 ${
+										customSymbol === s
+											? "border-blue-500 bg-blue-50 text-blue-800 font-bold scale-[1.02]"
+											: "border-gray-200 hover:bg-gray-100 text-gray-600"
+									}`}
+								>
+									{s}
+								</button>
+							</Tooltip>
 						))}
 					</div>
 				</div>

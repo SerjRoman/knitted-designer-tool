@@ -6,15 +6,6 @@ export const COLORS = {
 	yellow: "rgb(255, 255, 0)",
 	red: "rgb(240, 0, 0)",
 };
-export const SYMBOLS = {
-	empty: "",
-	star: "*",
-	vLine: "│",
-	slash: "/",
-	hLine: "─",
-	plus: "+",
-	x: "x",
-};
 export const MAX_COLORS = 12;
 export const MAX_SYMBOLS = 12;
 

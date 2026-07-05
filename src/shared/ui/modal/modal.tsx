@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { MODAL_ROOT, ROOT } from "../../config/dom";
 import { useClickOutside } from "../../lib/hooks/use-click-outside";
@@ -17,6 +17,17 @@ export function Modal(props: IModalProps) {
 
 	const contentRef = useRef<HTMLDivElement | null>(null);
 
+	useEffect(() => {
+		if (!isOpen) return;
+
+		const originalOverflow = document.body.style.overflow;
+		document.body.style.overflow = "hidden";
+
+		return () => {
+			document.body.style.overflow = originalOverflow;
+		};
+	}, [isOpen]);
+
 	useClickOutside(contentRef, () => {
 		if (doCloseOnClickOutside) onClose();
 	});
@@ -24,7 +35,7 @@ export function Modal(props: IModalProps) {
 	return createPortal(
 		<div
 			className={
-				"fixed inset-0 z-[500] bg-black/30 flex items-center justify-center"
+				"fixed inset-0 z-[500] bg-black/30 flex items-center justify-center "
 			}
 			data-modal-open="true"
 		>

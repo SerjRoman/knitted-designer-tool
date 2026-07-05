@@ -1,17 +1,74 @@
 import { useState } from "react";
-import { addSymbol } from "@/entities/canva";
+import { addSymbol, getSymbolDescription } from "@/entities/canva";
 import { setCurrentSymbolId } from "@/entities/editor";
 import { addActionToHistory } from "@/entities/history";
 import { openDialog } from "@/entities/modal";
 import { MAX_SYMBOLS } from "@/shared/lib";
 import { useAppDispatch, useAppSelector } from "@/shared/store";
-import { Modal } from "@/shared/ui";
+import { Modal, Tooltip } from "@/shared/ui";
 import { Button } from "@/shared/ui/button";
 
 const ALL_SYMBOLS = [
-	"!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "-", "_", "=", "+", "[", "]", "{", "}", "|", "\\", ";", ":", "'", "\"", ",", ".", "<", ">", "/", "?",
-	"1", "2", "3", "4", "5", "6", "7", "8", "9", "0",
-	"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t"
+	"!",
+	"@",
+	"#",
+	"$",
+	"%",
+	"^",
+	"&",
+	"*",
+	"(",
+	")",
+	"+",
+	"-",
+	"_",
+	"=",
+	"[",
+	"]",
+	"{",
+	"}",
+	"|",
+	"\\",
+	";",
+	":",
+	"'",
+	'"',
+	",",
+	".",
+	"<",
+	">",
+	"/",
+	"?",
+	"1",
+	"2",
+	"3",
+	"4",
+	"5",
+	"6",
+	"7",
+	"8",
+	"9",
+	"0",
+	"a",
+	"b",
+	"c",
+	"d",
+	"e",
+	"f",
+	"g",
+	"h",
+	"i",
+	"j",
+	"k",
+	"l",
+	"m",
+	"n",
+	"o",
+	"p",
+	"q",
+	"r",
+	"s",
+	"t",
 ];
 
 export function AddSymbolModal({
@@ -44,7 +101,9 @@ export function AddSymbolModal({
 			existingSymbolId === -1 ? symbols.length : existingSymbolId;
 		dispatch(addSymbol(symbol));
 		dispatch(setCurrentSymbolId(nextSymbolId));
-		dispatch(addActionToHistory({ type: "ADD_SYMBOL", payload: { symbol } }));
+		dispatch(
+			addActionToHistory({ type: "ADD_SYMBOL", payload: { symbol } }),
+		);
 		onClose();
 	};
 
@@ -70,15 +129,25 @@ export function AddSymbolModal({
 
 				<div className="flex flex-col gap-2 mb-4">
 					<span className="text-sm text-gray-700">Pick:</span>
-					<div className="grid grid-cols-10 gap-1 h-32 overflow-y-auto border border-gray-200 p-1 rounded">
+					<div className="grid grid-cols-2 gap-1.5 h-48 overflow-y-auto border border-gray-200 p-2 rounded">
 						{ALL_SYMBOLS.map((s) => (
-							<button
+							<Tooltip
 								key={s}
-								onClick={() => setSymbol(s)}
-								className={`w-6 h-6 flex items-center justify-center border rounded ${symbol === s ? 'border-blue-500 bg-blue-100 text-blue-800' : 'border-gray-200 hover:bg-gray-100 text-gray-600'}`}
+								text={getSymbolDescription(s)}
+								position="top"
+								className="w-full"
 							>
-								{s}
-							</button>
+								<button
+									onClick={() => setSymbol(s)}
+									className={`w-full h-10 flex items-center justify-center border rounded-lg text-lg transition-all duration-150 ${
+										symbol === s
+											? "border-blue-500 bg-blue-50 text-blue-800 font-bold scale-[1.02]"
+											: "border-gray-200 hover:bg-gray-100 text-gray-600"
+									}`}
+								>
+									{s}
+								</button>
+							</Tooltip>
 						))}
 					</div>
 				</div>

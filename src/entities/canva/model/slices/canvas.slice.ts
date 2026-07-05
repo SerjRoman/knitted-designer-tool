@@ -15,7 +15,6 @@ import {
 	INITIAL_ROWS,
 	INITIAL_TENSION_ROWS,
 	INITIAL_TENSION_STITCHES,
-	SYMBOLS,
 	type Grid,
 	type Point,
 	type PointWithCode,
@@ -29,6 +28,7 @@ import {
 	replaceColorId,
 	replaceSymbolId,
 } from "../cell-codec";
+import { DEFAULT_SYMBOLS } from "../symbols";
 
 import type { CellCode } from "../types";
 
@@ -78,7 +78,7 @@ const initialState: CanvasSlice = {
 	pixelWidth: INITIAL_TENSION.width,
 	pixelHeight: INITIAL_TENSION.height,
 	colors: Object.values(COLORS),
-	symbols: Object.values(SYMBOLS),
+	symbols: Object.values(DEFAULT_SYMBOLS),
 	canvasDimensions: { height: CANVAS_HEIGHT, width: CANVAS_WIDTH },
 };
 
@@ -365,9 +365,7 @@ export const canvasSlice = createSlice({
 					const cellCode = state.grid[y][x];
 					const oldSymbolId = decodeSymbolId(cellCode);
 					const symbol = oldSymbols[oldSymbolId];
-					const mappedSymbolId = symbol
-						? symbols.indexOf(symbol)
-						: 0;
+					const mappedSymbolId = symbol ? symbols.indexOf(symbol) : 0;
 					const nextSymbolId =
 						mappedSymbolId === -1 ? 0 : mappedSymbolId;
 					state.grid[y][x] = replaceSymbolId(cellCode, nextSymbolId);
@@ -378,7 +376,9 @@ export const canvasSlice = createSlice({
 		removeSymbol(state, { payload }: PayloadAction<string>) {
 			const symbolToRemoveId = state.symbols.indexOf(payload);
 			if (symbolToRemoveId === -1) return;
-			state.symbols = state.symbols.filter((symbol) => symbol !== payload);
+			state.symbols = state.symbols.filter(
+				(symbol) => symbol !== payload,
+			);
 			for (let y = 0; y < state.grid.length; y++) {
 				for (let x = 0; x < state.grid[y].length; x++) {
 					const cellCode = state.grid[y][x];
@@ -388,7 +388,10 @@ export const canvasSlice = createSlice({
 						continue;
 					}
 					if (symbolId > symbolToRemoveId) {
-						state.grid[y][x] = replaceSymbolId(cellCode, symbolId - 1);
+						state.grid[y][x] = replaceSymbolId(
+							cellCode,
+							symbolId - 1,
+						);
 					}
 				}
 			}

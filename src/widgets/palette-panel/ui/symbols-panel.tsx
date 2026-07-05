@@ -1,12 +1,16 @@
 import { PlusIcon } from "lucide-react";
 import { useState } from "react";
-import { AddSymbolModal } from "@/features/symbols/add-symbol/ui/add-symbol-modal/add-symbol-modal";
-import { EditCustomSymbolModal } from "@/features/symbols/edit-symbol/ui/edit-symbol-modal/edit-symbol-modal";
+import { AddSymbolModal } from "@/features/symbols/add-symbol";
+import { EditCustomSymbolModal } from "@/features/symbols/edit-symbol";
 import { mergeSymbol } from "@/features/symbols/merge-symbol";
-import { getPixelsBySymbolWithSymbols } from "@/entities/canva";
+import {
+	getPixelsBySymbolWithSymbols,
+	getSymbolDescription,
+} from "@/entities/canva";
 import { setCurrentSymbolId } from "@/entities/editor";
 import { useModal, MAX_SYMBOLS } from "@/shared/lib";
 import { useAppDispatch, useAppSelector } from "@/shared/store";
+import { Tooltip } from "@/shared/ui";
 import { SelectedPaint } from "./selected-paint";
 
 export function SymbolsPanel() {
@@ -26,88 +30,109 @@ export function SymbolsPanel() {
 	const [dragOverIdx, setDragOverIdx] = useState<number | null>(null);
 
 	return (
-		<div className="grid grid-cols-7 gap-2 ">
+		<div className="grid grid-cols-7 gap-2">
 			<div className="col-span-2 grid grid-rows-2 grid-cols-1 gap-3">
 				<button
-					onClick={() => openEditSymbolModal({ selectedSymbol: currentSymbol })}
-					className="row-span-1 flex items-center justify-center border border-gray-300 rounded-lg transition hover:brightness-90 cursor-pointer overflow-hidden"
+					onClick={() =>
+						openEditSymbolModal({ selectedSymbol: currentSymbol })
+					}
+					className="row-span-1 flex items-center justify-center border border-gray-300 rounded-lg transition hover:brightness-90 cursor-pointer overflow-hidden bg-white shadow-sm"
 				>
 					<SelectedPaint />
 				</button>
 				<button
-					className={`flex flex-row items-center justify-center p-2 rounded-lg border transition-all duration-200 cursor-pointer ${
+					className={`flex flex-row items-center justify-center p-2 rounded-lg border border-gray-300 bg-white transition hover:bg-gray-50 cursor-pointer text-gray-700 text-sm font-medium ${
 						maxSymbolsExceeded && "opacity-50 cursor-not-allowed"
 					}`}
 					disabled={maxSymbolsExceeded}
 					onClick={() => openAddNewSymbolModal()}
 				>
-					<PlusIcon size={20} /> Add
+					<PlusIcon size={16} /> Add
 				</button>
 			</div>
-			<div className="col-span-5 grid grid-cols-4 row-auto gap-1">
-				{symbols.map((symbol, index) => (
-					<button
-						key={symbol}
-						draggable
-						onDragStart={(e) => {
-							setDraggedIdx(index);
-							e.dataTransfer.effectAllowed = "move";
-						}}
-						onDragOver={(e) => {
-							e.preventDefault();
-							if (draggedIdx !== index) {
-								setDragOverIdx(index);
-							}
-						}}
-						onDragLeave={() => setDragOverIdx(null)}
-						onDrop={async (e) => {
-							e.preventDefault();
-							setDragOverIdx(null);
-							setDraggedIdx(null);
-							if (draggedIdx === null) return;
-							if (draggedIdx === index) return;
-							if (dragOverIdx === null) return;
-							const symbolToMerge = symbols[draggedIdx];
-							const targetSymbol = symbols[dragOverIdx];
-							if (symbolToMerge === targetSymbol) return;
-							if (!symbolToMerge || !targetSymbol) return;
 
-							const pointsBefore = await dispatch(
-								getPixelsBySymbolWithSymbols({
-									symbol: symbols[draggedIdx],
-								}),
-							).unwrap();
-							await dispatch(
-								mergeSymbol({
-									symbolToMerge,
-									newSymbol: targetSymbol,
-									pixels: pointsBefore,
-								}),
-							);
-							dispatch(setCurrentSymbolId(dragOverIdx));
-						}}
-						onDragEnd={() => {
-							setDraggedIdx(null);
-							setDragOverIdx(null);
-						}}
-						className={`
-                            w-12 h-12 rounded border-2 flex items-center justify-center
-                            text-gray-500 transition-all duration-150 cursor-grab active:cursor-grabbing
-                            ${
-								dragOverIdx === index
-									? "border-blue-500 scale-110 z-10 shadow-md bg-blue-50"
-									: draggedIdx === index
-										? "opacity-40 border-dashed border-gray-400"
-										: currentSymbolId === index
-										  ? "border-gray-500 bg-gray-100"
-										  : "border-gray-200 hover:border-gray-300 transform-none"
-							}`}
-						onClick={() => dispatch(setCurrentSymbolId(index))}
-					>
-						{symbol}
-					</button>
-				))}
+			<div className="col-span-5 grid grid-cols-4 row-auto gap-1">
+				{symbols.map((symbol, index) => {
+					const isSelected = currentSymbolId === index;
+					const isDragged = draggedIdx === index;
+					const isDragOver = dragOverIdx === index;
+
+					return (
+						<Tooltip
+							key={symbol}
+							text={getSymbolDescription(symbol)}
+							position="top"
+						>
+							<button
+								draggable
+								onDragStart={(e) => {
+									setDraggedIdx(index);
+									e.dataTransfer.effectAllowed = "move";
+								}}
+								onDragOver={(e) => {
+									e.preventDefault();
+									if (draggedIdx !== index) {
+										setDragOverIdx(index);
+									}
+								}}
+								onDragLeave={() => setDragOverIdx(null)}
+								onDrop={async (e) => {
+									e.preventDefault();
+									setDragOverIdx(null);
+									setDraggedIdx(null);
+									if (draggedIdx === null) return;
+									if (draggedIdx === index) return;
+									if (dragOverIdx === null) return;
+									const symbolToMerge = symbols[draggedIdx];
+									const targetSymbol = symbols[dragOverIdx];
+									if (symbolToMerge === targetSymbol) return;
+									if (!symbolToMerge || !targetSymbol) return;
+
+									const pointsBefore = await dispatch(
+										getPixelsBySymbolWithSymbols({
+											symbol: symbols[draggedIdx],
+										}),
+									).unwrap();
+									await dispatch(
+										mergeSymbol({
+											symbolToMerge,
+											newSymbol: targetSymbol,
+											pixels: pointsBefore,
+										}),
+									);
+									dispatch(setCurrentSymbolId(dragOverIdx));
+								}}
+								onDragEnd={() => {
+									setDraggedIdx(null);
+									setDragOverIdx(null);
+								}}
+								className={`
+									w-12 h-12 rounded-lg border-2 flex items-center justify-center
+									text-gray-500 transition-all duration-150 cursor-grab active:cursor-grabbing
+									${
+										isDragOver
+											? "border-blue-500 scale-110 z-10 shadow-md bg-blue-50"
+											: isDragged
+												? "opacity-40 border-dashed border-gray-400"
+												: isSelected
+													? "border-gray-500 bg-gray-100 font-bold text-gray-800"
+													: "border-gray-200 bg-white hover:border-gray-300"
+									}`}
+								onClick={() =>
+									dispatch(setCurrentSymbolId(index))
+								}
+							>
+								{symbol || (
+									<span className="text-gray-400 text-[10px] font-normal italic">
+										(empty)
+									</span>
+								)}
+							</button>
+						</Tooltip>
+					);
+				})}
 			</div>
+
 			<EditSymbolModalProvider ModalComponent={EditCustomSymbolModal} />
 			<ModalAddNewSymbolProvider ModalComponent={AddSymbolModal} />
 		</div>

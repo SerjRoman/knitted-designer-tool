@@ -11,7 +11,7 @@ export function useShadowElement(
 
 		if (!hostContainer?.shadowRoot) {
 			console.warn(
-				`[useShadowElement]: ShadowRoot для #${hostId} не найден.`,
+				`[useShadowElement]: ShadowRoot for #${hostId} not found.`,
 			);
 			return null;
 		}
@@ -21,7 +21,7 @@ export function useShadowElement(
 
 		if (!targetElement) {
 			console.warn(
-				`[useShadowElement]: Элемент #${elementId} не найден внутри Shadow DOM #${hostId}.`,
+				`[useShadowElement]: Element #${elementId} not found inside Shadow DOM #${hostId}.`,
 			);
 		}
 
