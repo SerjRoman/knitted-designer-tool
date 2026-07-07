@@ -1,60 +1,31 @@
+import { getSymbolInfo, SYMBOL_SVG_SIZE, type StitchSymbol } from "../../model";
+
 export function drawSymbol(
 	context: CanvasRenderingContext2D,
 	x: number,
 	y: number,
 	width: number,
 	height: number,
-	symbolId: number,
+	symbol: StitchSymbol,
 ) {
+	const info = getSymbolInfo(symbol);
+	if (!info.path) return;
+
+	context.save();
+	context.fillStyle = "rgba(0, 0, 0, 1)";
 	context.strokeStyle = "rgba(0, 0, 0, 1)";
 	context.lineWidth = 1;
+	const matrix = new DOMMatrix()
+		.translate(x, y)
+		.scale(width / SYMBOL_SVG_SIZE, height / SYMBOL_SVG_SIZE);
+	const transformedPath = new Path2D();
+	transformedPath.addPath(info.path, matrix);
 
-	const centerX = x + width / 2;
-	const centerY = y + height / 2;
-	switch (symbolId) {
-		case 1: // star "*"
-			context.moveTo(centerX, y);
-			context.lineTo(centerX, y + height);
-			context.moveTo(x, centerY);
-			context.lineTo(x + width, centerY);
-			context.moveTo(x, y);
-			context.lineTo(x + width, y + height);
-			context.moveTo(x + width, y);
-			context.lineTo(x, y + height);
-			break;
-
-		case 2: // vLine "│"
-			context.moveTo(centerX, y);
-			context.lineTo(centerX, y + height);
-			break;
-
-		case 3: // slash "/"
-			context.moveTo(x, y + height);
-			context.lineTo(x + width, y);
-			break;
-
-		case 4: // hLine "─"
-			context.moveTo(x, centerY);
-			context.lineTo(x + width, centerY);
-			break;
-
-		case 5: // plus "+"
-			context.moveTo(centerX, y);
-			context.lineTo(centerX, y + height);
-			context.moveTo(x, centerY);
-			context.lineTo(x + width, centerY);
-			break;
-
-		case 6: // minus "-"
-			context.moveTo(x + width * 0.25, centerY);
-			context.lineTo(x + width * 0.75, centerY);
-			break;
-
-		case 7: // x "x"
-			context.moveTo(x, y);
-			context.lineTo(x + width, y + height);
-			context.moveTo(x + width, y);
-			context.lineTo(x, y + height);
-			break;
+	if (info.isFill) {
+		context.fill(transformedPath);
 	}
+	if (info.isStroke) {
+		context.stroke(transformedPath);
+	}
+	context.restore();
 }

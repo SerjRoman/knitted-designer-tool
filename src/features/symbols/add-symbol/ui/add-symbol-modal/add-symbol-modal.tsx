@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { addSymbol, getSymbolDescription } from "@/entities/canva";
+import React, { useState } from "react";
+import { addSymbol, getSymbolDescription, SYMBOL_ROWS } from "@/entities/canva";
 import { setCurrentSymbolId } from "@/entities/editor";
 import { addActionToHistory } from "@/entities/history";
 import { openDialog } from "@/entities/modal";
@@ -8,69 +8,6 @@ import { useAppDispatch, useAppSelector } from "@/shared/store";
 import { Modal, Tooltip } from "@/shared/ui";
 import { Button } from "@/shared/ui/button";
 
-const ALL_SYMBOLS = [
-	"!",
-	"@",
-	"#",
-	"$",
-	"%",
-	"^",
-	"&",
-	"*",
-	"(",
-	")",
-	"+",
-	"-",
-	"_",
-	"=",
-	"[",
-	"]",
-	"{",
-	"}",
-	"|",
-	"\\",
-	";",
-	":",
-	"'",
-	'"',
-	",",
-	".",
-	"<",
-	">",
-	"/",
-	"?",
-	"1",
-	"2",
-	"3",
-	"4",
-	"5",
-	"6",
-	"7",
-	"8",
-	"9",
-	"0",
-	"a",
-	"b",
-	"c",
-	"d",
-	"e",
-	"f",
-	"g",
-	"h",
-	"i",
-	"j",
-	"k",
-	"l",
-	"m",
-	"n",
-	"o",
-	"p",
-	"q",
-	"r",
-	"s",
-	"t",
-];
-
 export function AddSymbolModal({
 	isOpen,
 	onClose,
@@ -78,7 +15,7 @@ export function AddSymbolModal({
 	isOpen: boolean;
 	onClose: () => void;
 }>) {
-	const [symbol, setSymbol] = useState(ALL_SYMBOLS[0]);
+	const [symbol, setSymbol] = useState(SYMBOL_ROWS[0][0]);
 	const dispatch = useAppDispatch();
 	const symbols = useAppSelector((state) => state.canvas.symbols);
 	const maxSymbolsExceeded = MAX_SYMBOLS <= symbols.length;
@@ -124,30 +61,51 @@ export function AddSymbolModal({
 					</h2>
 				</div>
 				<div className="w-full h-12 flex items-center justify-center rounded border border-gray-300 mb-3 text-xl font-bold bg-gray-50 text-gray-800">
-					{symbol}
+					{symbol || (
+						<span className="text-gray-400 text-sm font-normal italic">
+							(empty)
+						</span>
+					)}
 				</div>
 
 				<div className="flex flex-col gap-2 mb-4">
 					<span className="text-sm text-gray-700">Pick:</span>
 					<div className="grid grid-cols-2 gap-1.5 h-48 overflow-y-auto border border-gray-200 p-2 rounded">
-						{ALL_SYMBOLS.map((s) => (
-							<Tooltip
-								key={s}
-								text={getSymbolDescription(s)}
-								position="top"
-								className="w-full"
-							>
-								<button
-									onClick={() => setSymbol(s)}
-									className={`w-full h-10 flex items-center justify-center border rounded-lg text-lg transition-all duration-150 ${
-										symbol === s
-											? "border-blue-500 bg-blue-50 text-blue-800 font-bold scale-[1.02]"
-											: "border-gray-200 hover:bg-gray-100 text-gray-600"
-									}`}
-								>
-									{s}
-								</button>
-							</Tooltip>
+						{SYMBOL_ROWS.map((row, rowIndex) => (
+							<React.Fragment key={rowIndex}>
+								{row.map((s, colIndex) => {
+									const key = `${rowIndex}-${colIndex}`;
+									return (
+										<Tooltip
+											key={key}
+											text={getSymbolDescription(s)}
+											position="top"
+											className="w-full"
+										>
+											<button
+												onClick={() => setSymbol(s)}
+												className={`w-full h-10 flex items-center justify-center border rounded-lg text-lg transition-all duration-150 ${
+													symbol === s
+														? "border-blue-500 bg-blue-50 text-blue-800 font-bold scale-[1.02]"
+														: "border-gray-200 hover:bg-gray-100 text-gray-600"
+												}`}
+											>
+												{s || (
+													<span className="text-gray-400 text-xs italic">
+														(empty)
+													</span>
+												)}
+											</button>
+										</Tooltip>
+									);
+								})}
+								{row.length < 2 && (
+									<div
+										key={`${rowIndex}-empty`}
+										className="w-full h-10"
+									/>
+								)}
+							</React.Fragment>
 						))}
 					</div>
 				</div>

@@ -1,6 +1,11 @@
 import type { Point, PointWithCode } from "@/shared/lib";
-import { decodeCellCode } from "../../model";
-import { drawSymbol } from "./draw-symbol";
+import {
+	decodeCellCode,
+	createPathGroup,
+	addSymbolToGroup,
+	SYMBOL_SVG_SIZE,
+    type StitchSymbol,
+} from "../../model";
 
 export function drawClipboardPreview(
 	context: CanvasRenderingContext2D,
@@ -14,9 +19,11 @@ export function drawClipboardPreview(
 	},
 	colors: string[],
 	backgroundColorId: number,
+	symbols: StitchSymbol[],
 ) {
 	context.globalAlpha = 0.75;
-	context.beginPath();
+
+	const group = createPathGroup();
 
 	for (const point of clipboardPoints) {
 		const worldX = point.x + origin.x;
@@ -42,17 +49,27 @@ export function drawClipboardPreview(
 		}
 
 		if (cell.symbolId !== 0) {
-			drawSymbol(
-				context,
-				worldX * sizes.pixelWidth,
-				worldY * sizes.pixelHeight,
-				sizes.pixelWidth,
-				sizes.pixelHeight,
-				cell.symbolId,
-			);
+			const symbol = symbols[cell.symbolId];
+			if (symbol) {
+				const matrix = new DOMMatrix()
+					.translate(
+						worldX * sizes.pixelWidth,
+						worldY * sizes.pixelHeight,
+					)
+					.scale(
+						sizes.pixelWidth / SYMBOL_SVG_SIZE,
+						sizes.pixelHeight / SYMBOL_SVG_SIZE,
+					);
+				addSymbolToGroup(group, symbol, matrix);
+			}
 		}
 	}
 
+	context.fillStyle = "rgba(0, 0, 0, 1)";
+	context.fill(group.fill);
+
+	context.strokeStyle = "rgba(0, 0, 0, 1)";
+	context.lineWidth = 1;
+	context.stroke(group.stroke);
 	context.globalAlpha = 1;
-	context.stroke();
 }

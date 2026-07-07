@@ -28,7 +28,6 @@ export function Tooltip({
 
 		const rect = bubble.getBoundingClientRect();
 
-		// Find closest scroll container to check bounding clip
 		const scrollContainer = bubble.closest(
 			".overflow-y-auto, [style*='overflow']",
 		);
@@ -46,7 +45,6 @@ export function Tooltip({
 				setAdjustedPosition(position);
 			}
 		} else {
-			// Viewport fallback
 			if (position === "top" && rect.top < 0) {
 				setAdjustedPosition("bottom");
 			} else if (

@@ -8,7 +8,7 @@ import { useAppSelector } from "@/shared/store";
 import { Canvas } from "@/shared/ui";
 
 export function CanvasLayer() {
-	const { grid, backgroundColorId, colors } = useAppSelector(
+	const { grid, backgroundColorId, colors, symbols } = useAppSelector(
 		(state) => state.canvas,
 	);
 	const { scale, offsets } = useAppSelector((state) => state.viewport);
@@ -34,6 +34,7 @@ export function CanvasLayer() {
 				pixelDimensions.height,
 				backgroundColorId,
 				colors,
+				symbols,
 			);
 		},
 		[
@@ -44,6 +45,7 @@ export function CanvasLayer() {
 			canvasDimensions,
 			backgroundColorId,
 			colors,
+			symbols,
 		],
 	);
 

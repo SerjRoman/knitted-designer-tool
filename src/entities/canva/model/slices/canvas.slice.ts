@@ -28,7 +28,7 @@ import {
 	replaceColorId,
 	replaceSymbolId,
 } from "../cell-codec";
-import { DEFAULT_SYMBOLS } from "../symbols";
+import { DEFAULT_SYMBOLS, type StitchSymbol } from "../symbols";
 
 import type { CellCode } from "../types";
 
@@ -42,7 +42,7 @@ interface CanvasSlice {
 	pixelWidth: number;
 	pixelHeight: number;
 	colors: string[];
-	symbols: string[];
+	symbols: StitchSymbol[];
 }
 export const INITIAL_TENSION = calculateTension(
 	INITIAL_TENSION_STITCHES,
@@ -330,7 +330,7 @@ export const canvasSlice = createSlice({
 				}
 			}
 		},
-		addSymbol(state, { payload }: PayloadAction<string>) {
+		addSymbol(state, { payload }: PayloadAction<StitchSymbol>) {
 			if (state.symbols.includes(payload)) return;
 			state.symbols.push(payload);
 		},
@@ -338,7 +338,10 @@ export const canvasSlice = createSlice({
 			state,
 			{
 				payload,
-			}: PayloadAction<{ symbolToChange: string; newSymbol: string }>,
+			}: PayloadAction<{
+				symbolToChange: StitchSymbol;
+				newSymbol: StitchSymbol;
+			}>,
 		) {
 			const { symbolToChange, newSymbol } = payload;
 			const symbolToChangeId = state.symbols.indexOf(symbolToChange);
@@ -357,9 +360,10 @@ export const canvasSlice = createSlice({
 				}
 			}
 		},
-		setSymbols(state, { payload }: PayloadAction<string[]>) {
+		setSymbols(state, { payload }: PayloadAction<StitchSymbol[]>) {
 			const oldSymbols = [...state.symbols];
-			const symbols = payload.length > 0 ? payload : [""];
+			const symbols: StitchSymbol[] =
+				payload.length > 0 ? payload : [DEFAULT_SYMBOLS[0]];
 			for (let y = 0; y < state.grid.length; y++) {
 				for (let x = 0; x < state.grid[y].length; x++) {
 					const cellCode = state.grid[y][x];
@@ -373,7 +377,7 @@ export const canvasSlice = createSlice({
 			}
 			state.symbols = symbols;
 		},
-		removeSymbol(state, { payload }: PayloadAction<string>) {
+		removeSymbol(state, { payload }: PayloadAction<StitchSymbol>) {
 			const symbolToRemoveId = state.symbols.indexOf(payload);
 			if (symbolToRemoveId === -1) return;
 			state.symbols = state.symbols.filter(

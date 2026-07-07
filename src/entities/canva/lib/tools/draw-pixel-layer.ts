@@ -1,6 +1,11 @@
 import { type Grid } from "@/shared/lib";
-import { decodeCellCode } from "../../model";
-import { drawSymbol } from "./draw-symbol";
+import {
+	decodeCellCode,
+	createPathGroup,
+	addSymbolToGroup,
+	SYMBOL_SVG_SIZE,
+	type StitchSymbol,
+} from "../../model";
 
 export function drawPixelLayer(
 	context: CanvasRenderingContext2D,
@@ -9,10 +14,13 @@ export function drawPixelLayer(
 	pixelHeight: number,
 	backgroundColorId: number,
 	colors: string[],
+	symbols: StitchSymbol[],
 ) {
-	context.beginPath();
 	context.fillStyle = colors[backgroundColorId];
 	context.fillRect(0, 0, context.canvas.width, context.canvas.height);
+
+	const group = createPathGroup();
+
 	for (let y = 0; y < grid.length; y++) {
 		for (let x = 0; x < grid[y].length; x++) {
 			const cell = decodeCellCode(grid[y][x]);
@@ -26,16 +34,24 @@ export function drawPixelLayer(
 				);
 			}
 			if (cell.symbolId !== 0) {
-				drawSymbol(
-					context,
-					x * pixelWidth,
-					y * pixelHeight,
-					pixelWidth,
-					pixelHeight,
-					cell.symbolId,
-				);
+				const symbol = symbols[cell.symbolId];
+				if (symbol) {
+					const matrix = new DOMMatrix()
+						.translate(x * pixelWidth, y * pixelHeight)
+						.scale(
+							pixelWidth / SYMBOL_SVG_SIZE,
+							pixelHeight / SYMBOL_SVG_SIZE,
+						);
+					addSymbolToGroup(group, symbol, matrix);
+				}
 			}
 		}
 	}
-	context.stroke();
+
+	context.fillStyle = "rgba(0, 0, 0, 1)";
+	context.fill(group.fill);
+
+	context.strokeStyle = "rgba(0, 0, 0, 1)";
+	context.lineWidth = 1;
+	context.stroke(group.stroke);
 }

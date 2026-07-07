@@ -1,10 +1,10 @@
 import { useCallback, useLayoutEffect, useRef, useState } from "react";
-import { drawSymbol } from "@/entities/canva";
+import { drawSymbol, type StitchSymbol } from "@/entities/canva";
 import { useAppSelector } from "@/shared/store";
 import { Canvas } from "@/shared/ui";
 
 export function SelectedPaint() {
-	const { colors } = useAppSelector((s) => s.canvas);
+	const { colors, symbols } = useAppSelector((s) => s.canvas);
 	const { currentSymbolId = 0, currentColorId = 0 } = useAppSelector(
 		(s) => s.editor,
 	);
@@ -52,14 +52,15 @@ export function SelectedPaint() {
 			context.fillRect(0, 0, w, h);
 
 			if (currentSymbolId !== 0) {
-				context.beginPath();
-				drawSymbol(context, 0, 0, w, h, currentSymbolId);
-				context.stroke();
+				const symbol = symbols[currentSymbolId] as StitchSymbol;
+				if (symbol) {
+					drawSymbol(context, 0, 0, w, h, symbol);
+				}
 			}
 
 			context.restore();
 		},
-		[colors, currentColorId, currentSymbolId, size],
+		[colors, symbols, currentColorId, currentSymbolId, size],
 	);
 
 	return (

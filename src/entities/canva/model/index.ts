@@ -8,4 +8,3 @@ export {
 	getPixelsByColorWithColors,
 } from "./thunks/get-pixels-by-color";
 export { getPixelsBySymbolWithSymbols } from "./thunks/get-pixels-by-symbol";
-

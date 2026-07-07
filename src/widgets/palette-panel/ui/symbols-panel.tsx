@@ -6,6 +6,9 @@ import { mergeSymbol } from "@/features/symbols/merge-symbol";
 import {
 	getPixelsBySymbolWithSymbols,
 	getSymbolDescription,
+	getSymbolInfo,
+	getSymbolPathStr,
+	SYMBOL_SVG_SIZE,
 } from "@/entities/canva";
 import { setCurrentSymbolId } from "@/entities/editor";
 import { useModal, MAX_SYMBOLS } from "@/shared/lib";
@@ -36,18 +39,20 @@ export function SymbolsPanel() {
 					onClick={() =>
 						openEditSymbolModal({ selectedSymbol: currentSymbol })
 					}
-					className="row-span-1 flex items-center justify-center border border-gray-300 rounded-lg transition hover:brightness-90 cursor-pointer overflow-hidden bg-white shadow-sm"
+					className="row-span-1 flex items-center justify-center border border-gray-300 rounded-lg transition hover:brightness-90 cursor-pointer overflow-hidden"
 				>
 					<SelectedPaint />
 				</button>
 				<button
-					className={`flex flex-row items-center justify-center p-2 rounded-lg border border-gray-300 bg-white transition hover:bg-gray-50 cursor-pointer text-gray-700 text-sm font-medium ${
-						maxSymbolsExceeded && "opacity-50 cursor-not-allowed"
+					className={`flex flex-row items-center justify-center p-2 rounded-lg border transition-all duration-200 cursor-pointer ${
+						maxSymbolsExceeded
+							? "opacity-50 cursor-not-allowed"
+							: ""
 					}`}
 					disabled={maxSymbolsExceeded}
 					onClick={() => openAddNewSymbolModal()}
 				>
-					<PlusIcon size={16} /> Add
+					<PlusIcon size={20} /> Add
 				</button>
 			</div>
 
@@ -62,6 +67,7 @@ export function SymbolsPanel() {
 							key={symbol}
 							text={getSymbolDescription(symbol)}
 							position="top"
+							className="w-12 h-12 flex items-center justify-center"
 						>
 							<button
 								draggable
@@ -107,7 +113,7 @@ export function SymbolsPanel() {
 									setDragOverIdx(null);
 								}}
 								className={`
-									w-12 h-12 rounded-lg border-2 flex items-center justify-center
+									w-full h-full rounded border-2 flex items-center justify-center
 									text-gray-500 transition-all duration-150 cursor-grab active:cursor-grabbing
 									${
 										isDragOver
@@ -122,11 +128,49 @@ export function SymbolsPanel() {
 									dispatch(setCurrentSymbolId(index))
 								}
 							>
-								{symbol || (
-									<span className="text-gray-400 text-[10px] font-normal italic">
-										(empty)
-									</span>
-								)}
+								{(() => {
+									if (!symbol) {
+										return (
+											<span className="text-gray-400 text-[10px] font-normal italic">
+												(empty)
+											</span>
+										);
+									}
+									const info = getSymbolInfo(symbol);
+									const pathStr = getSymbolPathStr(symbol);
+									if (pathStr) {
+										return (
+											<svg
+												viewBox={`0 0 ${SYMBOL_SVG_SIZE} ${SYMBOL_SVG_SIZE}`}
+												className="w-8 h-8 text-current"
+											>
+												<path
+													d={pathStr}
+													fill={
+														info.isFill
+															? "currentColor"
+															: "none"
+													}
+													stroke={
+														info.isStroke
+															? "currentColor"
+															: "none"
+													}
+													strokeWidth={
+														info.isStroke ? 1 : 0
+													}
+													strokeLinecap="round"
+													strokeLinejoin="round"
+												/>
+											</svg>
+										);
+									}
+									return (
+										<span className="text-sm font-normal">
+											{symbol}
+										</span>
+									);
+								})()}
 							</button>
 						</Tooltip>
 					);
