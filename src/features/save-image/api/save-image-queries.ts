@@ -1,3 +1,4 @@
+import type { StitchSymbol } from "@/entities/canva";
 import { ApiClient } from "@/shared/api";
 import { transformGridToApiFormat, type Grid } from "@/shared/lib";
 
@@ -17,7 +18,7 @@ export interface AttachImagePayload {
 export interface SaveImageToCloudPayload {
 	filename: string;
 	colors: string[];
-	symbols: string[];
+	symbols: StitchSymbol[];
 	grid: Grid;
 	numberOfColumns: number;
 	numberOfRows: number;

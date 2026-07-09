@@ -5,13 +5,13 @@ import {
 } from "@/entities/history";
 import { createAppAsyncThunk } from "@/shared/store";
 import { undoAddColorAction } from "./restore-add-color-action";
+import { undoAddSymbolAction } from "./restore-add-symbol-action";
 import { undoChangePixelDimensions } from "./restore-change-pixel-dimensions";
 import { undoDrawAction } from "./restore-draw-action";
 import { undoEditColorAction } from "./restore-edit-color-action";
+import { undoEditSymbolAction } from "./restore-edit-symbol-action";
 import { undoChangeGridSizesAction } from "./restore-grid-sizes";
 import { undoMergeColorAction } from "./restore-merge-color";
-import { undoAddSymbolAction } from "./restore-add-symbol-action";
-import { undoEditSymbolAction } from "./restore-edit-symbol-action";
 import { undoMergeSymbolAction } from "./restore-merge-symbol";
 
 export const applyUndo = createAppAsyncThunk(

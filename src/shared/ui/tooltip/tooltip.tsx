@@ -1,7 +1,7 @@
 import React, { useState, useRef, useLayoutEffect } from "react";
 import { createPortal } from "react-dom";
-import { useShadowElement } from "../../lib/hooks/use-shadow-element";
 import { MODAL_ROOT, ROOT } from "../../config/dom";
+import { useShadowElement } from "../../lib/hooks/use-shadow-element";
 
 interface TooltipProps {
 	text: string;

@@ -1,13 +1,13 @@
 import { redoAction, selectRedoActions } from "@/entities/history";
 import { createAppAsyncThunk } from "@/shared/store";
 import { redoAddColorAction } from "./restore-add-color-action";
+import { redoAddSymbolAction } from "./restore-add-symbol-action";
 import { redoChangePixelDimensions } from "./restore-change-pixel-dimensions";
 import { redoDrawAction } from "./restore-draw-action";
 import { redoEditColorAction } from "./restore-edit-color-action";
+import { redoEditSymbolAction } from "./restore-edit-symbol-action";
 import { redoChangeGridSizesAction } from "./restore-grid-sizes";
 import { redoMergeColorAction } from "./restore-merge-color";
-import { redoAddSymbolAction } from "./restore-add-symbol-action";
-import { redoEditSymbolAction } from "./restore-edit-symbol-action";
 import { redoMergeSymbolAction } from "./restore-merge-symbol";
 
 export const applyRedo = createAppAsyncThunk(

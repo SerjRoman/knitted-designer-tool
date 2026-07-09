@@ -49,7 +49,7 @@ export function transformGridToApiFormat(
 			if (compactSymbolId === undefined) {
 				compactSymbolId = usedSymbols.length;
 				symbolIdMap.set(symbolId, compactSymbolId);
-				usedSymbols.push(getValueByIndex(symbols, symbolId, "symbol"));
+				usedSymbols.push(getValueByIndex(symbols, symbolId, "symbol") as StitchSymbol);
 			}
 
 			const compactCode = encodeCellCode({
