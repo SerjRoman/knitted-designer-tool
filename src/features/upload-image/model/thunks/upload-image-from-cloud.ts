@@ -4,6 +4,7 @@ import {
 	setColors,
 	setGrid,
 	setSymbols,
+	StitchSymbol,
 } from "@/entities/canva";
 import { setCurrentColorId } from "@/entities/editor";
 import { ApiClient } from "@/shared/api";
@@ -43,7 +44,7 @@ export const uploadImageFromCloud = createAsyncThunk(
 				grid[row.index] = transformedRow;
 			}
 			dispatch(setColors(RGBColors));
-			dispatch(setSymbols(symbols));
+			dispatch(setSymbols(symbols as StitchSymbol[]));
 			dispatch(setCurrentColorId(0));
 			dispatch(
 				updateGridSizes({

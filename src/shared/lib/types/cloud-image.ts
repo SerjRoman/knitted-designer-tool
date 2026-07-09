@@ -1,3 +1,5 @@
+import type { StitchSymbol } from "@/entities/canva";
+
 export type PixelInApiImageBody = { code: number; count: number };
 
 export type RowInApiImageBody = {
@@ -8,6 +10,6 @@ export type ApiImageBody = {
 	width: number;
 	height: number;
 	colors: string[];
-	symbols: string[];
+	symbols: StitchSymbol[];
 	rows: RowInApiImageBody[];
 };

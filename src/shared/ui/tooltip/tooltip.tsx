@@ -58,15 +58,11 @@ export function Tooltip({
 
 		if (currentPosition === "top") {
 			left =
-				triggerRect.left +
-				triggerRect.width / 2 -
-				bubbleRect.width / 2;
+				triggerRect.left + triggerRect.width / 2 - bubbleRect.width / 2;
 			top = triggerRect.top - bubbleRect.height - 6;
 		} else if (currentPosition === "bottom") {
 			left =
-				triggerRect.left +
-				triggerRect.width / 2 -
-				bubbleRect.width / 2;
+				triggerRect.left + triggerRect.width / 2 - bubbleRect.width / 2;
 			top = triggerRect.bottom + 6;
 		} else if (currentPosition === "left") {
 			left = triggerRect.left - bubbleRect.width - 6;
@@ -127,4 +123,3 @@ export function Tooltip({
 		</div>
 	);
 }
-

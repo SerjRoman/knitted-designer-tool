@@ -1,4 +1,4 @@
-import { decodeCellCode, encodeCellCode } from "@/entities/canva";
+import { decodeCellCode, encodeCellCode, StitchSymbol } from "@/entities/canva";
 import type { ApiImageBody, Grid, RowInApiImageBody } from "../types";
 import { RGBAToHEX } from "./rgba-to-hex";
 
@@ -21,12 +21,12 @@ function toHexColor(color: string): string {
 export function transformGridToApiFormat(
 	grid: Grid,
 	colors: string[],
-	symbols: string[],
+	symbols: StitchSymbol[],
 	width: number,
 	height: number,
 ): ApiImageBody {
 	const usedColors: string[] = [];
-	const usedSymbols: string[] = [];
+	const usedSymbols: StitchSymbol[] = [];
 	const colorIdMap = new Map<number, number>();
 	const symbolIdMap = new Map<number, number>();
 	const rows: RowInApiImageBody[] = [];

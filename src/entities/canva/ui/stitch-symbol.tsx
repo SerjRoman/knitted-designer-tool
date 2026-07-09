@@ -1,4 +1,9 @@
-import { getSymbolInfo, getSymbolPathStr, SYMBOL_SVG_SIZE, type StitchSymbol as StitchSymbolType } from "../model/symbols";
+import {
+	getSymbolInfo,
+	getSymbolPathStr,
+	SYMBOL_SVG_SIZE,
+	type StitchSymbol as StitchSymbolType,
+} from "../model/symbols";
 
 export interface StitchSymbolProps {
 	symbol: StitchSymbolType;
@@ -19,9 +24,7 @@ export function StitchSymbol({
 }: Readonly<StitchSymbolProps>) {
 	if (!symbol) {
 		return (
-			<span className={`${emptyClassName} ${className}`}>
-				(empty)
-			</span>
+			<span className={`${emptyClassName} ${className}`}>(empty)</span>
 		);
 	}
 
@@ -50,9 +53,5 @@ export function StitchSymbol({
 		);
 	}
 
-	return (
-		<span className={`${textClassName} ${className}`}>
-			{symbol}
-		</span>
-	);
+	return <span className={`${textClassName} ${className}`}>{symbol}</span>;
 }

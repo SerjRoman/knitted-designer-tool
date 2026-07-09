@@ -3,14 +3,15 @@ import {
 	removeSymbol,
 	replaceSymbolId,
 	setPixelsWithCode,
+	type StitchSymbol,
 } from "@/entities/canva";
 import { addActionToHistory } from "@/entities/history";
 import type { PointWithCode } from "@/shared/lib";
 import { createAppAsyncThunk } from "@/shared/store";
 
 interface MergeSymbolPayload {
-	symbolToMerge: string;
-	newSymbol: string;
+	symbolToMerge: StitchSymbol;
+	newSymbol: StitchSymbol;
 	pixels: PointWithCode[];
 }
 

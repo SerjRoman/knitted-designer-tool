@@ -1,11 +1,11 @@
-import { changeSymbolInGrid } from "@/entities/canva";
+import { changeSymbolInGrid, StitchSymbol } from "@/entities/canva";
 import { setCurrentSymbolId } from "@/entities/editor";
 import { addActionToHistory } from "@/entities/history";
 import { createAppAsyncThunk } from "@/shared/store";
 
 interface ChangeSymbolToCustomPayload {
-	prevSymbol: string;
-	newSymbol: string;
+	prevSymbol: StitchSymbol;
+	newSymbol: StitchSymbol;
 }
 
 export const changeSymbolToCustom = createAppAsyncThunk(

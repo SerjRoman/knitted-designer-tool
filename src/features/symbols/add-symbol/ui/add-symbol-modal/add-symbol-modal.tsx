@@ -1,5 +1,10 @@
 import React, { useState } from "react";
-import { addSymbol, getSymbolDescription, SYMBOL_ROWS, StitchSymbol } from "@/entities/canva";
+import {
+	addSymbol,
+	getSymbolDescription,
+	SYMBOL_ROWS,
+	StitchSymbol,
+} from "@/entities/canva";
 import { setCurrentSymbolId } from "@/entities/editor";
 import { addActionToHistory } from "@/entities/history";
 import { openDialog } from "@/entities/modal";
@@ -15,7 +20,7 @@ export function AddSymbolModal({
 	isOpen: boolean;
 	onClose: () => void;
 }>) {
-	const [symbol, setSymbol] = useState(SYMBOL_ROWS[0][0]);
+	const [symbol, setSymbol] = useState<StitchSymbol>(SYMBOL_ROWS[0]);
 	const dispatch = useAppDispatch();
 	const symbols = useAppSelector((state) => state.canvas.symbols);
 	const maxSymbolsExceeded = MAX_SYMBOLS <= symbols.length;

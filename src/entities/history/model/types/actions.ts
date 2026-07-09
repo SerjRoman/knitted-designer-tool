@@ -1,3 +1,4 @@
+import type { StitchSymbol } from "@/entities/canva";
 import type { PointWithCode } from "@/shared/lib";
 
 interface ChangeGridSizesData {
@@ -26,8 +27,8 @@ export type EditColorActionPayload = {
 	colorAfter: string;
 };
 export type EditSymbolActionPayload = {
-	symbolBefore: string;
-	symbolAfter: string;
+	symbolBefore: StitchSymbol;
+	symbolAfter: StitchSymbol;
 };
 
 export interface MergeColorActionPayload {
@@ -39,18 +40,18 @@ export interface MergeColorActionPayload {
 	colorsAfter: string[];
 }
 export interface MergeSymbolActionPayload {
-	symbolToMerge: string;
-	newSymbol: string;
+	symbolToMerge: StitchSymbol;
+	newSymbol: StitchSymbol;
 	pixelsBefore: PointWithCode[];
 	pixelsAfter: PointWithCode[];
-	symbolsBefore: string[];
-	symbolsAfter: string[];
+	symbolsBefore: StitchSymbol[];
+	symbolsAfter: StitchSymbol[];
 }
 export type AddColorActionPayload = {
 	color: string;
 };
 export type AddSymbolActionPayload = {
-	symbol: string;
+	symbol: StitchSymbol;
 };
 export type ActionType =
 	| "DRAW"

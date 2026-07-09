@@ -8,7 +8,3 @@ type MergedStitchSymbol = StitchSymbolType;
 const MergedStitchSymbol = StitchSymbolComponent;
 
 export { MergedStitchSymbol as StitchSymbol };
-
-
-
-
