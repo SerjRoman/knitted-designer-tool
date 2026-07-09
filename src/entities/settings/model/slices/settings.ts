@@ -24,14 +24,20 @@ export const settingsSlice = createSlice({
 		setShowRulers: (state, action: PayloadAction<boolean>) => {
 			state.showRulers = action.payload;
 		},
-        toggleCrosshair: (state) => {
-            state.showCrosshair = !state.showCrosshair;
-        },
-        setShowCrosshair: (state, action: PayloadAction<boolean>) => {
-            state.showCrosshair = action.payload;
-        },
+		toggleCrosshair: (state) => {
+			state.showCrosshair = !state.showCrosshair;
+		},
+		setShowCrosshair: (state, action: PayloadAction<boolean>) => {
+			state.showCrosshair = action.payload;
+		},
 	},
 });
 
-export const { toggleRulers, setShowRulers, toggleCrosshair, setShowCrosshair } = settingsSlice.actions;
-export const { selectShowRulers, selectShowCrosshair } = settingsSlice.selectors;
+export const {
+	toggleRulers,
+	setShowRulers,
+	toggleCrosshair,
+	setShowCrosshair,
+} = settingsSlice.actions;
+export const { selectShowRulers, selectShowCrosshair } =
+	settingsSlice.selectors;

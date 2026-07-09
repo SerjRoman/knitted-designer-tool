@@ -6,7 +6,7 @@ export function drawGridLayer(
 	pixelHeight: number,
 	columns: number,
 	rows: number,
-	scale: number
+	scale: number,
 ) {
 	context.strokeStyle = GRID_COLOR;
 	context.lineWidth = 2 / scale;

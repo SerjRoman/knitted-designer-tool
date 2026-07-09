@@ -4,15 +4,9 @@ import {
 	selectGrid,
 	setPixelsWithCode,
 } from "@/entities/canva";
-import {
-	selectCurrentColorId,
-	selectCurrentSymbolId,
-} from "@/entities/editor";
+import { selectCurrentColorId, selectCurrentSymbolId } from "@/entities/editor";
 import { addActionToHistory } from "@/entities/history";
-import {
-	getAdjacentPoints,
-	type Point,
-} from "@/shared/lib";
+import { getAdjacentPoints, type Point } from "@/shared/lib";
 import { createAppAsyncThunk } from "@/shared/store";
 export const fillArea = createAppAsyncThunk(
 	"editor/fill-area",

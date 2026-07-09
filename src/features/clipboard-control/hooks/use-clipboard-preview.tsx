@@ -11,8 +11,13 @@ interface ClipboardPreview {
 
 export function useClipboardPreview(): ClipboardPreview {
 	const { clipboard } = useAppSelector((state) => state.editor);
-	const { numberOfColumns, numberOfRows, colors, backgroundColorId, symbols } =
-		useAppSelector((state) => state.canvas);
+	const {
+		numberOfColumns,
+		numberOfRows,
+		colors,
+		backgroundColorId,
+		symbols,
+	} = useAppSelector((state) => state.canvas);
 	const { width: pixelWidth, height: pixelHeight } = useAppSelector(
 		selectPixelDimensions,
 	);

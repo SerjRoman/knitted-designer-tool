@@ -1,7 +1,4 @@
-import {
-	setSymbols,
-	setPixelsWithCode,
-} from "@/entities/canva";
+import { setSymbols, setPixelsWithCode } from "@/entities/canva";
 import type { MergeSymbolActionPayload } from "@/entities/history";
 import { createAppAsyncThunk } from "@/shared/store";
 

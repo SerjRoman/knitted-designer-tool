@@ -86,10 +86,14 @@ export function SelectDrawingTool() {
 						dispatch(setTool("fill"));
 					}}
 				/>
-				<ToolButton icon={LetterText} label="Text" onClick={() => {
-                    dispatch(setTool('insertText'))
-                    open()
-                }} />
+				<ToolButton
+					icon={LetterText}
+					label="Text"
+					onClick={() => {
+						dispatch(setTool("insertText"));
+						open();
+					}}
+				/>
 			</div>
 			<TextModalProvider ModalComponent={InsertTextModal} />
 		</div>

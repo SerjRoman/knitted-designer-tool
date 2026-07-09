@@ -3,7 +3,7 @@ export {
 	selectShowRulers,
 	toggleRulers,
 	setShowRulers,
-    selectShowCrosshair,
-    toggleCrosshair,
-    setShowCrosshair,
+	selectShowCrosshair,
+	toggleCrosshair,
+	setShowCrosshair,
 } from "./slices/settings";

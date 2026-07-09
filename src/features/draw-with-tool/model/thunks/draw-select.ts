@@ -19,9 +19,9 @@ export const drawSelect = createAppAsyncThunk(
 		if (!toolState.startPoint || selectedPoints) return;
 		const rectSelectedPoints = getRectPoints(
 			toolState.startPoint,
-			endPoint
+			endPoint,
 		);
 		dispatch(setSelectedPoints(rectSelectedPoints));
 		dispatch(clearSelectStartPoint());
-	}
+	},
 );

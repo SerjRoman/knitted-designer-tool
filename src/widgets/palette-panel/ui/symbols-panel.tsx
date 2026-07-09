@@ -6,9 +6,7 @@ import { mergeSymbol } from "@/features/symbols/merge-symbol";
 import {
 	getPixelsBySymbolWithSymbols,
 	getSymbolDescription,
-	getSymbolInfo,
-	getSymbolPathStr,
-	SYMBOL_SVG_SIZE,
+	StitchSymbol,
 } from "@/entities/canva";
 import { setCurrentSymbolId } from "@/entities/editor";
 import { useModal, MAX_SYMBOLS } from "@/shared/lib";
@@ -23,7 +21,7 @@ export function SymbolsPanel() {
 	const currentSymbol = symbols[currentSymbolId] ?? symbols[0] ?? "";
 
 	const [{ open: openEditSymbolModal }, EditSymbolModalProvider] = useModal<{
-		selectedSymbol: string;
+		selectedSymbol: StitchSymbol;
 	}>();
 	const [{ open: openAddNewSymbolModal }, ModalAddNewSymbolProvider] =
 		useModal();
@@ -128,49 +126,7 @@ export function SymbolsPanel() {
 									dispatch(setCurrentSymbolId(index))
 								}
 							>
-								{(() => {
-									if (!symbol) {
-										return (
-											<span className="text-gray-400 text-[10px] font-normal italic">
-												(empty)
-											</span>
-										);
-									}
-									const info = getSymbolInfo(symbol);
-									const pathStr = getSymbolPathStr(symbol);
-									if (pathStr) {
-										return (
-											<svg
-												viewBox={`0 0 ${SYMBOL_SVG_SIZE} ${SYMBOL_SVG_SIZE}`}
-												className="w-8 h-8 text-current"
-											>
-												<path
-													d={pathStr}
-													fill={
-														info.isFill
-															? "currentColor"
-															: "none"
-													}
-													stroke={
-														info.isStroke
-															? "currentColor"
-															: "none"
-													}
-													strokeWidth={
-														info.isStroke ? 1 : 0
-													}
-													strokeLinecap="round"
-													strokeLinejoin="round"
-												/>
-											</svg>
-										);
-									}
-									return (
-										<span className="text-sm font-normal">
-											{symbol}
-										</span>
-									);
-								})()}
+								<StitchSymbol symbol={symbol} />
 							</button>
 						</Tooltip>
 					);

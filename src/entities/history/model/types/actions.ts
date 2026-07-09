@@ -1,111 +1,111 @@
 import type { PointWithCode } from "@/shared/lib";
 
 interface ChangeGridSizesData {
-    numberOfColumns: number;
-    numberOfRows: number;
+	numberOfColumns: number;
+	numberOfRows: number;
 }
 
 export interface DrawActionPayload {
-    pointsBefore: PointWithCode[];
-    pointsAfter: PointWithCode[];
+	pointsBefore: PointWithCode[];
+	pointsAfter: PointWithCode[];
 }
 
 export interface ChangeGridSizesActionPayload {
-    sizesBefore: ChangeGridSizesData;
-    sizesAfter: ChangeGridSizesData;
-    lostPixels: PointWithCode[];
+	sizesBefore: ChangeGridSizesData;
+	sizesAfter: ChangeGridSizesData;
+	lostPixels: PointWithCode[];
 }
 export interface ChangePixelDimensionsActionPayload {
-    pixelWidthBefore: number;
-    pixelWidthAfter: number;
-    pixelHeightBefore: number;
-    pixelHeightAfter: number;
+	pixelWidthBefore: number;
+	pixelWidthAfter: number;
+	pixelHeightBefore: number;
+	pixelHeightAfter: number;
 }
 export type EditColorActionPayload = {
-    colorBefore: string;
-    colorAfter: string;
+	colorBefore: string;
+	colorAfter: string;
 };
 export type EditSymbolActionPayload = {
-    symbolBefore: string;
-    symbolAfter: string;
+	symbolBefore: string;
+	symbolAfter: string;
 };
 
 export interface MergeColorActionPayload {
-    colorToMerge: string;
-    newColor: string;
-    pixelsBefore: PointWithCode[];
-    pixelsAfter: PointWithCode[];
-    colorsBefore: string[];
-    colorsAfter: string[];
+	colorToMerge: string;
+	newColor: string;
+	pixelsBefore: PointWithCode[];
+	pixelsAfter: PointWithCode[];
+	colorsBefore: string[];
+	colorsAfter: string[];
 }
 export interface MergeSymbolActionPayload {
-    symbolToMerge: string;
-    newSymbol: string;
-    pixelsBefore: PointWithCode[];
-    pixelsAfter: PointWithCode[];
-    symbolsBefore: string[];
-    symbolsAfter: string[];
+	symbolToMerge: string;
+	newSymbol: string;
+	pixelsBefore: PointWithCode[];
+	pixelsAfter: PointWithCode[];
+	symbolsBefore: string[];
+	symbolsAfter: string[];
 }
 export type AddColorActionPayload = {
-    color: string;
+	color: string;
 };
 export type AddSymbolActionPayload = {
-    symbol: string;
+	symbol: string;
 };
 export type ActionType =
-    | "DRAW"
-    | "CHANGE_GRID_DIMENSIONS"
-    | "CHANGE_PIXEL_DIMENSIONS"
-    | "ADD_COLOR"
-    | "EDIT_COLOR"
-    | "MERGE_COLOR"
-    | "ADD_SYMBOL"
-    | "MERGE_SYMBOL";
+	| "DRAW"
+	| "CHANGE_GRID_DIMENSIONS"
+	| "CHANGE_PIXEL_DIMENSIONS"
+	| "ADD_COLOR"
+	| "EDIT_COLOR"
+	| "MERGE_COLOR"
+	| "ADD_SYMBOL"
+	| "MERGE_SYMBOL";
 
 export type DrawAction = {
-    payload: DrawActionPayload;
-    type: "DRAW";
+	payload: DrawActionPayload;
+	type: "DRAW";
 };
 export type ChangeGridSizesAction = {
-    payload: ChangeGridSizesActionPayload;
-    type: "CHANGE_GRID_DIMENSIONS";
+	payload: ChangeGridSizesActionPayload;
+	type: "CHANGE_GRID_DIMENSIONS";
 };
 export type ChangePixelDimensionsAction = {
-    payload: ChangePixelDimensionsActionPayload;
-    type: "CHANGE_PIXEL_DIMENSIONS";
+	payload: ChangePixelDimensionsActionPayload;
+	type: "CHANGE_PIXEL_DIMENSIONS";
 };
 export type EditColorAction = {
-    payload: EditColorActionPayload;
-    type: "EDIT_COLOR";
+	payload: EditColorActionPayload;
+	type: "EDIT_COLOR";
 };
 export type EditSymbolAction = {
-    payload: EditSymbolActionPayload;
-    type: "EDIT_SYMBOL";
+	payload: EditSymbolActionPayload;
+	type: "EDIT_SYMBOL";
 };
 export type AddColorAction = {
-    payload: AddColorActionPayload;
-    type: "ADD_COLOR";
+	payload: AddColorActionPayload;
+	type: "ADD_COLOR";
 };
 export type AddSymbolAction = {
-    payload: AddSymbolActionPayload;
-    type: "ADD_SYMBOL";
+	payload: AddSymbolActionPayload;
+	type: "ADD_SYMBOL";
 };
 export type MergeColorAction = {
-    payload: MergeColorActionPayload;
-    type: "MERGE_COLOR";
+	payload: MergeColorActionPayload;
+	type: "MERGE_COLOR";
 };
 export type MergeSymbolAction = {
-    payload: MergeSymbolActionPayload;
-    type: "MERGE_SYMBOL";
+	payload: MergeSymbolActionPayload;
+	type: "MERGE_SYMBOL";
 };
 export type ActionInput =
-    | ChangeGridSizesAction
-    | DrawAction
-    | AddColorAction
-    | EditColorAction
-    | ChangePixelDimensionsAction
-    | MergeColorAction
-    | AddSymbolAction
-    | MergeSymbolAction
-    | EditSymbolAction;
+	| ChangeGridSizesAction
+	| DrawAction
+	| AddColorAction
+	| EditColorAction
+	| ChangePixelDimensionsAction
+	| MergeColorAction
+	| AddSymbolAction
+	| MergeSymbolAction
+	| EditSymbolAction;
 export type Action = { id: string } & ActionInput;

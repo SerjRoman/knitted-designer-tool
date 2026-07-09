@@ -1,4 +1,9 @@
-import { decodeColorId, removeColor, replaceColorId, setPixelsWithCode } from "@/entities/canva";
+import {
+	decodeColorId,
+	removeColor,
+	replaceColorId,
+	setPixelsWithCode,
+} from "@/entities/canva";
 import { addActionToHistory } from "@/entities/history";
 import type { PointWithCode } from "@/shared/lib";
 import { createAppAsyncThunk } from "@/shared/store";
@@ -41,7 +46,9 @@ export const mergeColor = createAppAsyncThunk(
 					colorToMerge,
 					newColor,
 					colorsBefore: colors,
-					colorsAfter: colors.filter((color) => color !== colorToMerge),
+					colorsAfter: colors.filter(
+						(color) => color !== colorToMerge,
+					),
 				},
 			}),
 		);

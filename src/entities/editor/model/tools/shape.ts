@@ -4,7 +4,7 @@ import type { EditorState, Shapes } from "../types";
 
 function setShapeStartPoint(
 	state: EditorState,
-	{ payload }: PayloadAction<Point>
+	{ payload }: PayloadAction<Point>,
 ) {
 	if (state.toolState.tool === "shape") {
 		state.toolState.startPoint = payload;

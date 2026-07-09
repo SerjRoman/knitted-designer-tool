@@ -32,7 +32,12 @@ export const drawLine = createAppAsyncThunk(
 			grid,
 			nextPaint,
 		});
-		dispatch(setPixels({ points: pointsToFill, code: paintToCellCode(nextPaint) }));
+		dispatch(
+			setPixels({
+				points: pointsToFill,
+				code: paintToCellCode(nextPaint),
+			}),
+		);
 		dispatch(clearLineStartPoint());
 
 		dispatch(

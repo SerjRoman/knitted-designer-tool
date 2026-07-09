@@ -1,7 +1,4 @@
-import {
-	setColors,
-	setPixelsWithCode,
-} from "@/entities/canva";
+import { setColors, setPixelsWithCode } from "@/entities/canva";
 import type { MergeColorActionPayload } from "@/entities/history";
 import { createAppAsyncThunk } from "@/shared/store";
 

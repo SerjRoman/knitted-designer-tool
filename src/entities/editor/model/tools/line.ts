@@ -4,7 +4,7 @@ import type { EditorState } from "../types";
 
 function setLineStartPoint(
 	state: EditorState,
-	{ payload }: PayloadAction<Point>
+	{ payload }: PayloadAction<Point>,
 ) {
 	if (state.toolState.tool === "line") {
 		state.toolState.startPoint = payload;

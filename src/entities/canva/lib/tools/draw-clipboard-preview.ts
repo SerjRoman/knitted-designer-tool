@@ -4,7 +4,7 @@ import {
 	createPathGroup,
 	addSymbolToGroup,
 	SYMBOL_SVG_SIZE,
-    type StitchSymbol,
+	type StitchSymbol,
 } from "../../model";
 
 export function drawClipboardPreview(

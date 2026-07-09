@@ -2,7 +2,7 @@ import { calculateColorDistance, type RGBColor } from "@/shared/lib";
 
 export function quantizeRGBArrayByPalette(
 	RGBArray: RGBColor[],
-	palette: RGBColor[]
+	palette: RGBColor[],
 ): RGBColor[] {
 	const newRGBArray: RGBColor[] = [...RGBArray];
 	const colorMap = new Map<string, RGBColor>();
@@ -18,7 +18,7 @@ export function quantizeRGBArrayByPalette(
 			for (const paletteColor of palette) {
 				const distance = calculateColorDistance(
 					originalColor,
-					paletteColor
+					paletteColor,
 				);
 				if (distance < minDistance) {
 					minDistance = distance;

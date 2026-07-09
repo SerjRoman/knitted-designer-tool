@@ -2,9 +2,10 @@ import type { PointWithCode } from "@/shared/lib";
 import { createAppAsyncThunk } from "@/shared/store/store";
 import { decodeColorId, decodeSymbolId, encodeCellCode } from "../cell-codec";
 import { selectGrid } from "../slices";
+import type { StitchSymbol } from "../symbols";
 
 interface GetPixelsByCodePayload {
-	symbol: string;
+	symbol: StitchSymbol;
 }
 
 export const getPixelsBySymbolWithSymbols = createAppAsyncThunk<
@@ -25,7 +26,10 @@ export const getPixelsBySymbolWithSymbols = createAppAsyncThunk<
 					pixelsWithCode.push({
 						x,
 						y,
-						code: encodeCellCode({ colorId: decodeColorId(grid[y][x]), symbolId }),
+						code: encodeCellCode({
+							colorId: decodeColorId(grid[y][x]),
+							symbolId,
+						}),
 					});
 				}
 			}

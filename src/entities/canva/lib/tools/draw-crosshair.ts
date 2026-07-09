@@ -10,7 +10,7 @@ export function drawCrosshair(
 	pixelWidth: number,
 	pixelHeight: number,
 	columns: number,
-	rows: number
+	rows: number,
 ) {
 	context.strokeStyle = CROSSHAIR_COLOR;
 	context.globalAlpha = CROSSHAIR_ALPHA;

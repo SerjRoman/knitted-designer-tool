@@ -1,10 +1,14 @@
 import { decodeColorId, decodeSymbolId, selectGrid } from "@/entities/canva";
-import { setCurrentColorId, setCurrentSymbolId, setTool } from "@/entities/editor";
+import {
+	setCurrentColorId,
+	setCurrentSymbolId,
+	setTool,
+} from "@/entities/editor";
 import type { Point } from "@/shared/lib";
 import { createAppAsyncThunk } from "@/shared/store";
 
 export const pickColor = createAppAsyncThunk(
-    "canvas/pick-color",
+	"canvas/pick-color",
 	(point: Point, { getState, dispatch }) => {
 		const state = getState();
 		const grid = selectGrid(state);

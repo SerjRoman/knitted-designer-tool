@@ -3,7 +3,7 @@ import { useRef, useCallback } from "react";
 
 export function useMemoizedCalculation<Args extends any[], Result>(
 	calculateFn: (...args: Args) => Result,
-	isEqual?: (prev: Args, next: Args) => boolean
+	isEqual?: (prev: Args, next: Args) => boolean,
 ) {
 	const cacheRef = useRef<{ args: Args | null; result: Result | null }>({
 		args: null,
@@ -34,6 +34,6 @@ export function useMemoizedCalculation<Args extends any[], Result>(
 
 			return newResult;
 		},
-		[calculateFn, isEqual]
+		[calculateFn, isEqual],
 	);
 }

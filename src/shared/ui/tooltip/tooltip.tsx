@@ -1,10 +1,14 @@
 import React, { useState, useRef, useLayoutEffect } from "react";
+import { createPortal } from "react-dom";
+import { useShadowElement } from "../../lib/hooks/use-shadow-element";
+import { MODAL_ROOT, ROOT } from "../../config/dom";
 
 interface TooltipProps {
 	text: string;
 	position?: "top" | "bottom" | "left" | "right";
 	className?: string;
 	children: React.ReactNode;
+	container?: HTMLElement | null;
 }
 
 export function Tooltip({
@@ -12,63 +16,89 @@ export function Tooltip({
 	position = "top",
 	className,
 	children,
+	container,
 }: Readonly<TooltipProps>) {
 	const [isVisible, setIsVisible] = useState(false);
+	const triggerRef = useRef<HTMLDivElement>(null);
 	const bubbleRef = useRef<HTMLDivElement>(null);
-	const [adjustedPosition, setAdjustedPosition] = useState(position);
+	const [coords, setCoords] = useState({ top: 0, left: 0 });
+
+	const bodyContainer = useShadowElement(ROOT, MODAL_ROOT);
+	const targetContainer =
+		container !== undefined
+			? container
+			: bodyContainer ||
+				(typeof document !== "undefined" ? document.body : null);
 
 	useLayoutEffect(() => {
 		if (!isVisible) {
-			setAdjustedPosition(position);
 			return;
 		}
 
+		const trigger = triggerRef.current;
 		const bubble = bubbleRef.current;
-		if (!bubble) return;
+		if (!trigger || !bubble) return;
 
-		const rect = bubble.getBoundingClientRect();
+		const triggerRect = trigger.getBoundingClientRect();
+		const bubbleRect = bubble.getBoundingClientRect();
 
-		const scrollContainer = bubble.closest(
-			".overflow-y-auto, [style*='overflow']",
+		let currentPosition = position;
+
+		if (position === "top" && triggerRect.top - bubbleRect.height - 6 < 0) {
+			currentPosition = "bottom";
+		} else if (
+			position === "bottom" &&
+			triggerRect.bottom + bubbleRect.height + 6 > window.innerHeight
+		) {
+			currentPosition = "top";
+		}
+
+		let top = 0;
+		let left = 0;
+
+		if (currentPosition === "top") {
+			left =
+				triggerRect.left +
+				triggerRect.width / 2 -
+				bubbleRect.width / 2;
+			top = triggerRect.top - bubbleRect.height - 6;
+		} else if (currentPosition === "bottom") {
+			left =
+				triggerRect.left +
+				triggerRect.width / 2 -
+				bubbleRect.width / 2;
+			top = triggerRect.bottom + 6;
+		} else if (currentPosition === "left") {
+			left = triggerRect.left - bubbleRect.width - 6;
+			top =
+				triggerRect.top +
+				triggerRect.height / 2 -
+				bubbleRect.height / 2;
+		} else if (currentPosition === "right") {
+			left = triggerRect.right + 6;
+			top =
+				triggerRect.top +
+				triggerRect.height / 2 -
+				bubbleRect.height / 2;
+		}
+
+		left = Math.max(
+			6,
+			Math.min(left, window.innerWidth - bubbleRect.width - 6),
+		);
+		top = Math.max(
+			6,
+			Math.min(top, window.innerHeight - bubbleRect.height - 6),
 		);
 
-		if (scrollContainer) {
-			const containerRect = scrollContainer.getBoundingClientRect();
-			if (position === "top" && rect.top < containerRect.top) {
-				setAdjustedPosition("bottom");
-			} else if (
-				position === "bottom" &&
-				rect.bottom > containerRect.bottom
-			) {
-				setAdjustedPosition("top");
-			} else {
-				setAdjustedPosition(position);
-			}
-		} else {
-			if (position === "top" && rect.top < 0) {
-				setAdjustedPosition("bottom");
-			} else if (
-				position === "bottom" &&
-				rect.bottom > window.innerHeight
-			) {
-				setAdjustedPosition("top");
-			} else {
-				setAdjustedPosition(position);
-			}
-		}
+		setCoords({ top, left });
 	}, [isVisible, position]);
 
 	if (!text) return <>{children}</>;
 
-	const positionClasses = {
-		top: "bottom-full left-1/2 -translate-x-1/2 mb-1.5",
-		bottom: "top-full left-1/2 -translate-x-1/2 mt-1.5",
-		left: "right-full top-1/2 -translate-y-1/2 mr-1.5",
-		right: "left-full top-1/2 -translate-y-1/2 ml-1.5",
-	};
-
 	return (
 		<div
+			ref={triggerRef}
 			className={`relative inline-flex items-center justify-center ${className ?? ""}`}
 			onMouseEnter={() => setIsVisible(true)}
 			onMouseLeave={() => setIsVisible(false)}
@@ -76,19 +106,25 @@ export function Tooltip({
 			onBlur={() => setIsVisible(false)}
 		>
 			{children}
-			{isVisible && (
-				<div
-					ref={bubbleRef}
-					className={`absolute z-50 pointer-events-none ${positionClasses[adjustedPosition]}`}
-					role="tooltip"
-				>
+			{isVisible &&
+				targetContainer &&
+				createPortal(
 					<div
-						className={`bg-neutral-800 text-white px-2 py-1 rounded text-[11px] max-w-50 w-max whitespace-normal wrap-break-word shadow text-center leading-normal transition-all duration-150 `}
+						ref={bubbleRef}
+						className="fixed z-500 pointer-events-none"
+						style={{
+							top: `${coords.top}px`,
+							left: `${coords.left}px`,
+						}}
+						role="tooltip"
 					>
-						{text}
-					</div>
-				</div>
-			)}
+						<div className="bg-neutral-800 text-white px-2 py-1 rounded text-[11px] max-w-50 w-max whitespace-normal wrap-break-word shadow text-center leading-normal transition-all duration-150">
+							{text}
+						</div>
+					</div>,
+					targetContainer,
+				)}
 		</div>
 	);
 }
+

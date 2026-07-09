@@ -37,7 +37,12 @@ export const drawRect = createAppAsyncThunk(
 			nextPaint,
 		});
 
-		dispatch(setPixels({ points: pointsToFill, code: paintToCellCode(nextPaint) }));
+		dispatch(
+			setPixels({
+				points: pointsToFill,
+				code: paintToCellCode(nextPaint),
+			}),
+		);
 		dispatch(clearShapeState());
 
 		dispatch(

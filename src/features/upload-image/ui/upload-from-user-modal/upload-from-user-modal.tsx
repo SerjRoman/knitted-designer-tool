@@ -141,8 +141,8 @@ export function UploadFromUserModal({
 							className="mt-0.5 accent-blue-500"
 						/>
 						<span>
-							Replace existing palette with image colors
-							(removes old colors)
+							Replace existing palette with image colors (removes
+							old colors)
 						</span>
 					</label>
 					<div className="flex justify-end gap-3 pt-2">

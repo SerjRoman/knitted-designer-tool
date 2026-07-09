@@ -14,7 +14,7 @@ export function useColorPickerTool(): ToolHandlers {
 				dispatch(pickColor(point));
 			}
 		},
-		[dispatch, tool]
+		[dispatch, tool],
 	);
 
 	return { onMouseDown: onMouseDown };

@@ -1,7 +1,7 @@
 export function calculateTension(
 	stitches: number,
 	rows: number,
-	cm: number = 10
+	cm: number = 10,
 ) {
 	return {
 		width: cm / stitches,

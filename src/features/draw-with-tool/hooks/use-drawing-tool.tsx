@@ -21,7 +21,7 @@ export function useDrawingTool(): ToolHandlers {
 			lastPointRef.current = point;
 			dispatch(drawPixel(point));
 		},
-		[dispatch, tool]
+		[dispatch, tool],
 	);
 	const handleMouseMove: ToolHandler = useCallback(
 		({ point }) => {
@@ -35,7 +35,7 @@ export function useDrawingTool(): ToolHandlers {
 			lastPointRef.current = point;
 			dispatch(drawPixel(point));
 		},
-		[dispatch, tool]
+		[dispatch, tool],
 	);
 	const handleMouseUp: ToolHandler = useCallback(() => {
 		dispatch(completeBrushStroke());

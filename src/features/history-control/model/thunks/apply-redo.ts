@@ -11,46 +11,46 @@ import { redoEditSymbolAction } from "./restore-edit-symbol-action";
 import { redoMergeSymbolAction } from "./restore-merge-symbol";
 
 export const applyRedo = createAppAsyncThunk(
-    "editor/apply-redo-action",
-    (_, { getState, dispatch }) => {
-        const state = getState();
-        const redoActions = selectRedoActions(state);
-        if (redoActions.length === 0) return;
-        const currentAction = redoActions[0];
-        if (!currentAction) {
-            return;
-        }
-        switch (currentAction.type) {
-            case "DRAW":
-                dispatch(redoDrawAction(currentAction.payload));
-                break;
-            case "ADD_COLOR":
-                dispatch(redoAddColorAction(currentAction.payload));
-                break;
-            case "EDIT_COLOR":
-                dispatch(redoEditColorAction(currentAction.payload));
-                break;
-            case "CHANGE_GRID_DIMENSIONS":
-                dispatch(redoChangeGridSizesAction(currentAction.payload));
-                break;
-            case "CHANGE_PIXEL_DIMENSIONS":
-                dispatch(redoChangePixelDimensions(currentAction.payload));
-                break;
-            case "MERGE_COLOR":
-                dispatch(redoMergeColorAction(currentAction.payload));
-                break;
-            case "ADD_SYMBOL":
-                dispatch(redoAddSymbolAction(currentAction.payload));
-                break;
-            case "EDIT_SYMBOL":
-                dispatch(redoEditSymbolAction(currentAction.payload));
-                break;
-            case "MERGE_SYMBOL":
-                dispatch(redoMergeSymbolAction(currentAction.payload));
-                break;
-            default:
-                break;
-        }
-        dispatch(redoAction());
-    },
+	"editor/apply-redo-action",
+	(_, { getState, dispatch }) => {
+		const state = getState();
+		const redoActions = selectRedoActions(state);
+		if (redoActions.length === 0) return;
+		const currentAction = redoActions[0];
+		if (!currentAction) {
+			return;
+		}
+		switch (currentAction.type) {
+			case "DRAW":
+				dispatch(redoDrawAction(currentAction.payload));
+				break;
+			case "ADD_COLOR":
+				dispatch(redoAddColorAction(currentAction.payload));
+				break;
+			case "EDIT_COLOR":
+				dispatch(redoEditColorAction(currentAction.payload));
+				break;
+			case "CHANGE_GRID_DIMENSIONS":
+				dispatch(redoChangeGridSizesAction(currentAction.payload));
+				break;
+			case "CHANGE_PIXEL_DIMENSIONS":
+				dispatch(redoChangePixelDimensions(currentAction.payload));
+				break;
+			case "MERGE_COLOR":
+				dispatch(redoMergeColorAction(currentAction.payload));
+				break;
+			case "ADD_SYMBOL":
+				dispatch(redoAddSymbolAction(currentAction.payload));
+				break;
+			case "EDIT_SYMBOL":
+				dispatch(redoEditSymbolAction(currentAction.payload));
+				break;
+			case "MERGE_SYMBOL":
+				dispatch(redoMergeSymbolAction(currentAction.payload));
+				break;
+			default:
+				break;
+		}
+		dispatch(redoAction());
+	},
 );

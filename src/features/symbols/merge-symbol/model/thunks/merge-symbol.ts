@@ -1,4 +1,9 @@
-import { decodeSymbolId, removeSymbol, replaceSymbolId, setPixelsWithCode } from "@/entities/canva";
+import {
+	decodeSymbolId,
+	removeSymbol,
+	replaceSymbolId,
+	setPixelsWithCode,
+} from "@/entities/canva";
 import { addActionToHistory } from "@/entities/history";
 import type { PointWithCode } from "@/shared/lib";
 import { createAppAsyncThunk } from "@/shared/store";
@@ -41,7 +46,9 @@ export const mergeSymbol = createAppAsyncThunk(
 					symbolToMerge,
 					newSymbol,
 					symbolsBefore: symbols,
-					symbolsAfter: symbols.filter((symbol) => symbol !== symbolToMerge),
+					symbolsAfter: symbols.filter(
+						(symbol) => symbol !== symbolToMerge,
+					),
 				},
 			}),
 		);

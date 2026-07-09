@@ -139,8 +139,7 @@ export const saveImageQueries = {
 				numberOfColumns,
 				numberOfRows,
 				filename,
-			} =
-				payload;
+			} = payload;
 
 			const dataToSend = transformGridToApiFormat(
 				grid,

@@ -2,7 +2,11 @@ import { decodeCellCode, encodeCellCode } from "@/entities/canva";
 import type { ApiImageBody, Grid, RowInApiImageBody } from "../types";
 import { RGBAToHEX } from "./rgba-to-hex";
 
-function getValueByIndex(values: string[], index: number, valueName: string): string {
+function getValueByIndex(
+	values: string[],
+	index: number,
+	valueName: string,
+): string {
 	const value = values[index];
 	if (value === undefined) {
 		throw new Error(`Invalid ${valueName} id ${index} in grid code`);
@@ -45,9 +49,7 @@ export function transformGridToApiFormat(
 			if (compactSymbolId === undefined) {
 				compactSymbolId = usedSymbols.length;
 				symbolIdMap.set(symbolId, compactSymbolId);
-				usedSymbols.push(
-					getValueByIndex(symbols, symbolId, "symbol"),
-				);
+				usedSymbols.push(getValueByIndex(symbols, symbolId, "symbol"));
 			}
 
 			const compactCode = encodeCellCode({

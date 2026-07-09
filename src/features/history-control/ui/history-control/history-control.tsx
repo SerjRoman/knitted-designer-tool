@@ -7,7 +7,7 @@ import { applyRedo, applyUndo } from "../../model";
 export function HistoryControl() {
 	const dispatch = useAppDispatch();
 	const { redoActions, currentActionId } = useAppSelector(
-		(state) => state.history
+		(state) => state.history,
 	);
 
 	useHistoryShortcuts();

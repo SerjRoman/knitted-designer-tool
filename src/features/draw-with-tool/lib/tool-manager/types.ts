@@ -19,9 +19,9 @@ export interface ToolHandlers {
 }
 export type ToolHandler = (params: ToolHandlerParams) => void;
 export type ToolHandlerWithoutPoint = (
-	params: Omit<ToolHandlerParams, "point">
+	params: Omit<ToolHandlerParams, "point">,
 ) => void;
 export type PreviewToolHandler = (
 	context: CanvasRenderingContext2D,
-	params: PreviewToolHandlerParams
+	params: PreviewToolHandlerParams,
 ) => void;

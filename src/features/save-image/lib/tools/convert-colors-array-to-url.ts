@@ -1,7 +1,7 @@
 export function convertColorsArrayToUrl(
 	colorsArray: string[],
 	width: number,
-	height: number
+	height: number,
 ): string {
 	const colorRegex =
 		/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/;

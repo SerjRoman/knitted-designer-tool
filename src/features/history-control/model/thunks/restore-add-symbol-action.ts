@@ -1,8 +1,4 @@
-import {
-	addSymbol,
-	removeSymbol,
-	selectSymbols,
-} from "@/entities/canva";
+import { addSymbol, removeSymbol, selectSymbols } from "@/entities/canva";
 import { setCurrentSymbolId } from "@/entities/editor";
 import type { AddSymbolActionPayload } from "@/entities/history";
 import { createAppAsyncThunk } from "@/shared/store";

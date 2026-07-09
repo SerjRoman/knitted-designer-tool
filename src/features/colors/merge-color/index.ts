@@ -1,1 +1,1 @@
-export { mergeColor } from './model/thunks/merge-color';
+export { mergeColor } from "./model/thunks/merge-color";

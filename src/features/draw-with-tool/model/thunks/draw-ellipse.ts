@@ -12,10 +12,7 @@ import {
 	selectToolState,
 } from "@/entities/editor";
 import { addActionToHistory } from "@/entities/history";
-import {
-	getEllipsePoints,
-	type Point,
-} from "@/shared/lib";
+import { getEllipsePoints, type Point } from "@/shared/lib";
 import { createAppAsyncThunk } from "@/shared/store";
 
 export const drawEllipse = createAppAsyncThunk(
@@ -40,7 +37,12 @@ export const drawEllipse = createAppAsyncThunk(
 			nextPaint,
 		});
 
-		dispatch(setPixels({ points: pointsToFill, code: paintToCellCode(nextPaint) }));
+		dispatch(
+			setPixels({
+				points: pointsToFill,
+				code: paintToCellCode(nextPaint),
+			}),
+		);
 		dispatch(clearShapeState());
 
 		dispatch(

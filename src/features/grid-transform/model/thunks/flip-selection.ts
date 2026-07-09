@@ -12,17 +12,20 @@ import { createAppAsyncThunk } from "@/shared/store";
 type FlipDirection = "horizontal" | "vertical";
 
 export const flipSelection = createAppAsyncThunk(
-    "canvas/flip-selection",
-    async (direction: FlipDirection, { getState, dispatch }) => {
+	"canvas/flip-selection",
+	async (direction: FlipDirection, { getState, dispatch }) => {
 		const state = getState();
 		const selectedPoints = selectSelectedPoints(state);
 		const grid = selectGrid(state);
 		const backgroundColorId = selectBackgroundColorId(state);
-		const backgroundCode = encodeCellCode({ colorId: backgroundColorId, symbolId: 0 });
+		const backgroundCode = encodeCellCode({
+			colorId: backgroundColorId,
+			symbolId: 0,
+		});
 
-        if (!selectedPoints || selectedPoints.length === 0) {
-            return;
-        }
+		if (!selectedPoints || selectedPoints.length === 0) {
+			return;
+		}
 		const pointsBefore: PointWithCode[] = [];
 		const pointsAfter: PointWithCode[] = [];
 
@@ -31,10 +34,10 @@ export const flipSelection = createAppAsyncThunk(
 		selectedPoints.forEach((point) => {
 			const code = grid[point.y]?.[point.x] ?? backgroundCode;
 
-            const newX =
-                direction === "horizontal" ? minX + maxX - point.x : point.x;
-            const newY =
-                direction === "vertical" ? minY + maxY - point.y : point.y;
+			const newX =
+				direction === "horizontal" ? minX + maxX - point.x : point.x;
+			const newY =
+				direction === "vertical" ? minY + maxY - point.y : point.y;
 			const pointBefore: PointWithCode = {
 				...point,
 				code,
@@ -44,25 +47,25 @@ export const flipSelection = createAppAsyncThunk(
 				y: Math.floor(newY),
 				code,
 			};
-            pointsAfter.push(pointAfter);
-            pointsBefore.push(pointBefore);
-        });
+			pointsAfter.push(pointAfter);
+			pointsBefore.push(pointBefore);
+		});
 
-        const pixelsToClear = selectedPoints;
-        const newSelectedPoints = pointsAfter.map(({ x, y }) => ({ x, y }));
+		const pixelsToClear = selectedPoints;
+		const newSelectedPoints = pointsAfter.map(({ x, y }) => ({ x, y }));
 
-        dispatch(applyFlip({ pixelsToClear, pixelsToApply: pointsAfter }));
+		dispatch(applyFlip({ pixelsToClear, pixelsToApply: pointsAfter }));
 
-        dispatch(setSelectedPoints(newSelectedPoints));
+		dispatch(setSelectedPoints(newSelectedPoints));
 
-        dispatch(
-            addActionToHistory({
-                type: "DRAW",
-                payload: {
-                    pointsAfter,
-                    pointsBefore,
-                },
-            })
-        );
-    }
+		dispatch(
+			addActionToHistory({
+				type: "DRAW",
+				payload: {
+					pointsAfter,
+					pointsBefore,
+				},
+			}),
+		);
+	},
 );
