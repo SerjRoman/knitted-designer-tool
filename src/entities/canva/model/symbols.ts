@@ -1,5 +1,10 @@
 export const SYMBOLS_STRING_PATH = {
 	empty: "",
+	knit: "M 8 8 H 24 V 24 H 8 Z",
+	purl: "M 8 16 H 24",
+	yarnOver: "M 16 11 A 5 5 0 1 0 16 21 A 5 5 0 1 0 16 11",
+	cableFront: "M 8 24 L 14 18 M 18 14 L 24 8 M 24 24 L 8 8",
+	cableBack: "M 24 24 L 18 18 M 14 14 L 8 8 M 8 24 L 24 8",
 	loopWithBar:
 		"M 18 24 C 16 22, 12 18, 12 12 C 12 6, 20 6, 20 12 C 20 18, 16 22, 14 24 M 10 26 H 22",
 	loopWithDot:
@@ -79,13 +84,13 @@ export const SYMBOLS_STRING_PATH = {
 export type StitchSymbol = keyof typeof SYMBOLS_STRING_PATH;
 export const DEFAULT_SYMBOLS: StitchSymbol[] = [
 	"empty",
+	"knit",
+	"purl",
+	"yarnOver",
 	"diagonalWithBranch",
-	"diagonalSlash",
-	"diagonalWithBranchAndBar",
-	"backDiagonalWithBranchAndBar",
-	"backDiagonalSlashWithDot",
-	"verticalWithLeftBranch",
-	"wedgeWithTwo",
+	"cableBack",
+	"backTripleDiagonalWithBranch",
+	"tripleDiagonalWithBranch"
 ];
 export interface StitchSymbolInfo {
 	path: Path2D | null;
@@ -103,9 +108,44 @@ export const SYMBOL_SVG_SIZE = 32;
 export const SYMBOL_INFO: Record<string, StitchSymbolInfo> = {
 	empty: {
 		path: null,
-		isStroke: false,
+		isStroke: false, 
 		isFill: false,
-		description: "Empty stitch (Knit)",
+		description: "Blank area"
+	},
+	knit: {
+		pathStr: SYMBOLS_STRING_PATH.knit,
+		path: new Path2D(SYMBOLS_STRING_PATH.knit),
+		isStroke: true,
+		isFill: false,
+		description: "Knit stitch",
+	},
+	purl: {
+		pathStr: SYMBOLS_STRING_PATH.purl,
+		path: new Path2D(SYMBOLS_STRING_PATH.purl),
+		isStroke: true,
+		isFill: false,
+		description: "Purl stitch",
+	},
+	yarnOver: {
+		pathStr: SYMBOLS_STRING_PATH.yarnOver,
+		path: new Path2D(SYMBOLS_STRING_PATH.yarnOver),
+		isStroke: true,
+		isFill: false,
+		description: "Yarn over",
+	},
+	cableFront: {
+	pathStr: SYMBOLS_STRING_PATH.cableFront,
+	path: new Path2D(SYMBOLS_STRING_PATH.cableFront),
+	isStroke: true,
+	isFill: false,
+	description: "Cable cross, front (e.g. C4F)",
+	},
+	cableBack: {
+		pathStr: SYMBOLS_STRING_PATH.cableBack,
+		path: new Path2D(SYMBOLS_STRING_PATH.cableBack),
+		isStroke: true,
+		isFill: false,
+		description: "Cable cross, back (e.g. C4B)",
 	},
 	loopWithBar: {
 		pathStr: SYMBOLS_STRING_PATH.loopWithBar,
@@ -189,7 +229,7 @@ export const SYMBOL_INFO: Record<string, StitchSymbolInfo> = {
 		path: new Path2D(SYMBOLS_STRING_PATH.letterM),
 		isStroke: true,
 		isFill: false,
-		description: "Make 1 (M1) purlwise on WS",
+		description: "Make 1 (M1) knitwise on RS, make 1 (M1) purlwise on WS",
 	},
 	boldLetterP: {
 		pathStr: SYMBOLS_STRING_PATH.boldLetterP,
@@ -378,13 +418,7 @@ export const SYMBOL_INFO: Record<string, StitchSymbolInfo> = {
 		description: "K1, wrapping yarn twice around needle",
 	},
 
-	circleWithTwo: {
-		pathStr: SYMBOLS_STRING_PATH.circleWithTwo,
-		path: new Path2D(SYMBOLS_STRING_PATH.circleWithTwo),
-		isStroke: true,
-		isFill: false,
-		description: "K1, wrapping yarn twice around needle (alternative)",
-	},
+	
 	bindOffArc: {
 		pathStr: SYMBOLS_STRING_PATH.bindOffArc,
 		path: new Path2D(SYMBOLS_STRING_PATH.bindOffArc),
@@ -399,26 +433,12 @@ export const SYMBOL_INFO: Record<string, StitchSymbolInfo> = {
 		isFill: true,
 		description: "St rem on right needle after last BO st",
 	},
-	containedLastBoArc: {
-		pathStr: SYMBOLS_STRING_PATH.containedLastBoArc,
-		path: new Path2D(SYMBOLS_STRING_PATH.containedLastBoArc),
-		isStroke: true,
-		isFill: false,
-		description: "St rem on right needle after last BO st (alternative)",
-	},
-	castOnArc: {
+		castOnArc: {
 		pathStr: SYMBOLS_STRING_PATH.castOnArc,
 		path: new Path2D(SYMBOLS_STRING_PATH.castOnArc),
 		isStroke: true,
 		isFill: false,
 		description: "Cast on",
-	},
-	plusSymbol: {
-		pathStr: SYMBOLS_STRING_PATH.plusSymbol,
-		path: new Path2D(SYMBOLS_STRING_PATH.plusSymbol),
-		isStroke: true,
-		isFill: false,
-		description: "Cast on (alternative)",
 	},
 };
 
